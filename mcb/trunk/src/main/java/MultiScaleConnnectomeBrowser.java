@@ -19,7 +19,7 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 /**
  * This application creates a simple graph with zoom capabilities.
- * This application will be used as a template for future applications.
+ * This application will be used as a template for the development of Multi-Sacale Connectome Browser.
  * @date    December 10, 2009
  * @author  Ruggero Carloz
  * @version 0.0.2
