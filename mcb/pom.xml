@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>mcb</groupId>
   <artifactId>mcb</artifactId>
-  <version>1</version>
+  <version>2-SNAPSHOT</version>
 	<scm>
-		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags/1</connection>
-		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/1</developerConnection>
-		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/1</url>
+		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/trunk</connection>
+		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/trunk</developerConnection>
+		<url>http://code.google.com/p/wholebrain/source/checkout</url>
 	</scm>
 	<build>
 		<plugins>
