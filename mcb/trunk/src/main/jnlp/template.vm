@@ -1,8 +1,8 @@
-<jnlp spec="$jnlpspec" codebase="http://ccdb-dev-db2.crbs.ucsd.edu/helloworld" href="$outputFile">
+<jnlp spec="$jnlpspec" codebase="http://ccdb-dev-db2.crbs.ucsd.edu/mcb" href="$outputFile">
   <information>
-    <title>HelloWorldJUNG $project.Version</title>
+    <title>mcb $project.Version</title>
     <vendor>Whole Brain Project</vendor>
-    <homepage href="http://wiki.wholebraincatalog.org/wiki/HelloWolrdJUNG"/>
+    <homepage href="http://wiki.wholebraincatalog.org/wiki/mcb"/>
     <description>$project.Description</description>
     #if($offlineAllowed)
     <offline-allowed/>

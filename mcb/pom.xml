@@ -4,8 +4,8 @@
   <artifactId>mcb</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 	<scm>
-		<connection>scm:svn:http://wholebrain.googlecode.com/svn/HelloWorldJUNG/trunk</connection>
-		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/HelloWorldJUNG/trunk</developerConnection>
+		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/trunk</connection>
+		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/trunk</developerConnection>
 		<url>http://code.google.com/p/wholebrain/source/checkout</url>
 	</scm>
 	<build>
@@ -37,7 +37,7 @@
 				<version>2.0-beta-9</version>
 				<configuration>
 					<tagBase>
-						https://wholebrain.googlecode.com/svn/HelloWorldJUNG/tags
+						https://wholebrain.googlecode.com/svn/mcb/tags
 					</tagBase>
 					<!--
 						triggers the profile below called 'release', which causes
@@ -61,7 +61,7 @@
 		<site>
 			<id>google.download</id>
 			<name>wholebrain googlecode scm</name>
-			<url>scm:svn:https://wholebrain.googlecode.com/svn/site/HelloWorldJUNG
+			<url>scm:svn:https://wholebrain.googlecode.com/svn/site/mcb
 			</url>
 		</site>
 		<repository>
@@ -116,14 +116,14 @@
 								<!-- default values -->
 								<!--
 									inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath -->
-								<outputFile>HelloWorldJUNG.jnlp</outputFile> <!-- defaults to launch.jnlp -->
+								<outputFile>MultiScaleConnnectomeBrowser.jnlp</outputFile> <!-- defaults to launch.jnlp -->
 
 								<!--
 									used to automatically identify the jar containing the main
 									class.
 								-->
 								<!-- this is perhaps going to change -->
-								<mainClass>HelloWorld</mainClass>
+								<mainClass>MultiScaleConnnectomeBrowser</mainClass>
 							</jnlp>
 
 							<!-- SIGNING -->
