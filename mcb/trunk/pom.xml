@@ -4,9 +4,9 @@
   <artifactId>mcb</artifactId>
   <version>2</version>
 	<scm>
-		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags/2</connection>
-		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/2</developerConnection>
-		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/2</url>
+		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/trunk</connection>
+		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/trunk</developerConnection>
+		<url>http://code.google.com/p/wholebrain/source/checkout</url>
 	</scm>
 	<build>
 		<plugins>
