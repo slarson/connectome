@@ -4,7 +4,7 @@ import org.apache.commons.collections15.Factory;
 
 /**
  * The class is used to create the edges for the graph.  This class is implemented 
- * by Multi-Scale Connnectome Browser.
+ * by Multi-Scale Connectome Browser.
  * @date    December 10, 2009
  * @author  Ruggero Carloz
  * @version 0.0.2

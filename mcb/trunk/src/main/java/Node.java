@@ -2,7 +2,7 @@ import org.apache.commons.collections15.Factory;
 
 /**
  * The class is used to create the vertices for the graph.  This class is implemented 
- * by class Multi-Scale Connnectome Browser.
+ * by class Multi-Scale Connectome Browser.
  * @date    December 10, 2009
  * @author  Ruggero Carloz
  * @version 0.0.2
