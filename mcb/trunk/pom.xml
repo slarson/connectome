@@ -4,9 +4,9 @@
   <artifactId>mcb</artifactId>
   <version>0.0.2-SNAPSHOT</version>
 	<scm>
-		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.0.2-SNAPSHOT</connection>
-		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.0.2-SNAPSHOT</developerConnection>
-		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.0.2-SNAPSHOT</url>
+		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.0.2</connection>
+		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.0.2</developerConnection>
+		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.0.2</url>
 	</scm>
 	<build>
 		<plugins>
