@@ -1,4 +1,5 @@
 
+
 import org.apache.commons.collections15.Factory;
 
 /**
@@ -10,18 +11,10 @@ import org.apache.commons.collections15.Factory;
  */
 public class Link implements Factory{
 
-	double capacity;
-	double weight;
-	double value;
-
 	/*
 	 * Constructor
 	 */
-	public Link(double weight,double capacity){
-		this.value++;
-		this.weight = weight;
-		this.capacity = capacity;
-	}
+	public Link(){}
 	/*
 	 * Method makes the edges value printable.
 	 * @see java.lang.Object#toString()
@@ -31,7 +24,12 @@ public class Link implements Factory{
 	}
 
 	public Object create() {
+		
+		
+		
+		
+		
 		// TODO Auto-generated method stub
-		return new Link(1.0,2.0);
+		return new Link();
 	}
 }
