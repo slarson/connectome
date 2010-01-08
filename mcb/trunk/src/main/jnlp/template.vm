@@ -1,4 +1,4 @@
-<jnlp spec="$jnlpspec" codebase="http://ccdb-dev-db2.crbs.ucsd.edu/mcb" href="$outputFile">
+<jnlp spec="$jnlpspec" codebase="http://ccdb-dev-db2.crbs.ucsd.edu/multi-scale-connectome-browser-0.0.2-stable" href="$outputFile">
   <information>
     <title>mcb $project.Version</title>
     <vendor>Whole Brain Project</vendor>
