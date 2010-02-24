@@ -1,3 +1,4 @@
+package org.wholebraincatalog.mcb;
 
 import java.awt.Dimension;
 import javax.swing.JFrame;
