@@ -1,3 +1,4 @@
+package org.wholebraincatalog.mcb;
 
 import org.apache.commons.collections15.Factory;
 
