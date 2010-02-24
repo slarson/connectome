@@ -29,29 +29,19 @@ public class Reader{
 	public static void main(String[] args) throws Exception {
 		Node[] data = new Node[3];
 		
+		//obtain the data from the URLs
 		DataReader sCaudoputamen = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A","Caudoputamen");
-		//DataReader rCaudoputamen = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%24t%0D%0A}%0D%0A");
 		DataReader sGlobusPallidus = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A","Globus pallidus");
-		//DataReader rGlobusPallidus = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%24t%0D%0A}%0D%0A");
 		DataReader sCentralNucleusOfAmygdala = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A", "Central nucleus of amygdala");
-		//DataReader rCentralNucleusOfAmygdala = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%24t%0D%0A}%0D%0A");
-		/**System.out.println("URL sending_Structure Caudoputamen: "+sCaudoputamen.getNode().getURI());
-		System.out.println("URL receiving_Structure Caudoputamen: "+rCaudoputamen.getNode().getURI());
-		System.out.println("URL sending_Structure Globus_pallidus: "+sGlobusPallidus.getNode().getURI());
-		System.out.println("URL receiving_Structure Globus_pallidus: "+rGlobusPallidus.getNode().getURI());
-		System.out.println("URL sending_Structure Central_nucleus_of_amygdala: "+sCentralNucleusOfAmygdala.getNode().getURI());
-		System.out.println("URL receiving_Structure Central_nucleus_of_amygdala: "+rCentralNucleusOfAmygdala.getNode().getURI());
-**/
+		
 		data[0] = sCaudoputamen.getNode();
 		data[1] = sGlobusPallidus.getNode();
 		data[2] = sCentralNucleusOfAmygdala.getNode();
-		//data[3] = rGlobusPallidus.getNode();
-		//data[2] = sCentralNucleusOfAmygdala.getNode();
-		//data[5] = rCentralNucleusOfAmygdala.getNode();
-
+		
+		//connect the nodes and build the graph.
         BuildConnections connections = new BuildConnections(data,3);
 		
-        //System.out.println(connections);
+       
 	}
 
 }

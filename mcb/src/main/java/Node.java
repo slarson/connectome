@@ -36,11 +36,19 @@ public class Node implements Factory{
 	 */
 	private TreeSet<String> uris;
 
+	/**
+	 * URL that contains the node sending connections.
+	 */
 	private String URL = null;
 	
+	/**
+	 * Number of possible connections for node.
+	 */
 	private int numberOfConnections;
+
 	/**
 	 * Constructor.
+	 * @param URL - the url of a given node.
 	 * @param vertexName - name of node.
 	 * @param elementNum - the number of URIs in the node.
 	 **/
@@ -48,13 +56,12 @@ public class Node implements Factory{
 		this.URL = URL;
 		this.name = vertexName;
 		this.numberOfConnections = elementNum;
-		createURIArray(this.numberOfConnections);
+		createURITreeSet();
 	}
 
 	/**
-	 * Method returns the URL for the node which is the name of
-	 * the node.
-	 * @return vertexName - name of node.
+	 * Method returns the URL for the node.
+	 * @return URL
 	 */
 	public String getURL(){
 		return this.URL;
@@ -62,9 +69,8 @@ public class Node implements Factory{
 	
 	/**
 	 * This method instantiates the tree to store URIs.
-	 * @param index
 	 */
-	public void createURIArray(int index){
+	public void createURITreeSet(){
 		uris = new TreeSet<String>();
 	}
 	
@@ -100,12 +106,20 @@ public class Node implements Factory{
 	}
 	
 	/**
-	 * This meethod gives the name of the corrent node.
+	 * This method gives the name of node.
 	 * @return vertexName -  name of current node.
 	 */
 	public String getVertexName() {
 		return this.name;
 	}
+	
+	/**
+	 * Method return name of node.
+	 */
+	public String toString() {
+		return this.name;
+	}
+	
 	public Object create() {
 		// TODO Auto-generated method stub
 		return new Node("W","",3);
