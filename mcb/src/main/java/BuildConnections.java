@@ -1,7 +1,5 @@
 
 import java.awt.Dimension;
-import java.util.Iterator;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,7 +16,11 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
-
+/* The class creates and displays a graph given a set of nodes to connect.
+ * @date   February 23, 2010
+ * @author Ruggero Carloz
+ *
+ */
 
 public class BuildConnections {
 
@@ -29,26 +31,26 @@ public class BuildConnections {
 	public BuildConnections(Node[] nodes, int numberElements){
 		//Generic graph.
 		gr = new DirectedSparseMultigraph<Node, Edge>();
-
-		makeConnections(nodes, numberElements);
 		
+		makeConnections(nodes, numberElements);
+	
 		// Object foe visualization of graph.
 		Layout<Node, Edge> layout = new CircleLayout(gr);	
 	
 	
 		// set the size.
 		layout.setSize(new Dimension(400,400));
-	
+		
 		VisualizationViewer<Node,Edge> bvs = new VisualizationViewer<Node,Edge>(layout);
 	
 		// Add node and edge labels.
 		bvs.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-		bvs.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
+		//bvs.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
 	
 		// Create a graph mouse.
 		DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
 		bvs.setGraphMouse(gm);
-	
+		
 	
 		String str = "Controls: Use mouse wheel to zoom in and out.\n"+
 		" Under Menu use TRANSFORMING to move graph (click left mouse button and drag) \n" +
@@ -70,6 +72,7 @@ public class BuildConnections {
 		mm.setText("Menu");
 		mm.setPreferredSize(new Dimension(80,20));
 		mb.add(mm);
+		
 		frame.setJMenuBar(mb);
 		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
 

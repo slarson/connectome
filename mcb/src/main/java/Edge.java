@@ -31,9 +31,7 @@ public class Edge implements Factory{
 	 * Method makes the edges value printable.
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString(){
-		return " ";
-	}
+	
 
 	public Object create() {
 		
