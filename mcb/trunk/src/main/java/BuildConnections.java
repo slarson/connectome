@@ -18,7 +18,7 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 /* The class creates and displays a graph given a set of nodes to connect.
  * @date   February 23, 2010
- * @author Ruggero Carloz
+ * @author Ruggero Carloz ----
  *
  */
 
