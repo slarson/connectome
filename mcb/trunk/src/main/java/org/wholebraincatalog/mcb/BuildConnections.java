@@ -1,47 +1,48 @@
 package org.wholebraincatalog.mcb;
 
 import java.awt.Dimension;
+import java.util.HashSet;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
-
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.ZoomPanGraphMouse;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
-/* The class creates and displays a graph given a set of nodes to connect.
- * @date   February 23, 2010
- * @author Ruggero Carloz ----
- *
- */
 
-public class BuildConnections {
+public class BuildConnections{
 
 	private JFrame frame;
 
 	private static Graph<Node,Edge> gr;
-	
-	public BuildConnections(Node[] nodes, int numberElements){
+ 	
+	public BuildConnections(Node[] nodes, int numberElements){	
+		
 		//Generic graph.
 		gr = new DirectedSparseMultigraph<Node, Edge>();
-		
+						
+		//construct graph by making graph connections.
 		makeConnections(nodes, numberElements);
-	
+		
 		// Object foe visualization of graph.
 		Layout<Node, Edge> layout = new CircleLayout(gr);	
 	
-	
+		ZoomPanGraphMouse zoom = new ZoomPanGraphMouse(3,3);
+		zoom.setZoomAtMouse(true);
+		
 		// set the size.
 		layout.setSize(new Dimension(400,400));
-		
+	
 		VisualizationViewer<Node,Edge> bvs = new VisualizationViewer<Node,Edge>(layout);
 	
 		// Add node and edge labels.
@@ -50,8 +51,8 @@ public class BuildConnections {
 	
 		// Create a graph mouse.
 		DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
+		gm.setZoomAtMouse(true);
 		bvs.setGraphMouse(gm);
-		
 	
 		String str = "Controls: Use mouse wheel to zoom in and out.\n"+
 		" Under Menu use TRANSFORMING to move graph (click left mouse button and drag) \n" +
@@ -64,7 +65,6 @@ public class BuildConnections {
 		label.setEnabled(false);
 		JFrame frame =  new JFrame("Multi-Scale Connectome Browser");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 
 
 		frame.getContentPane().add(bvs);

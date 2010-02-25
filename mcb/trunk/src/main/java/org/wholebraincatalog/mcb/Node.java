@@ -1,6 +1,5 @@
 package org.wholebraincatalog.mcb;
 
-import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.apache.commons.collections15.Factory;
