@@ -186,18 +186,30 @@
 	</profiles>
 	<dependencies>
 		<dependency>
+			<groupId>colt</groupId>
+			<artifactId>colt</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.wholebrainproject</groupId>
 			<artifactId>wbc-core</artifactId>
 			<version>0.7.0.6</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
+			<groupId>net.sourceforge.collections</groupId>
+			<artifactId>collections-generic</artifactId>
+			<version>4.01</version>
+			<scope>compile</scope>
 		</dependency>
+		<!-- verified jung 2.0 -->
 		<dependency>
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-api</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jung</groupId>
+			<artifactId>jung-algorithms</artifactId>
 			<version>2.0</version>
 		</dependency>
 		<dependency>
@@ -212,68 +224,14 @@
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>
-			<artifactId>jung-algorithms</artifactId>
+			<artifactId>jung-io</artifactId>
 			<version>2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.collections</groupId>
-			<artifactId>collections-generic</artifactId>
-			<version>4.01</version>
-			<scope>compile</scope>
+			<groupId>net.sf.jung</groupId>
+			<artifactId>jung-jai</artifactId>
+			<version>2.0</version>
 		</dependency>
-		<!-- verified org.wholebraincatalog.com.piccolox 1.0.0 -->
-		<dependency>
-			<groupId>org.wholebraincatalog.com.piccolox</groupId>
-			<artifactId>piccolox</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<!-- verified org.piccolo2d 1.2.1 -->
-		<dependency>
-			<groupId>org.piccolo2d</groupId>
-			<artifactId>piccolo2d-core</artifactId>
-			<version>1.2.1</version>
-		</dependency>
-		<!-- verified jgoodies.forms 1.0.5 -->
-		<dependency>
-			<groupId>jgoodies</groupId>
-			<artifactId>forms</artifactId>
-			<version>1.0.5</version>
-		</dependency>
-		<!-- verified jung 1.6.0 -->
-		<dependency>
-			<groupId>jung</groupId>
-			<artifactId>jung</artifactId>
-			<version>1.6.0</version>
-		</dependency>
-		<!-- verified junit 3.8.2 -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.2</version>
-		</dependency>
-		<!-- verified org.wholebraincatalog.com.jgoodies looks 1.3.1 -->
-		<dependency>
-			<groupId>org.wholebraincatalog.com.jgoodies</groupId>
-			<artifactId>looks</artifactId>
-			<version>1.3.1</version>
-		</dependency>
-		<!-- May need some review -->
-		<dependency>
-			<groupId>com.hp.hpl.guess</groupId>
-			<artifactId>Guess</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<!-- May need some review -->
-		<dependency>
-			<groupId>org.python</groupId>
-			<artifactId>jython</artifactId>
-			<version>2.2</version>
-		</dependency>
-		<!-- May need some review -->
-		<dependency>
-			<groupId>jfree</groupId>
-			<artifactId>jfreechart</artifactId>
-			<version>1.0.9</version>
-		</dependency>
+	
 	</dependencies>
 </project>
