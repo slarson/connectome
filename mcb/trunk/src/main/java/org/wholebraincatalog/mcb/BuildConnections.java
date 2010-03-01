@@ -1,12 +1,24 @@
 package org.wholebraincatalog.mcb;
-/*
- * Copyright (c) 2003, the JUNG Project and the Regents of the University of
- * California All rights reserved.
- * 
- * This software is open-source under the BSD license; see either "license.txt"
- * or http://jung.sourceforge.net/license.txt for a description.
- * 
- */
+/*Copyright (C) 2010 contact@wholebraincatalog.org
+*
+* Whole Brain Catalog is Licensed under the GNU Lesser Public License (LGPL), Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the license at
+*
+* http://www.gnu.org/licenses/lgpl.txt
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+* The class is used to create the edges for the graph.  This class is implemented 
+* by Multi-Scale Connectome Browser.
+* @date    March 1, 2010
+* @author  Ruggero Carloz
+* @version 0.0.1
+*/
 
 
 import java.awt.BorderLayout;
@@ -26,9 +38,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -42,7 +52,6 @@ import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
-import edu.uci.ics.jung.graph.util.TestGraphs;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationModel;
@@ -58,41 +67,32 @@ import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
 
 
 /**
- * A demo that shows how collections of vertices can be collapsed
- * into a single vertex. In this demo, the vertices that are
+ * Programs shows how collections of vertices can be collapsed
+ * into a single vertex. In this application, the vertices that are
  * collapsed are those mouse-picked by the user. Any criteria
  * could be used to form the vertex collections to be collapsed,
  * perhaps some common characteristic of those vertex objects.
  * 
  * Note that the collection types don't use generics in this
- * demo, because the vertices are of two types: String for plain
- * vertices, and Graph<String,Number> for the collapsed vertices.
+ * application.
  * 
  * @author Tom Nelson
  * @author Ruggero Carloz - adaptation 
  * 
  */
 @SuppressWarnings("serial")
+
 public class BuildConnections extends JApplet {
 
-    String instructions =
-        "<html>Use the mouse to select multiple vertices"+
-        "<p>either by dragging a region, or by shift-clicking"+
-        "<p>on multiple vertices."+
-        "<p>After you select vertices, use the Collapse button"+
-        "<p>to combine them into a single vertex."+
-        "<p>Select a 'collapsed' vertex and use the Expand button"+
-        "<p>to restore the collapsed vertices."+
-        "<p>The Restore button will restore the original graph."+
-        "<p>If you select 2 (and only 2) vertices, then press"+
-        "<p>the Compress Edges button, parallel edges between"+
-        "<p>those two vertices will no longer be expanded."+
-        "<p>If you select 2 (and only 2) vertices, then press"+
-        "<p>the Expand Edges button, parallel edges between"+
-        "<p>those two vertices will be expanded."+
-        "<p>You can drag the vertices with the mouse." +
-        "<p>Use the 'Picking'/'Transforming' combo-box to switch"+
-        "<p>between picking and transforming mode.</html>";
+	String instructions ="Use the mouse to select multiple vertices either by dragging a region, or by shift-clicking "+
+		"on multiple vertices. After you select vertices, use the Collapse button to combine them \n"+
+		"into a single vertex.  Select a 'collapsed' vertex and use the Expand button to restore the "+
+		"collapsed vertices.  The Restore button will restore the original graph.  If you select 2 \n" +
+		"(and only 2) vertices, then press the Compress Edges button, parallel edges between "+ 
+		"those two vertices will no longer be expanded.  If you select 2 (and only 2) vertices, then \n"+
+		"press the Expand Edges button, parallel edges between those two vertices will be "+
+		"expanded.  You can drag the vertices with the mouse. Use the 'Picking'/'Transforming' \n"+
+		"combo-box to switch between picking and transforming mode.";		
     /**
      * the graph
      */
@@ -102,9 +102,21 @@ public class BuildConnections extends JApplet {
      * the visual component and renderer for the graph
      */
     VisualizationViewer vv;
-    
+    /**
+     * graph layout.
+     */
     Layout layout;
+    /**
+     * split that contains graph and instructions.
+     */
+    static JSplitPane split_graph_help;
+    /**
+     * split that contains split_graph_help and option buttons.
+     */
     static JSplitPane split;
+    /**
+     * graph collapser.
+     */
     GraphCollapser collapser;
 
     public BuildConnections(Node[] nodes, int numberElements) {
@@ -112,14 +124,14 @@ public class BuildConnections extends JApplet {
         // create a simple graph for the demo
         graph = new DirectedSparseMultigraph();
         
-      //construct graph by making graph connections.
+        //construct graph by making graph connections.
 		makeConnections(nodes, numberElements);
 		
         collapser = new GraphCollapser(graph);
         
         layout = new FRLayout(graph);
 
-        Dimension preferredSize = new Dimension(400,400);
+        Dimension preferredSize = new Dimension(800,400);
         final VisualizationModel visualizationModel = 
             new DefaultVisualizationModel(layout, preferredSize);
         vv =  new VisualizationViewer(visualizationModel, preferredSize);
@@ -153,10 +165,9 @@ public class BuildConnections extends JApplet {
 				}
 				return super.transform(v);
 			}});
+       
         
-        /**
-         * the regular graph mouse for the normal view
-         */
+        //the regular graph mouse for the normal view
         final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
 
         vv.setGraphMouse(graphMouse);
@@ -169,20 +180,7 @@ public class BuildConnections extends JApplet {
         modeBox.addItemListener(graphMouse.getModeListener());
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
 
-        /**String str = "Controls: Use mouse wheel to zoom in and out.\n"+
-		" Under Menu use TRANSFORMING to move graph (click left mouse button and drag) \n" +
-		"   and PICKING to manipulate graph nodes. (click left mouse button on red nodes and drag).\n" +
-		" In PICKING mode, you can also drag a box around multiple nodes \n" +
-		"   (click left mouse button outside a node and drag a box around multiple nodes)";
-	
-		// Graphs GUI
-		JTextArea label = new JTextArea(str);
-		label.setEnabled(false);
-		// Splitting the window in two parts.
-		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,label,vv);
-		split.setOneTouchExpandable(true);
-		split.setDividerLocation(100);**/
-		
+     	
         final ScalingControl scaler = new CrossoverScalingControl();
 
         JButton plus = new JButton("+");
@@ -281,14 +279,7 @@ public class BuildConnections extends JApplet {
                 exclusions.clear();
                 vv.repaint();
             }});
-        
-        JButton help = new JButton("Help");
-        help.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog((JComponent)e.getSource(), instructions, "Help", JOptionPane.PLAIN_MESSAGE);
-            }
-        });
-
+		
         JPanel controls = new JPanel();
         JPanel zoomControls = new JPanel(new GridLayout(2,1));
         zoomControls.setBorder(BorderFactory.createTitledBorder("Zoom"));
@@ -304,12 +295,25 @@ public class BuildConnections extends JApplet {
         collapseControls.add(reset);
         controls.add(collapseControls);
         controls.add(modeBox);
-        controls.add(help);
         content.add(controls, BorderLayout.SOUTH);
+
+        JTextArea label = new JTextArea(instructions);
+		label.setEnabled(false);
+
+		// Splitting the window in two parts.
+		split_graph_help = new JSplitPane(JSplitPane.VERTICAL_SPLIT,label,vv);
+		split_graph_help.setOneTouchExpandable(false);
+		split_graph_help.setDividerLocation(80);
+		// Splitting the window in two parts.
+		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,split_graph_help,controls);
+		split.setOneTouchExpandable(false);
+		split.setDividerLocation(500);
+		
+
     }
     
     /**
-     * a demo class that will create a vertex shape that is either a
+     * A demo class that will create a vertex shape that is either a
      * polygon or star. The number of sides corresponds to the number
      * of vertices that were collapsed into the vertex represented by
      * this shape.
@@ -360,9 +364,10 @@ public class BuildConnections extends JApplet {
         }
     }
 	/**
-	 * Method creates graph by building connections between nodes.
-	 * @param nodes - array containing the nodes used to make graph.
-	 * @param numberElements - number of nodes to be connected.
+	 *  Method creates graph by building connections between nodes.
+	 *  @param nodes - array containing the nodes used to make graph.
+	 *  @param numberElements - number of nodes to be connected.
+	 *  @author Ruggero Carloz
 	 */
 	private void makeConnections(Node[] node, int numberElements) {
 	
@@ -376,8 +381,8 @@ public class BuildConnections extends JApplet {
 		}		
 	}
 
-    /**
-     * a driver for this demo
+    /*
+     * Driver for application
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
@@ -393,6 +398,7 @@ public class BuildConnections extends JApplet {
 		DataReader sPrelimbicArea = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}","Prelimbic area");
 		DataReader sLateralPreopticArea = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Lateral_preoptic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}","Lateral preoptic area");
 
+		//store node data
 		data[0] = sCaudoputamen.getNode();
 		data[1] = sGlobusPallidus.getNode();
 		data[2] = sCentralNucleusOfAmygdala.getNode();
@@ -400,13 +406,14 @@ public class BuildConnections extends JApplet {
 		data[4] = sVentralTegmentalArea.getNode();
 		data[5] = sPrelimbicArea.getNode();
 		data[6] = sLateralPreopticArea.getNode();
-        JFrame f = new JFrame("Multi-Scale Connectome Browser");
-
         
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JFrame f = new JFrame("Multi-Scale Connectome Browser version-0.0.1-alpha");        
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.getContentPane().add(new BuildConnections(data, 7));
+        f.add(split);
         f.pack();
         f.setVisible(true);
+        
     }
 }
 
