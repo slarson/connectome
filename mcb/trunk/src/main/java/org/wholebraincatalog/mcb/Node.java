@@ -26,7 +26,7 @@ import org.apache.commons.collections15.Factory;
  */
 public class Node implements Factory{
 
-	/** 
+	/**
 	 * Name of vertex.
 	 */
 	private String name;
@@ -81,13 +81,15 @@ public class Node implements Factory{
 	public void store(String str){
 		uris.add(str);
 	}
+	
 	/**
 	 * This method returns the number of connections in a node.
 	 * @return numberOfConnections - number of connections in node.
 	 */
 	public int getNumberOfConnections(){
 		return numberOfConnections;
-	}	
+	}
+	
 	/**
 	 * This method returns a TreeSet containing the name for receiving
 	 * nodes.
@@ -114,12 +116,18 @@ public class Node implements Factory{
 	}
 	
 	/**
-	 * Method return name of node.
+	 * Method return name of node used as default.
+	 * @return name - name of node
 	 */
 	public String toString() {
-		return this.name;
+		return this.name ;
 	}
 	
+	/**
+	 * Method creates a new node.  Method not used in this 
+	 * implementation.
+	 * @see org.apache.commons.collections15.Factory#create()
+	 */
 	public Object create() {
 		// TODO Auto-generated method stub
 		return new Node("W","",3);

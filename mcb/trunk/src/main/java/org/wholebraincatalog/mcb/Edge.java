@@ -23,23 +23,37 @@ import org.apache.commons.collections15.Factory;
  * @version 0.0.1
  */
 public class Edge implements Factory{
+	/**
+	 * Possible edge data
+	 */
+	private String name = " ";
 
-	/*
+	/**
+	 * Default constructor
+	 */
+	public Edge() {}
+
+	/**
 	 * Constructor
 	 */
-	public Edge(){}
-	/*
+	public Edge(Node node1, Node node2){
+		
+	}
+	
+	/**
 	 * Method makes the edges value printable.
 	 * @see java.lang.Object#toString()
 	 */
+	public String toString(){
+		return name;
+	}
 	
-
+	 /**
+	  * Possible method implemented to create an edge.  Method not 
+	  * used in this implementation.
+	  * @see org.apache.commons.collections15.Factory#create()
+	  */
 	public Object create() {
-		
-		
-		
-		
-		
 		// TODO Auto-generated method stub
 		return new Edge();
 	}
