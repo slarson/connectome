@@ -46,6 +46,7 @@ import javax.swing.JTextArea;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
@@ -385,36 +386,57 @@ public class BuildConnections extends JApplet {
      * Driver for application
      * @throws Exception 
      */
-    public static void main(String[] args) throws Exception {
-    	
-    	Node[] data = new Node[7];
-		
-		//obtain the data from the URLs
-		DataReader sCaudoputamen = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A","Caudoputamen");
-		DataReader sGlobusPallidus = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A","Globus pallidus");
-		DataReader sCentralNucleusOfAmygdala = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A", "Central nucleus of amygdala");
-		DataReader sSubstantiaNigraCompactPart = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Substantia_nigra_compact_part%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}","Substantia nigra compact part");
-		DataReader sVentralTegmentalArea = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Ventral_tegmental_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}","Ventral tegmental area");
-		DataReader sPrelimbicArea = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}","Prelimbic area");
-		DataReader sLateralPreopticArea = new DataReader("http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Lateral_preoptic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}","Lateral preoptic area");
+	public static void main(String[] args) {
 
-		//store node data
-		data[0] = sCaudoputamen.getNode();
-		data[1] = sGlobusPallidus.getNode();
-		data[2] = sCentralNucleusOfAmygdala.getNode();
-		data[3] = sSubstantiaNigraCompactPart.getNode();
-		data[4] = sVentralTegmentalArea.getNode();
-		data[5] = sPrelimbicArea.getNode();
-		data[6] = sLateralPreopticArea.getNode();
-        
-		JFrame f = new JFrame("Multi-Scale Connectome Browser version-0.0.1-alpha");        
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.getContentPane().add(new BuildConnections(data, 7));
-        f.add(split);
-        f.pack();
-        f.setVisible(true);
-        
-    }
+		try {
+			Node[] data = new Node[7];
+
+			// obtain the data from the URLs
+			DataReader sCaudoputamen = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A",
+					"Caudoputamen");
+			DataReader sGlobusPallidus = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A",
+					"Globus pallidus");
+			DataReader sCentralNucleusOfAmygdala = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A",
+					"Central nucleus of amygdala");
+			DataReader sSubstantiaNigraCompactPart = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Substantia_nigra_compact_part%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
+					"Substantia nigra compact part");
+			DataReader sVentralTegmentalArea = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Ventral_tegmental_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
+					"Ventral tegmental area");
+			DataReader sPrelimbicArea = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
+					"Prelimbic area");
+			DataReader sLateralPreopticArea = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Lateral_preoptic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
+					"Lateral preoptic area");
+
+			// store node data
+			data[0] = sCaudoputamen.getNode();
+			data[1] = sGlobusPallidus.getNode();
+			data[2] = sCentralNucleusOfAmygdala.getNode();
+			data[3] = sSubstantiaNigraCompactPart.getNode();
+			data[4] = sVentralTegmentalArea.getNode();
+			data[5] = sPrelimbicArea.getNode();
+			data[6] = sLateralPreopticArea.getNode();
+
+			JFrame f = new JFrame(
+					"Multi-Scale Connectome Browser version-0.1-alpha");
+			f.setSize(500, 900);
+			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			f.getContentPane().add(new BuildConnections(data, 7));
+			f.add(split);
+			f.pack();
+			f.setVisible(true);
+		} catch (Exception e) {
+			System.out.println("Unrecoverable error!");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 }
 
 
