@@ -1,8 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>mcb</groupId>
+	<groupId>org.wholebraincatalog</groupId>
 	<artifactId>mcb</artifactId>
+	<name>Multi-scale Connectome Browser</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<scm>
 		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/trunk</connection>
