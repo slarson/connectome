@@ -4,7 +4,7 @@
 	<groupId>org.wholebraincatalog</groupId>
 	<artifactId>mcb</artifactId>
 	<name>Multi-scale Connectome Browser</name>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<scm>
 		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/trunk</connection>
 		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/trunk</developerConnection>
