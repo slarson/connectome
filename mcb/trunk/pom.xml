@@ -2,11 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>mcb</groupId>
 	<artifactId>mcb</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<name>Multi-Scale Connectome Browser</name>
+	<version>0.1</version>
 	<scm>
-		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags</connection>
-		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags</developerConnection>
-		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags</url>
+		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1</connection>
+		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1</developerConnection>
+		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1</url>
 	</scm>
 	<build>
 		<plugins>
