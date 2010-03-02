@@ -83,7 +83,7 @@ import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
  */
 @SuppressWarnings("serial")
 
-public class BuildConnections extends JApplet {
+public class BuildConnections extends JPanel{
 
 	String instructions ="Use the mouse to select multiple vertices either by dragging a region, or by shift-clicking "+
 		"on multiple vertices. After you select vertices, use the Collapse button to combine them \n"+
@@ -173,7 +173,7 @@ public class BuildConnections extends JApplet {
 
         vv.setGraphMouse(graphMouse);
         
-        Container content = getContentPane();
+        Container content = this;
         GraphZoomScrollPane gzsp = new GraphZoomScrollPane(vv);
         content.add(gzsp);
         
