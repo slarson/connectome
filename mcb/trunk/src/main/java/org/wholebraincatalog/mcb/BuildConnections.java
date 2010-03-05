@@ -33,6 +33,9 @@ import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.HierarchyBoundsListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,11 +49,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
@@ -104,7 +109,9 @@ public class BuildConnections extends JPanel{
 	"those two vertices will no longer be expanded.  If you select 2 (and only 2) vertices, then \n"+
 	"press the Expand Edges button, parallel edges between those two vertices will be "+
 	"expanded.  You can drag the vertices with the mouse. Use the 'Picking'/'Transforming' \n"+
-	"combo-box to switch between picking and transforming mode.";		
+	"combo-box to switch between picking and transforming mode.  Press the 'Save' button \n "+
+	"under 'Save Image' to save the current graph.  Name the image followed by '.jpg' otherwise \n"+
+	"you will have to choose the application that will open the saved image.";		
 	/**
 	 * the graph
 	 */
@@ -138,6 +145,10 @@ public class BuildConnections extends JPanel{
 	 * 
 	 */
 	static JFrame f;	
+
+	static int width;
+	
+	static int height;
 	
 
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
@@ -204,6 +215,20 @@ public class BuildConnections extends JPanel{
 		modeBox.addItemListener(graphMouse.getModeListener());
 		graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
 
+		f.setVisible(true);
+		
+		f.getContentPane().addHierarchyBoundsListener(new HierarchyBoundsListener(){
+
+			public void ancestorMoved(HierarchyEvent e) {
+				//width = e.getChanged().getWidth();
+				//height = e.getChanged().getHeight();				
+			}
+			public void ancestorResized(HierarchyEvent e) {
+				width = e.getChanged().getWidth();
+				height = e.getChanged().getHeight();
+				
+			}
+		});
 
 		final ScalingControl scaler = new CrossoverScalingControl();
 
@@ -304,18 +329,34 @@ public class BuildConnections extends JPanel{
 				vv.repaint();
 			}});
 		file_chooser = new JFileChooser();
-		JButton graph_save = new JButton("Graph Save");
+		JButton graph_save = new JButton("Save");
 		graph_save.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e){
-				File file;
+				File file,rename_file;
 				Robot robot;
 				Rectangle rectangle;
+				JPanel content;
+				KeyStroke stroke;
+			
+				
 				try {
 					robot = new Robot();
-					rectangle = new Rectangle(f.getWidth(),f.getHeight());
-					file_chooser.showSaveDialog(null);
+					int value;
+					System.out.println("Height:"+height+"  Width:"+width);
+
+					if(width > 0 && height > 0)
+						rectangle = new Rectangle(width,height);
+					else 
+						rectangle = new Rectangle(f.getWidth(),f.getHeight());
+
+					value = file_chooser.showOpenDialog(null);
+					
+					if(value == JFileChooser.CANCEL_OPTION) 
+						return;
+					
 					file = file_chooser.getSelectedFile();
+					
 					System.out.println(file.toString());
 					// Capture the screen shot of the area of the screen defined by the rectangle
 					ImageIO.write(robot.createScreenCapture(rectangle), "jpg",file );
@@ -346,7 +387,7 @@ public class BuildConnections extends JPanel{
 		collapseControls.add(expandEdges);
 		collapseControls.add(reset);
 		JPanel saveFile = new JPanel(new GridLayout(1,1));
-		saveFile.setBorder(BorderFactory.createTitledBorder("Save"));
+		saveFile.setBorder(BorderFactory.createTitledBorder("Save Image"));
 		saveFile.add(graph_save);
 
 		controls.add(collapseControls);
