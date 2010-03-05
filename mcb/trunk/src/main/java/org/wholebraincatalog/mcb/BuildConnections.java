@@ -350,8 +350,9 @@ public class BuildConnections extends JPanel{
 					else 
 						rectangle = new Rectangle(f.getWidth(),f.getHeight());
 
-					value = file_chooser.showOpenDialog(null);
+					value = file_chooser.showSaveDialog(null);
 					
+					//close save window if user presses cancel
 					if(value == JFileChooser.CANCEL_OPTION) 
 						return;
 					
