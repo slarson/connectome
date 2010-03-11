@@ -39,14 +39,18 @@ import java.awt.event.HierarchyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -110,9 +114,8 @@ public class BuildConnections extends JPanel{
 	"those two vertices will no longer be expanded.  If you select 2 (and only 2) vertices, then \n"+
 	"press the Expand Edges button, parallel edges between those two vertices will be "+
 	"expanded.  You can drag the vertices with the mouse. Use the 'Picking'/'Transforming' \n"+
-	"combo-box to switch between picking and transforming mode.  Press the 'Save' button \n "+
-	"under 'Save Image' to save the current graph.  Name the image followed by '.jpg' otherwise \n"+
-	"you will have to choose the application that will open the saved image.";		
+	"combo-box to switch between picking and transforming mode.  Press the 'Save' button under"+
+	" 'Save Image' and give the graph a name.  The graph will be saved as a power point. \n";		
 	/**
 	 * the graph
 	 */
@@ -122,37 +125,48 @@ public class BuildConnections extends JPanel{
 	 * the visual component and renderer for the graph
 	 */
 	VisualizationViewer vv;
+	
 	/**
 	 * graph layout.
 	 */
 	Layout layout;
+	
 	/**
 	 * split that contains graph and instructions.
 	 */
 	static JSplitPane split_graph_help;
+	
 	/**
 	 * split that contains split_graph_help and option buttons.
 	 */
 	static JSplitPane split;
+	
 	/**
 	 * graph collapser.
 	 */
 	GraphCollapser collapser;
+	
 	/**
-	 * 
+	 * used to create temporary file
 	 */
 	JFileChooser file_chooser;
+	
 	/**
-	 * 
+	 * the gui frame
 	 */
 	static JFrame f;	
 
+	/**
+	 * width of the graph
+	 */
 	static int width;
 
+	/**
+	 * height of the graph
+	 */
 	static int height;
 
-	static Point point;
-
+	
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
 		// create a simple graph for the demo
@@ -315,7 +329,6 @@ public class BuildConnections extends JPanel{
 				exclusions.clear();
 				vv.repaint();
 			}});
-		file_chooser = new JFileChooser();
 		JButton graph_save = new JButton("Save");
 		graph_save.addActionListener(new ActionListener() {
 
@@ -323,6 +336,7 @@ public class BuildConnections extends JPanel{
 				File file;
 				int value;
 				int indx;
+				String str;
 				width = vv.getWidth();
 				height = vv.getHeight();
 				BufferedImage bi = new BufferedImage(width,height,BufferedImage.TYPE_INT_BGR);
@@ -332,27 +346,35 @@ public class BuildConnections extends JPanel{
 				graphics.dispose();
 				
 				try {
+					file_chooser = new JFileChooser();
+					value = file_chooser.showSaveDialog(null);
+					//close save window if user presses cancel
+					if(value == JFileChooser.CANCEL_OPTION){
+						file_chooser = null;
+						return;
+					}	
+					file = file_chooser.getSelectedFile();
+					//check that file does not contain a '.'
+					if(file.getName().contains(".")){
+						System.out.println("File name: "+file.getName()+" must not contain character '.'");
+						return;
+					}
+					
 					//power point slide generator.
 					SlideShow slideShow = new SlideShow();
 					Slide slide= slideShow.createSlide();
-					
-					value = file_chooser.showSaveDialog(null);
-					//close save window if user presses cancel
-					if(value == JFileChooser.CANCEL_OPTION) 
-						return;
-					file = file_chooser.getSelectedFile();
-					System.out.println(file.toString());
-					
+					str = file.getAbsolutePath()+".ppt";
 					// Capture the screen shot of the area of the screen defined by the rectangle
-					ImageIO.write(bi, "jpg",file );
-			
+					ImageIO.write(bi,"jpg", file);
+					FileOutputStream out = new FileOutputStream(str);
 					indx = slideShow.addPicture(file, Picture.JPEG);
 					Picture pict = new Picture(indx);
 					pict.setAnchor(new java.awt.Rectangle(80,100,700,350));
 					slide.addShape(pict);
-					FileOutputStream out = new FileOutputStream("sample.ppt");
+					System.out.println("Writing file: "+file.getAbsolutePath());
 					slideShow.write(out);
-					out.close();
+                    out.close();
+                    file.deleteOnExit();
 					;
 				} catch (IOException e2) {
 					System.out.println(e2);
