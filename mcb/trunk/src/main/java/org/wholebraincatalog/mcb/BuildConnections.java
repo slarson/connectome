@@ -21,36 +21,25 @@ package org.wholebraincatalog.mcb;
  */
 
 
-import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.HierarchyBoundsListener;
-import java.awt.event.HierarchyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -59,8 +48,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
-
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.apache.poi.hslf.model.Picture;
@@ -68,7 +55,6 @@ import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
@@ -125,48 +111,37 @@ public class BuildConnections extends JPanel{
 	 * the visual component and renderer for the graph
 	 */
 	VisualizationViewer vv;
-	
+
 	/**
 	 * graph layout.
 	 */
 	Layout layout;
-	
+
 	/**
 	 * split that contains graph and instructions.
 	 */
 	static JSplitPane split_graph_help;
-	
+
 	/**
 	 * split that contains split_graph_help and option buttons.
 	 */
 	static JSplitPane split;
-	
+
 	/**
 	 * graph collapser.
 	 */
 	GraphCollapser collapser;
-	
+
 	/**
 	 * used to create temporary file
 	 */
 	JFileChooser file_chooser;
-	
+
 	/**
 	 * the gui frame
 	 */
 	static JFrame f;	
 
-	/**
-	 * width of the graph
-	 */
-	static int width;
-
-	/**
-	 * height of the graph
-	 */
-	static int height;
-
-	
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
 		// create a simple graph for the demo
@@ -329,7 +304,7 @@ public class BuildConnections extends JPanel{
 				exclusions.clear();
 				vv.repaint();
 			}});
-		JButton graph_save = new JButton("Save");
+		JButton graph_save = new JButton("Save Image");
 		graph_save.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e){
@@ -337,16 +312,16 @@ public class BuildConnections extends JPanel{
 				int value;
 				int indx;
 				String str;
-				width = vv.getWidth();
-				height = vv.getHeight();
+				int width = vv.getWidth();
+				int height = vv.getHeight();
 				BufferedImage bi = new BufferedImage(width,height,BufferedImage.TYPE_INT_BGR);
 				Graphics2D graphics = bi.createGraphics();
 				//paint graph
 				vv.paint(graphics);
 				graphics.dispose();
-				
+
 				try {
-					file_chooser = new JFileChooser();
+					JFileChooser file_chooser = new JFileChooser();
 					value = file_chooser.showSaveDialog(null);
 					//close save window if user presses cancel
 					if(value == JFileChooser.CANCEL_OPTION){
@@ -359,7 +334,7 @@ public class BuildConnections extends JPanel{
 						System.out.println("File name: "+file.getName()+" must not contain character '.'");
 						return;
 					}
-					
+
 					//power point slide generator.
 					SlideShow slideShow = new SlideShow();
 					Slide slide= slideShow.createSlide();
@@ -373,8 +348,9 @@ public class BuildConnections extends JPanel{
 					slide.addShape(pict);
 					System.out.println("Writing file: "+file.getAbsolutePath());
 					slideShow.write(out);
-                    out.close();
-                    file.deleteOnExit();
+					out.close();
+					file.deleteOnExit();
+					file_chooser = null;
 					;
 				} catch (IOException e2) {
 					System.out.println(e2);
@@ -398,8 +374,8 @@ public class BuildConnections extends JPanel{
 		collapseControls.add(compressEdges);
 		collapseControls.add(expandEdges);
 		collapseControls.add(reset);
-		JPanel saveFile = new JPanel(new GridLayout(1,2));
-		saveFile.setBorder(BorderFactory.createTitledBorder("Save Image"));
+		JPanel saveFile = new JPanel(new GridLayout(1,3));
+		saveFile.setBorder(BorderFactory.createTitledBorder("Save"));
 		saveFile.add(graph_save);
 
 		controls.add(collapseControls);
