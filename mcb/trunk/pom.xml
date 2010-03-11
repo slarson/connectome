@@ -1,15 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wholebraincatalog</groupId>
 	<artifactId>mcb</artifactId>
 	<name>Multi-scale Connectome Browser</name>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.2</version>
 	<scm>
-		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/trunk</connection>
-		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/trunk</developerConnection>
-		<url>http://code.google.com/p/wholebrain/source/checkout</url>
+		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1.2</connection>
+		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1.2</developerConnection>
+		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1.2</url>
 	</scm>
 	<build>
 		<plugins>
@@ -137,8 +136,7 @@
 							<jnlp>
 								<!-- default values -->
 								<!--
-									inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath
-								-->
+									inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath -->
 								<outputFile>BuildConnections.jnlp</outputFile> <!-- defaults to launch.jnlp -->
 
 								<!--
