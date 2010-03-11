@@ -24,10 +24,11 @@ package org.wholebraincatalog.mcb;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Shape;
@@ -35,10 +36,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,10 +48,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -59,6 +59,7 @@ import javax.swing.KeyStroke;
 
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
+import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 
@@ -147,9 +148,10 @@ public class BuildConnections extends JPanel{
 	static JFrame f;	
 
 	static int width;
-	
+
 	static int height;
-	
+
+	static Point point;
 
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
@@ -161,7 +163,7 @@ public class BuildConnections extends JPanel{
 
 		collapser = new GraphCollapser(graph);
 
-		layout = new FRLayout(graph);
+		layout = new CircleLayout(graph);
 
 		SlideShow slideShow = new SlideShow();
 		Slide slide = slideShow.createSlide();
@@ -214,21 +216,6 @@ public class BuildConnections extends JPanel{
 		JComboBox modeBox = graphMouse.getModeComboBox();
 		modeBox.addItemListener(graphMouse.getModeListener());
 		graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-
-		f.setVisible(true);
-		
-		f.getContentPane().addHierarchyBoundsListener(new HierarchyBoundsListener(){
-
-			public void ancestorMoved(HierarchyEvent e) {
-				//width = e.getChanged().getWidth();
-				//height = e.getChanged().getHeight();				
-			}
-			public void ancestorResized(HierarchyEvent e) {
-				width = e.getChanged().getWidth();
-				height = e.getChanged().getHeight();
-				
-			}
-		});
 
 		final ScalingControl scaler = new CrossoverScalingControl();
 
@@ -333,43 +320,45 @@ public class BuildConnections extends JPanel{
 		graph_save.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e){
-				File file,rename_file;
-				Robot robot;
-				Rectangle rectangle;
-				JPanel content;
-				KeyStroke stroke;
-			
+				File file;
+				int value;
+				int indx;
+				width = vv.getWidth();
+				height = vv.getHeight();
+				BufferedImage bi = new BufferedImage(width,height,BufferedImage.TYPE_INT_BGR);
+				Graphics2D graphics = bi.createGraphics();
+				//paint graph
+				vv.paint(graphics);
+				graphics.dispose();
 				
 				try {
-					robot = new Robot();
-					int value;
-					System.out.println("Height:"+height+"  Width:"+width);
-
-					if(width > 0 && height > 0)
-						rectangle = new Rectangle(width,height);
-					else 
-						rectangle = new Rectangle(f.getWidth(),f.getHeight());
-
-					value = file_chooser.showSaveDialog(null);
+					//power point slide generator.
+					SlideShow slideShow = new SlideShow();
+					Slide slide= slideShow.createSlide();
 					
+					value = file_chooser.showSaveDialog(null);
 					//close save window if user presses cancel
 					if(value == JFileChooser.CANCEL_OPTION) 
 						return;
-					
 					file = file_chooser.getSelectedFile();
-					
 					System.out.println(file.toString());
+					
 					// Capture the screen shot of the area of the screen defined by the rectangle
-					ImageIO.write(robot.createScreenCapture(rectangle), "jpg",file );
-
+					ImageIO.write(bi, "jpg",file );
+			
+					indx = slideShow.addPicture(file, Picture.JPEG);
+					Picture pict = new Picture(indx);
+					pict.setAnchor(new java.awt.Rectangle(80,100,700,350));
+					slide.addShape(pict);
+					FileOutputStream out = new FileOutputStream("sample.ppt");
+					slideShow.write(out);
+					out.close();
 					;
-				} catch (AWTException e1) {
-					System.out.println(e1);
-					e1.printStackTrace();
 				} catch (IOException e2) {
 					System.out.println(e2);
 					e2.printStackTrace();
-				}
+				}catch(Exception e1){e1.printStackTrace();}
+
 			}});
 
 
@@ -387,7 +376,7 @@ public class BuildConnections extends JPanel{
 		collapseControls.add(compressEdges);
 		collapseControls.add(expandEdges);
 		collapseControls.add(reset);
-		JPanel saveFile = new JPanel(new GridLayout(1,1));
+		JPanel saveFile = new JPanel(new GridLayout(1,2));
 		saveFile.setBorder(BorderFactory.createTitledBorder("Save Image"));
 		saveFile.add(graph_save);
 
@@ -521,13 +510,15 @@ public class BuildConnections extends JPanel{
 			data[6] = sLateralPreopticArea.getNode();
 
 			f = new JFrame(
-			"Multi-Scale Connectome Browser version-0.1-alpha");
+			"Multi-Scale Connectome Browser version-0.1.1-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(new BuildConnections(data, 7));
 			f.add(split);
 			f.pack();
 			f.setVisible(true);
+
+
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
 			e.printStackTrace();
