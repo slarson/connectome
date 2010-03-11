@@ -4,11 +4,11 @@
 	<groupId>org.wholebraincatalog</groupId>
 	<artifactId>mcb</artifactId>
 	<name>Multi-scale Connectome Browser</name>
-	<version>0.1.2</version>
+	<version>0.1.3-SNAPSHOT</version>
 	<scm>
-		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1.2</connection>
-		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1.2</developerConnection>
-		<url>scm:svn:https://wholebrain.googlecode.com/svn/mcb/tags/mcb-0.1.2</url>
+		<connection>scm:svn:http://wholebrain.googlecode.com/svn/mcb/trunk</connection>
+		<developerConnection>scm:svn:https://wholebrain.googlecode.com/svn/mcb/trunk</developerConnection>
+		<url>http://code.google.com/p/wholebrain/source/checkout</url>
 	</scm>
 	<build>
 		<plugins>
