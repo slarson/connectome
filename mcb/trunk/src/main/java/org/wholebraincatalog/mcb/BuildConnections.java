@@ -508,7 +508,7 @@ public class BuildConnections extends JPanel{
 			data[6] = sLateralPreopticArea.getNode();
 
 			f = new JFrame(
-			"Multi-Scale Connectome Browser version-0.1.1-alpha");
+			"Multi-Scale Connectome Browser version-0.1.2-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(new BuildConnections(data, 7));
