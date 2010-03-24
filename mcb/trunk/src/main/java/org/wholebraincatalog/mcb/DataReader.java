@@ -49,6 +49,10 @@ public class DataReader
 	 */
 	private String uri = null;
 	
+	private String literal = null;
+	
+	private String reference = null;
+	
 	/**
 	 * The synonyms.
 	 */
@@ -250,7 +254,9 @@ public class DataReader
 		int count = 0;
 		
 		//Brain part
-		String str;
+		String str_name = null;
+		String str_strength = null;
+		String str_reference = null;
 		System.out.println("Populating data from URL: "+thalisNeurolexStore.toString());
 		
 		System.out.println("......");
@@ -272,28 +278,27 @@ public class DataReader
 					{
 						//set definition
 						uri = parser.getElementText();
-						str = uri.substring(uri.indexOf("BAMS#")+5);
-						str = str.replace('_', ' ');
-						node.store(str);
+						str_name = uri.substring(uri.indexOf("BAMS#")+5);
+						str_name = str_name.replace('_', ' ');
+						//System.out.println("str_name: "+str_name);
 
 					}
-					else if ("sameAs".equals(parser.getLocalName()))
+					else if ("binding".equals(parser.getLocalName()))
 					{
-						//we parse the label from the sameAsURL, since there
-						//is no other easy way to get it.
-						String sameAsURL = parser.getAttributeValue(0);
-						
-						//chop off text before and including the '3A'
-						int cutOff = sameAsURL.indexOf("3A") + 2;
-						sameAsURL = sameAsURL.substring(cutOff);
-						
-						//swap underscores with spaces
-						sameAsURL = sameAsURL.replace('_', ' ');
-					}
-					else if ("Synonym".equals(parser.getLocalName()))
-					{
-						//add to synonyms
-						synonyms.add(parser.getElementText());
+						if(parser.getAttributeValue(0).equals("reference")){
+							event = parser.next();
+							event = parser.next();
+							reference = parser.getElementText();
+						    str_reference = reference.replace('_', ' ');
+					        //System.out.println("Reading reference: "+reference);
+						}	
+						else if(parser.getAttributeValue(0).equals("oReceive")){
+							event = parser.next();
+							event = parser.next();
+							literal = parser.getElementText();
+							str_strength = literal;
+							System.out.println("Reading reference: "+literal);
+						}
 					}
 				}
 			}
@@ -306,7 +311,16 @@ public class DataReader
 					withinSubjectElement = false;
 				}
 			}
+			if(str_name != null && str_strength != null && str_reference != null){
+				System.out.println("Adding data to node..");
+				node.store(str_name,str_strength);
+				node.addReference(str_reference);
+				str_name = null;
+				str_strength = null;
+				str_reference = null;
+			}	
 		}
+		
 		System.out.println("Data processing finalized.");
 		in.close();
 	}

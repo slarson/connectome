@@ -1,5 +1,6 @@
 package org.wholebraincatalog.mcb;
 
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.apache.commons.collections15.Factory;
@@ -36,15 +37,18 @@ public class Node implements Factory{
 	 */
 	private TreeSet<String> uris;
 
+	private HashMap<String,String> keySet;
 	/**
 	 * URL that contains the node sending connections.
 	 */
 	private String URL = null;
 	
+	private String reference = null;
 	/**
 	 * Number of possible connections for node.
 	 */
 	private int numberOfConnections;
+	
 
 	/**
 	 * Constructor.
@@ -57,6 +61,7 @@ public class Node implements Factory{
 		this.name = vertexName;
 		this.numberOfConnections = elementNum;
 		createURITreeSet();
+		createHashMap();
 	}
 
 	/**
@@ -74,12 +79,16 @@ public class Node implements Factory{
 		uris = new TreeSet<String>();
 	}
 	
+	private void createHashMap(){
+		keySet = new HashMap<String,String>();
+	}
 	/**
 	 * This method stores data in binary tree.
 	 * @param str -  data to be stored in tree.
 	 */
-	public void store(String str){
-		uris.add(str);
+	public void store(String brainRegion, String strength){
+		keySet.put(brainRegion, strength);
+		uris.add(brainRegion);
 	}
 	
 	/**
@@ -97,6 +106,10 @@ public class Node implements Factory{
 	 */
 	public TreeSet<String> getTree(){
 		return uris;
+	}
+	
+	public HashMap<String,String> getKeySet(){
+		return keySet;
 	}
 	
 	/**
@@ -123,6 +136,9 @@ public class Node implements Factory{
 		return this.name ;
 	}
 	
+	public void addReference(String str){
+		this.reference = str;
+	}
 	/**
 	 * Method creates a new node.  Method not used in this 
 	 * implementation.
