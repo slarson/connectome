@@ -163,6 +163,7 @@ public class BuildConnections extends JPanel{
 		vv =  new VisualizationViewer(visualizationModel, preferredSize);
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction());
+		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
 
 		final PredicatedParallelEdgeIndexFunction eif = PredicatedParallelEdgeIndexFunction.getInstance();
 		final Set exclusions = new HashSet();
@@ -460,7 +461,8 @@ public class BuildConnections extends JPanel{
 			for(int j = 0; j < numberElements ; j++){
 				//check that node[i] has a sending structure to node[j]
 				if(node[i].getNode().getTree().contains(node[j].getVertexName())){
-					graph.addEdge(new Edge(),node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
+					graph.addEdge(new Edge(node[i].getKeySet().get(node[j].getVertexName()),""),node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
+					System.out.println("Node: "+node[i].getVertexName()+" Strngth: "+node[i].getKeySet().get(node[j].getVertexName()));
 				}
 			}
 		}		
@@ -477,26 +479,26 @@ public class BuildConnections extends JPanel{
 
 			// obtain the data from the URLs
 			DataReader sCaudoputamen = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A",
-			"Caudoputamen");
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+					"Caudoputamen");
 			DataReader sGlobusPallidus = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A",
-			"Globus pallidus");
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+					"Globus pallidus");
 			DataReader sCentralNucleusOfAmygdala = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24t+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24t%0D%0A}%0D%0A",
-			"Central nucleus of amygdala");
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+					"Central nucleus of amygdala");
 			DataReader sSubstantiaNigraCompactPart = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Substantia_nigra_compact_part%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
-			"Substantia nigra compact part");
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Substantia_nigra_compact_part%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+					"Substantia nigra compact part");
 			DataReader sVentralTegmentalArea = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Ventral_tegmental_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
-			"Ventral tegmental area");
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Ventral_tegmental_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+					"Ventral tegmental area");
 			DataReader sPrelimbicArea = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
-			"Prelimbic area");
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+					"Prelimbic area");
 			DataReader sLateralPreopticArea = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24oSend+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Lateral_preoptic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24oSend%0D%0A}",
-			"Lateral preoptic area");
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Lateral_preoptic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+					"Lateral preoptic area");
 
 			// store node data
 			data[0] = sCaudoputamen.getNode();
@@ -508,7 +510,7 @@ public class BuildConnections extends JPanel{
 			data[6] = sLateralPreopticArea.getNode();
 
 			f = new JFrame(
-			"Multi-Scale Connectome Browser version-0.1.2-alpha");
+			"Multi-Scale Connectome Browser version-0.1.3-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(new BuildConnections(data, 7));

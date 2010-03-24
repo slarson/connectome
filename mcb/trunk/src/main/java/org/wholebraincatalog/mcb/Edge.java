@@ -26,12 +26,16 @@ public class Edge implements Factory{
 	/**
 	 * Possible edge data
 	 */
-	private String name = " ";
+	private String strength;
 
+	private String reference;
 	/**
 	 * Default constructor
 	 */
-	public Edge() {}
+	public Edge(String strength, String reference) {
+		this.strength = strength;
+		this.reference = reference;
+	}
 
 	/**
 	 * Constructor
@@ -45,7 +49,7 @@ public class Edge implements Factory{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return name;
+		return this.strength;
 	}
 	
 	 /**
@@ -55,6 +59,6 @@ public class Edge implements Factory{
 	  */
 	public Object create() {
 		// TODO Auto-generated method stub
-		return new Edge();
+		return new Edge("s","");
 	}
 }
