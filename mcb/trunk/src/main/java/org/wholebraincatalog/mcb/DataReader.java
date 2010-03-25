@@ -314,7 +314,7 @@ public class DataReader
 			if(str_name != null && str_strength != null && str_reference != null){
 				System.out.println("Adding data to node..");
 				node.store(str_name,str_strength);
-				node.addReference(str_reference);
+				node.addReference(str_name,str_reference);
 				str_name = null;
 				str_strength = null;
 				str_reference = null;

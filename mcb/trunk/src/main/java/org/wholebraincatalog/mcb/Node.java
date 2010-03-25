@@ -38,6 +38,8 @@ public class Node implements Factory{
 	private TreeSet<String> uris;
 
 	private HashMap<String,String> keySet;
+	
+	private HashMap<String, String> referenceMap;
 	/**
 	 * URL that contains the node sending connections.
 	 */
@@ -62,6 +64,7 @@ public class Node implements Factory{
 		this.numberOfConnections = elementNum;
 		createURITreeSet();
 		createHashMap();
+		createReferenceMap();
 	}
 
 	/**
@@ -81,6 +84,10 @@ public class Node implements Factory{
 	
 	private void createHashMap(){
 		keySet = new HashMap<String,String>();
+	}
+	
+	private void createReferenceMap(){
+		referenceMap = new HashMap<String, String>();
 	}
 	/**
 	 * This method stores data in binary tree.
@@ -112,6 +119,9 @@ public class Node implements Factory{
 		return keySet;
 	}
 	
+	public HashMap<String, String> getReferenceSet(){
+		return referenceMap;
+	}
 	/**
 	 * This method returns the current node.
 	 * @return this - current node.
@@ -136,8 +146,8 @@ public class Node implements Factory{
 		return this.name ;
 	}
 	
-	public void addReference(String str){
-		this.reference = str;
+	public void addReference(String node, String reference){
+		referenceMap.put(node, reference);
 	}
 	/**
 	 * Method creates a new node.  Method not used in this 

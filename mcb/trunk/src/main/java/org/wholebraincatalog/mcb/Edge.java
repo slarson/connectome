@@ -52,6 +52,9 @@ public class Edge implements Factory{
 		return this.strength;
 	}
 	
+	public String getReference(){
+		return this.reference;
+	}
 	 /**
 	  * Possible method implemented to create an edge.  Method not 
 	  * used in this implementation.
