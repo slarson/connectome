@@ -280,7 +280,6 @@ public class DataReader
 						uri = parser.getElementText();
 						str_name = uri.substring(uri.indexOf("BAMS#")+5);
 						str_name = str_name.replace('_', ' ');
-						//System.out.println("str_name: "+str_name);
 
 					}
 					else if ("binding".equals(parser.getLocalName()))
@@ -290,14 +289,12 @@ public class DataReader
 							event = parser.next();
 							reference = parser.getElementText();
 						    str_reference = reference.replace('_', ' ');
-					        //System.out.println("Reading reference: "+reference);
 						}	
 						else if(parser.getAttributeValue(0).equals("oReceive")){
 							event = parser.next();
 							event = parser.next();
 							literal = parser.getElementText();
 							str_strength = literal;
-							System.out.println("Reading reference: "+literal);
 						}
 					}
 				}
@@ -312,7 +309,6 @@ public class DataReader
 				}
 			}
 			if(str_name != null && str_strength != null && str_reference != null){
-				System.out.println("Adding data to node..");
 				node.store(str_name,str_strength);
 				node.addReference(str_name,str_reference);
 				str_name = null;

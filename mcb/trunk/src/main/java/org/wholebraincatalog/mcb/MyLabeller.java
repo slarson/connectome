@@ -15,11 +15,7 @@ public class MyLabeller extends ToStringLabeller{
 	 */
 	@Override
 	public String transform(Object v) {
-		
-		if(v instanceof Graph) {
-			return ((Edge)v).getReference();
-		}
-		return super.transform(v);
+		return ((Edge)v).getReference();
 	}
 
 }
