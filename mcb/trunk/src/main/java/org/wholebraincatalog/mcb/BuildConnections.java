@@ -100,8 +100,9 @@ public class BuildConnections extends JPanel{
 	"those two vertices will no longer be expanded.  If you select 2 (and only 2) vertices, then \n"+
 	"press the Expand Edges button, parallel edges between those two vertices will be "+
 	"expanded.  You can drag the vertices with the mouse. Use the 'Picking'/'Transforming' \n"+
-	"combo-box to switch between picking and transforming mode.  Press the 'Save' button under"+
-	" 'Save Image' and give the graph a name.  The graph will be saved as a power point. \n";		
+	"combo-box to switch between picking and transforming mode.  Rest mouse on an edge and a reference "+
+	"message will appear.  The edges legent state the connectivite strength \n"+ "" +
+	"between brain regions.  Press the 'Save' button under 'Save Image' and give the graph a name.  The graph will be saved as a power point. \n";		
 	/**
 	 * the graph
 	 */
@@ -181,7 +182,7 @@ public class BuildConnections extends JPanel{
 
 		// add a listener for ToolTips
 		vv.setVertexToolTipTransformer(new ToStringLabeller() {
-			
+
 
 			/* (non-Javadoc)
 			 * @see edu.uci.ics.jung.visualization.decorators.DefaultToolTipFunction#getToolTipText(java.lang.Object)
@@ -392,7 +393,7 @@ public class BuildConnections extends JPanel{
 		// Splitting the window in two parts.
 		split_graph_help = new JSplitPane(JSplitPane.VERTICAL_SPLIT,label,vv);
 		split_graph_help.setOneTouchExpandable(false);
-		split_graph_help.setDividerLocation(80);
+		split_graph_help.setDividerLocation(100);
 		// Splitting the window in two parts.
 		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,split_graph_help,controls);
 		split.setOneTouchExpandable(false);
@@ -462,8 +463,10 @@ public class BuildConnections extends JPanel{
 			for(int j = 0; j < numberElements ; j++){
 				//check that node[i] has a sending structure to node[j]
 				if(node[i].getNode().getTree().contains(node[j].getVertexName())){
-					graph.addEdge(new Edge(node[i].getKeySet().get(node[j].getVertexName()),node[i].getNode().getReferenceSet().get(node[j].getVertexName())),node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
-					System.out.println("Node: "+node[i].getVertexName()+" Strngth: "+node[i].getKeySet().get(node[j].getVertexName()));
+					graph.addEdge(new Edge(node[i].getKeySet().get(node[j].getVertexName()),
+							node[i].getNode().getReferenceSet().get(node[j].getVertexName())),
+							node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
+
 				}
 			}
 		}		
@@ -481,25 +484,25 @@ public class BuildConnections extends JPanel{
 			// obtain the data from the URLs
 			DataReader sCaudoputamen = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-					"Caudoputamen");
+			"Caudoputamen");
 			DataReader sGlobusPallidus = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-					"Globus pallidus");
+			"Globus pallidus");
 			DataReader sCentralNucleusOfAmygdala = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-					"Central nucleus of amygdala");
+			"Central nucleus of amygdala");
 			DataReader sSubstantiaNigraCompactPart = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Substantia_nigra_compact_part%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-					"Substantia nigra compact part");
+			"Substantia nigra compact part");
 			DataReader sVentralTegmentalArea = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Ventral_tegmental_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-					"Ventral tegmental area");
+			"Ventral tegmental area");
 			DataReader sPrelimbicArea = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-					"Prelimbic area");
+			"Prelimbic area");
 			DataReader sLateralPreopticArea = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Lateral_preoptic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-					"Lateral preoptic area");
+			"Lateral preoptic area");
 
 			// store node data
 			data[0] = sCaudoputamen.getNode();
