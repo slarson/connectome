@@ -181,6 +181,7 @@ public class BuildConnections extends JPanel{
 
 		// add a listener for ToolTips
 		vv.setVertexToolTipTransformer(new ToStringLabeller() {
+			
 
 			/* (non-Javadoc)
 			 * @see edu.uci.ics.jung.visualization.decorators.DefaultToolTipFunction#getToolTipText(java.lang.Object)
@@ -193,7 +194,7 @@ public class BuildConnections extends JPanel{
 				return super.transform(v);
 			}});
 
-
+		vv.setEdgeToolTipTransformer(new MyLabeller());
 		//the regular graph mouse for the normal view
 		final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
 
@@ -461,7 +462,7 @@ public class BuildConnections extends JPanel{
 			for(int j = 0; j < numberElements ; j++){
 				//check that node[i] has a sending structure to node[j]
 				if(node[i].getNode().getTree().contains(node[j].getVertexName())){
-					graph.addEdge(new Edge(node[i].getKeySet().get(node[j].getVertexName()),""),node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
+					graph.addEdge(new Edge(node[i].getKeySet().get(node[j].getVertexName()),node[i].getNode().getReferenceSet().get(node[j].getVertexName())),node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
 					System.out.println("Node: "+node[i].getVertexName()+" Strngth: "+node[i].getKeySet().get(node[j].getVertexName()));
 				}
 			}
