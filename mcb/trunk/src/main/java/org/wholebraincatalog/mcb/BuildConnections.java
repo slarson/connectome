@@ -30,6 +30,8 @@ import java.awt.GridLayout;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -41,11 +43,15 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import org.apache.commons.collections15.Predicate;
@@ -71,7 +77,11 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EllipseVertexShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.subLayout.GraphCollapser;
+import edu.uci.ics.jung.visualization.transform.LayoutLensSupport;
+import edu.uci.ics.jung.visualization.transform.LensSupport;
+import edu.uci.ics.jung.visualization.transform.shape.MagnifyImageLensSupport;
 import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
+
 
 
 /**
@@ -143,6 +153,15 @@ public class BuildConnections extends JPanel{
 	 */
 	static JFrame f;	
 
+	/**
+	 * Lens objects
+	 */
+	LensSupport viewSupport;
+	LensSupport modelSupport;
+	LensSupport magnifyLayoutSupport;
+	LensSupport magnifyViewSupport;
+
+
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
 		// create a simple graph for the demo
@@ -166,6 +185,7 @@ public class BuildConnections extends JPanel{
 		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction());
 		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
 
+		
 		final PredicatedParallelEdgeIndexFunction eif = PredicatedParallelEdgeIndexFunction.getInstance();
 		final Set exclusions = new HashSet();
 		eif.setPredicate(new Predicate() {
@@ -363,6 +383,47 @@ public class BuildConnections extends JPanel{
 			}});
 
 
+		this.viewSupport = new MagnifyImageLensSupport<Number,Number>(vv);
+		this.modelSupport = new LayoutLensSupport<Number,Number>(vv);
+
+		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
+		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());
+
+		ButtonGroup radio = new ButtonGroup();
+		JRadioButton none = new JRadioButton("None");
+
+		none.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(viewSupport != null) {
+					viewSupport.deactivate();
+				}
+				if(modelSupport != null) {
+					modelSupport.deactivate();
+				}
+			}
+		});
+
+		none.setSelected(true);
+
+		JRadioButton hyperView = new JRadioButton("View");
+		hyperView.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				viewSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		JRadioButton hyperModel = new JRadioButton("Layout");
+		hyperModel.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+
+		radio.add(none);
+		radio.add(hyperView);
+		radio.add(hyperModel);
+		JMenuBar menubar = new JMenuBar();
+		JMenu modeMenu = graphMouse.getModeMenu();
+		menubar.add(modeMenu);
 
 		JPanel controls = new JPanel();
 		JPanel zoomControls = new JPanel(new GridLayout(2,1));
@@ -398,6 +459,13 @@ public class BuildConnections extends JPanel{
 		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,split_graph_help,controls);
 		split.setOneTouchExpandable(false);
 		split.setDividerLocation(500);
+		JPanel lensPanel = new JPanel(new GridLayout(2,0));
+		lensPanel.setBorder(BorderFactory.createTitledBorder("Lens"));
+		lensPanel.add(none);
+		lensPanel.add(hyperView);
+		lensPanel.add(hyperModel);
+		controls.add(lensPanel);
+
 
 	}
 	/**
