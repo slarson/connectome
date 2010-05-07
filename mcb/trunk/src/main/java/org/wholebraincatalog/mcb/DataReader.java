@@ -32,8 +32,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.wholebrainproject.wbc.util.NetworkingUtil;
-import org.wholebrainproject.wbc.util.exception.WBCException;
 
 
 /**
@@ -108,7 +106,7 @@ public class DataReader
 	 * @return a String containing the contents of the "Label" property.  Null
 	 * if no label
 	 **/
-	public String getLabel()throws WBCException{
+	public String getLabel()throws Exception{
 		return label;
 	}
 	
@@ -140,7 +138,7 @@ public class DataReader
 	 * @param nifID - the NIF ID of the class you want to see.
 	 * @throws WBCException - if anything goes wrong
 	 */ 
-	private void preProcessID(String url) throws WBCException
+	private void preProcessID(String url) throws Exception
     {
               try
               {       
@@ -153,18 +151,18 @@ public class DataReader
               }
               catch (MalformedURLException e)
               {
-                      throw new WBCException("This ID doesn't make for a valid URL! " 
+                      throw new Exception("This ID doesn't make for a valid URL! " 
                                       + url, e);
               }
               catch (IOException e)
               {
-                      throw new WBCException("Can't access this URL! " + url, e);
+                      throw new Exception("Can't access this URL! " + url, e);
               }
               catch (XMLStreamException e)
               {
-                      throw new WBCException("Trouble parsing the RDF! " + url, e);
+                      throw new Exception("Trouble parsing the RDF! " + url, e);
               } catch (Exception e) {
-                      throw new WBCException("Trouble parsing the RDF! " + url, e);
+                      throw new Exception("Trouble parsing the RDF! " + url, e);
               }
               
       }
@@ -181,8 +179,7 @@ public class DataReader
 		int uriCount = 0;
 		URL permThalisURI = new URL(uri);
 		//open up a new stream to the neurolexPage
-		InputStream incount = 
-			NetworkingUtil.getInstance().getStreamViaRestlet(permThalisURI.toString());
+		InputStream incount = permThalisURI.openStream();
 
 		//create a parser for the XML that we will be getting
 		XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -236,8 +233,7 @@ public class DataReader
 	 */
 	private void populateDataFromRDFURL(URL thalisNeurolexStore) throws Exception {
 		//open up a new stream to the neurolexPage
-		InputStream in = 
-			NetworkingUtil.getInstance().getStreamViaRestlet(thalisNeurolexStore.toString());
+		InputStream in = thalisNeurolexStore.openStream();
 
 		//create a parser for the XML that we will be getting
 		XMLInputFactory factory = XMLInputFactory.newInstance();
