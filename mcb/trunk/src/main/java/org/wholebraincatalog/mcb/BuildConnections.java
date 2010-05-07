@@ -551,13 +551,14 @@ public class BuildConnections extends JPanel{
 	 *  @param numberElements - number of nodes to be connected.
 	 *  @author Ruggero Carloz
 	 */
+	@SuppressWarnings("unchecked")
 	private void makeConnections(Node[] node, int numberElements) {
 
 		for(int i = 0; i < numberElements ; i++){
 			for(int j = 0; j < numberElements ; j++){
 				//check that node[i] has a sending structure to node[j]
 				if(node[i].getNode().getTree().contains(node[j].getVertexName())){
-					graph.addEdge(new Edge(node[i].getKeySet().get(node[j].getVertexName()),
+					graph.addEdge(new Edge(node[i].getRegionToStrengthMap().get(node[j].getVertexName()),
 							node[i].getNode().getReferenceSet().get(node[j].getVertexName())),
 							node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
 

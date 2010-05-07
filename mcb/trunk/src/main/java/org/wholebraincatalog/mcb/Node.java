@@ -37,7 +37,7 @@ public class Node implements Factory{
 	 */
 	private TreeSet<String> uris;
 
-	private HashMap<String,String> keySet;
+	private HashMap<String,String> regionToStrength;
 	
 	private HashMap<String, String> referenceMap;
 	
@@ -66,7 +66,7 @@ public class Node implements Factory{
 		this.name = vertexName;
 		this.numberOfConnections = elementNum;
 		createURITreeSet();
-		createHashMap();
+		createRegionToStrengthMap();
 		createReferenceMap();
 		createNodeCellsMap();
 	}
@@ -90,20 +90,25 @@ public class Node implements Factory{
 		uris = new TreeSet<String>();
 	}
 	
-	private void createHashMap(){
-		keySet = new HashMap<String,String>();
+	/**
+	 * Initializes a map that stores the strength of the 
+	 * connection from this node to target brain regions
+	 */
+	private void createRegionToStrengthMap(){
+		regionToStrength = new HashMap<String,String>();
 	}
 	
 	private void createReferenceMap(){
 		referenceMap = new HashMap<String, String>();
 	}
 	/**
-	 * This method stores data in binary tree.
-	 * @param str -  data to be stored in tree.
+	 * Stores the strength of the connection to the target brain region
+	 * @param targetBrainRegion - the name of the region that this node projects to
+	 * @param strength - the strength of the projection to that region
 	 */
-	public void store(String brainRegion, String strength){
-		keySet.put(brainRegion, strength);
-		uris.add(brainRegion);
+	public void store(String targetBrainRegion, String strength){
+		regionToStrength.put(targetBrainRegion, strength);
+		uris.add(targetBrainRegion);
 	}
 	
 	/**
@@ -123,8 +128,13 @@ public class Node implements Factory{
 		return uris;
 	}
 	
-	public HashMap<String,String> getKeySet(){
-		return keySet;
+	/**
+	 * Returns a map between the brain regions that this node
+	 * targets and the strength values for those connections
+	 * @return
+	 */
+	public HashMap<String,String> getRegionToStrengthMap(){
+		return regionToStrength;
 	}
 	
 	public HashMap<String,String> getReferenceSet(){
