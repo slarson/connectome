@@ -238,16 +238,6 @@
 			<version>1.2.13 </version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.jackrabbit</groupId>
-			<artifactId>jackrabbit-text-extractors</artifactId>
-			<version>1.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.jackrabbit</groupId>
-			<artifactId>jackrabbit-standalone</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax</artifactId>
 			<version>1.2.0</version>
@@ -298,11 +288,7 @@
 			<artifactId>colt</artifactId>
 			<version>1.2.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.wholebrainproject</groupId>
-			<artifactId>wbc-core</artifactId>
-			<version>0.7.0.6</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
