@@ -575,22 +575,22 @@ public class BuildConnections extends JPanel{
 		try {
 			Node[] data = new Node[7];
 
-			// obtain the data from the URLs
-			DataReader sCaudoputamen = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Caudoputamen");
 			DataReader sGlobusPallidus = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Globus pallidus");
+			"Globus pallidus","http://api.talis.com/stores/neurolex/services/sparql?query=select+%24region+%24cellLabel+%24neurotransmitterLabel+%24roleLabel+{+%24region+%24x+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FCategory%3AGlobus_pallidus%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALocated_in%3E+%24region.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E++%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FCategory-3APrincipal_neuron_role%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24cellLabel.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ANeurotransmitter%3E+%24neurotransmitter.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24neurotransmitterLabel.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E+%24role.%0D%0A%24role+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24roleLabel.%0D%0A}");
+			// obtain the data from the URLs
+			/**DataReader sCaudoputamen = new DataReader(
+					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
+			"Caudoputamen");
 			DataReader sCentralNucleusOfAmygdala = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
 			"Central nucleus of amygdala");
 			DataReader sSubstantiaNigraCompactPart = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Substantia_nigra_compact_part%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Substantia nigra compact part");
+			"Substantia nigra pars compacta","http://api.talis.com/stores/neurolex/services/sparql?query=select+%24region+%24cellLabel+%24neurotransmitterLabel+%24roleLabel+{+%24region+%24x+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FCategory%3ASubstantia_nigra_pars_compacta%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALocated_in%3E+%24region.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E++%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FCategory-3APrincipal_neuron_role%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24cellLabel.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ANeurotransmitter%3E+%24neurotransmitter.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24neurotransmitterLabel.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E+%24role.%0D%0A%24role+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24roleLabel.%0D%0A}");
 			DataReader sVentralTegmentalArea = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Ventral_tegmental_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Ventral tegmental area");
+			"Ventral tegmental area","http://api.talis.com/stores/neurolex/services/sparql?query=select+%24region+%24cellLabel+%24neurotransmitterLabel+%24roleLabel+{+%24region+%24x+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FCategory%3AVentral_tegmental_area%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALocated_in%3E+%24region.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E++%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FCategory-3APrincipal_neuron_role%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24cellLabel.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ANeurotransmitter%3E+%24neurotransmitter.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24neurotransmitterLabel.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E+%24role.%0D%0A%24role+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24roleLabel.%0D%0A}");
 			DataReader sPrelimbicArea = new DataReader(
 					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
 			"Prelimbic area");
@@ -599,13 +599,13 @@ public class BuildConnections extends JPanel{
 			"Lateral preoptic area");
 
 			// store node data
-			data[0] = sCaudoputamen.getNode();
+			data[0] = sCaudoputamen.getNode();**/
 			data[1] = sGlobusPallidus.getNode();
-			data[2] = sCentralNucleusOfAmygdala.getNode();
+			/**data[2] = sCentralNucleusOfAmygdala.getNode();
 			data[3] = sSubstantiaNigraCompactPart.getNode();
 			data[4] = sVentralTegmentalArea.getNode();
 			data[5] = sPrelimbicArea.getNode();
-			data[6] = sLateralPreopticArea.getNode();
+			data[6] = sLateralPreopticArea.getNode();**/
 
 			f = new JFrame(
 			"Multi-Scale Connectome Browser version-0.1.5-alpha");
