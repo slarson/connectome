@@ -40,6 +40,9 @@ public class Node implements Factory{
 	private HashMap<String,String> keySet;
 	
 	private HashMap<String, String> referenceMap;
+	
+	private HashMap<String,CellData> nodeCells;
+	
 	/**
 	 * URL that contains the node sending connections.
 	 */
@@ -65,6 +68,11 @@ public class Node implements Factory{
 		createURITreeSet();
 		createHashMap();
 		createReferenceMap();
+		createNodeCellsMap();
+	}
+
+	private void createNodeCellsMap(){
+		nodeCells = new HashMap<String,CellData>();
 	}
 
 	/**
@@ -119,8 +127,12 @@ public class Node implements Factory{
 		return keySet;
 	}
 	
-	public HashMap<String, String> getReferenceSet(){
+	public HashMap<String,String> getReferenceSet(){
 		return referenceMap;
+	}
+	
+	public HashMap<String,CellData> getNodeCellsMap(){
+		return nodeCells;
 	}
 	/**
 	 * This method returns the current node.

@@ -51,6 +51,12 @@ public class DataReader
 	
 	private String reference = null;
 	
+	private String cell = null;
+	
+	private String neurotransmitter = null;
+	
+	private String role = null;
+	
 	/**
 	 * The synonyms.
 	 */
@@ -60,6 +66,11 @@ public class DataReader
 	 * The neurolex page.
 	 */
 	private URL thalisNeurolexStore = null;
+	
+	/**
+	 * The neurolex page.
+	 */
+	private URL thalisNeurolexStoreCellData = null;
 	
 	/**
 	 * The NIF ID of the class you are looking up.
@@ -73,6 +84,20 @@ public class DataReader
 	private Node node;
 	
 	private String label = null;
+
+	/**
+	 * Construct with the NIF ID.  Will access the page
+	 * http://neurolex.org/wiki/NIFID
+	 * @param nifID - the ID of the Category page you wish to read.
+	 * @throws Exception 
+	 */
+	public DataReader(String url,String str, String neuroTransmitterData)throws Exception{
+		this.url = url;
+		node = new Node(this.url,str,countURI(url));
+		preProcessID(url,false);
+		preProcessID(neuroTransmitterData,true);
+	}
+
 	/**
 	 * Construct with the NIF ID.  Will access the page
 	 * http://neurolex.org/wiki/NIFID
@@ -82,9 +107,9 @@ public class DataReader
 	public DataReader(String url,String str)throws Exception{
 		this.url = url;
 		node = new Node(this.url,str,countURI(url));
-		preProcessID(url);
+		preProcessID(url,false);
 	}
-
+	
 	/**
 	 * This method returns the node containing the data.
 	 * @return node - the node containing the data.
@@ -138,16 +163,26 @@ public class DataReader
 	 * @param nifID - the NIF ID of the class you want to see.
 	 * @throws WBCException - if anything goes wrong
 	 */ 
-	private void preProcessID(String url) throws Exception
+
+	private void preProcessID(String url, boolean neuroTransmitterData) throws Exception
     {
               try
               {       
+            	  	if(neuroTransmitterData){
                       //set the URL for the RDF actual page.
-                      thalisNeurolexStore = new URL(url);
-                      
+                      thalisNeurolexStoreCellData = new URL(url);
                       //with that URL, we can get the RDF page with the real content.
                       //populate the desired data from that RDF page.
-                      populateDataFromRDFURL(thalisNeurolexStore);
+                      populateDataFromRDFURLBrainRegion(thalisNeurolexStoreCellData);
+                      
+            	  	}  
+            	    
+            	  	//set the URL for the RDF actual page.
+                    thalisNeurolexStore = new URL(url);
+                    
+                    //with that URL, we can get the RDF page with the real content.
+                    //populate the desired data from that RDF page.
+                    populateDataFromRDFURL(thalisNeurolexStore);
               }
               catch (MalformedURLException e)
               {
@@ -253,6 +288,10 @@ public class DataReader
 		String str_name = null;
 		String str_strength = null;
 		String str_reference = null;
+		String str_cell = null;
+		String str_neurotransmitter = null;
+		String str_role = null;
+		
 		System.out.println("Populating data from URL: "+thalisNeurolexStore.toString());
 		
 		System.out.println("......");
@@ -260,6 +299,7 @@ public class DataReader
 		while (true) {
 			
 		    int event = parser.next();
+		    
 		    if (event == XMLStreamConstants.END_DOCUMENT) {
 		       parser.close();
 		       break;
@@ -293,6 +333,7 @@ public class DataReader
 							str_strength = literal;
 						}
 					}
+					
 				}
 			}
 			if (event == XMLStreamConstants.END_ELEMENT)
@@ -310,6 +351,109 @@ public class DataReader
 				str_name = null;
 				str_strength = null;
 				str_reference = null;
+			}	
+		}
+		
+		System.out.println("Data processing finalized.");
+		in.close();
+	}
+	/**
+	 * The method populates the data node from the particular URI.
+	 * @param neurolexPage - the URL of the RDF page you want to populate data 
+	 * 						from
+	 * @throws Exception 
+	 */
+	private void populateDataFromRDFURLBrainRegion(URL thalisNeurolexStore) throws Exception {
+		//open up a new stream to the neurolexPage
+		InputStream in = thalisNeurolexStore.openStream();
+
+		//create a parser for the XML that we will be getting
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		XMLStreamReader parser = factory.createXMLStreamReader(in);
+	
+		//variable to set when the parser is looking at tags
+		//inside the "swivt:Subject" element.
+		boolean withinSubjectElement = true;
+		
+		//Find the number of URIs in document.
+		//int uriCount = countURI(thalisNeurolexStore);
+		
+		//array index of uris.
+		int count = 0;
+		
+		//Cell data
+		String str_cell = null;
+		String str_neurotransmitter = null;
+		String str_role = null;
+		
+		System.out.println("Populating data from URL: "+thalisNeurolexStore.toString());
+		
+		System.out.println("......");
+		
+		while (true) {
+			
+		    int event = parser.next();
+
+		    if (event == XMLStreamConstants.END_DOCUMENT) {
+		       parser.close();
+		       break;
+		    }
+			if (event == XMLStreamConstants.START_ELEMENT)
+			{
+				//Assuming only one Class element with these properties
+				//ever appears on these pages.
+				if (withinSubjectElement)
+				{
+					if ("uri".equals(parser.getLocalName()))
+					{
+						//skip to next tag
+						uri = parser.getElementText();
+					}
+					else if ("binding".equals(parser.getLocalName()))
+					{
+						if(parser.getAttributeValue(0).equals("cellLabel")){
+							event = parser.next();
+							event = parser.next();
+							str_cell = parser.getElementText();
+							//str_cell = cell.substring(cell.indexOf("Category-3A")+11);
+						    //str_cell = str_cell.replace('_', ' ');
+						    System.out.println("Value of cell: "+str_cell);
+						}	
+						else if(parser.getAttributeValue(0).equals("neurotransmitterLabel")){
+							event = parser.next();
+							event = parser.next();
+							str_neurotransmitter = parser.getElementText();
+							//str_neurotransmitter = neurotransmitter.substring(neurotransmitter.indexOf("Category-3A")+11);
+							//str_neurotransmitter = str_neurotransmitter.replace('_', ' ');
+							System.out.println("Value of neurotransmitter: "+str_neurotransmitter);
+						}
+						else if(parser.getAttributeValue(0).equals("roleLabel")){
+							event = parser.next();
+							event = parser.next();
+							str_role = parser.getElementText();
+							//str_role = role.substring(role.indexOf("Category-3A")+11);
+							//str_role = str_role.replace('_', ' ');
+							System.out.println("Value of role: "+str_role);
+						}
+					}
+					
+				}
+			}
+			if (event == XMLStreamConstants.END_ELEMENT)
+			{
+				//if we are within the "Class" element, set the flag to 
+				//false
+				if ("Subject".equals(parser.getLocalName()))
+				{
+					withinSubjectElement = false;
+				}
+			}
+			if(str_cell != null && str_neurotransmitter != null && str_role != null){
+				CellData cellData = new CellData(str_neurotransmitter,str_role);
+				node.getNodeCellsMap().put(str_cell, cellData);
+				str_cell = null;
+				str_neurotransmitter = null;
+				str_role = null;
 			}	
 		}
 		
