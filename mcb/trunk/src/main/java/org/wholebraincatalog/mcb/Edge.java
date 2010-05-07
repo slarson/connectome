@@ -1,5 +1,7 @@
 package org.wholebraincatalog.mcb;
 
+import java.util.EnumSet;
+
 import org.apache.commons.collections15.Factory;
 
 /*Copyright (C) 2010 contact@wholebraincatalog.org
@@ -23,17 +25,47 @@ import org.apache.commons.collections15.Factory;
  * @version 0.0.1
  */
 public class Edge implements Factory{
+	
+	enum STRENGTH {
+		NOT_PRESENT("not present"),
+		NOT_CLEAR("not clear"),
+		EXISTS("exists"),
+		VERY_LIGHT("very light"),
+		LIGHT("light"),
+		MODERATE("moderate");
+		
+		String text; 
+        
+        STRENGTH(String msg) {
+                this.text = msg;
+        }
+        
+        public String toString() {
+                return this.text;
+        }
+        
+        public static STRENGTH myValueOf(Object s) {
+                //return MENU_STRING based on its toString() value
+                for (STRENGTH ms : EnumSet.allOf(STRENGTH.class)) {
+                        if (ms.toString().equals(s)) {
+                                return ms;
+                        }
+                }
+                return null;
+        }
+	}
+	
 	/**
 	 * Possible edge data
 	 */
-	private String strength;
+	private STRENGTH strength;
 
 	private String reference;
 	/**
 	 * Default constructor
 	 */
 	public Edge(String strength, String reference) {
-		this.strength = strength;
+		this.strength = STRENGTH.myValueOf(strength);
 		this.reference = reference;
 	}
 
@@ -49,6 +81,10 @@ public class Edge implements Factory{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
+		return this.strength.toString();
+	}
+	
+	public STRENGTH getStrength() {
 		return this.strength;
 	}
 	

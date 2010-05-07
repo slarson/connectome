@@ -21,6 +21,7 @@ package org.wholebraincatalog.mcb;
  */
 
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -56,6 +57,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.collections15.functors.ConstantTransformer;
 import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
@@ -162,6 +164,7 @@ public class BuildConnections extends JPanel{
 	LensSupport magnifyViewSupport;
 
 
+	@SuppressWarnings("unchecked")
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
 		// create a simple graph for the demo
@@ -216,6 +219,29 @@ public class BuildConnections extends JPanel{
 			}});
 
 		vv.setEdgeToolTipTransformer(new MyLabeller());
+		
+		 vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, BasicStroke>() {
+			    /**
+			     * Transforms the input by ignoring it and returning the stored constant instead.
+			     *
+			     * @param input the input object which is ignored
+			     * @return the stored constant
+			     */
+			    public BasicStroke transform(Edge input) {
+			    	switch (input.getStrength()) {
+			    	case EXISTS:
+			    		return new BasicStroke(0.5f);
+			    	case VERY_LIGHT:
+			    		return new BasicStroke(1f);
+			    	case LIGHT:
+			    		return new BasicStroke(2f);
+			    	case MODERATE:
+			    		return new BasicStroke(3f);
+			    	}
+			        return new BasicStroke(2.5f);
+			    }
+		 });		
+		
 		//the regular graph mouse for the normal view
 		final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
 
