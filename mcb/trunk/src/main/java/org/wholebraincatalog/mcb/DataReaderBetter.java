@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.stream.XMLInputFactory;
@@ -83,14 +84,28 @@ public class DataReaderBetter implements IDataReader
 	 * @return - a string containing a SPARQL query
 	 * @see #addQueryTriplet(String)
 	 */
-	protected String getComposedQuery(String selectVariables) {
-		String queryString = "select " + selectVariables + "{";
-
+	protected String getComposedQuery(List<String> selectVariables) {
+		// variables that are used in the SPARQL query
+		String variables = "";
+		// SPARQL query
+		String queryString = "";
+		
+		// append variables 
+		for(String var : selectVariables ) {
+			variables+=" "+var;
+		}	
+		
+		// make sure we have some variables
+		if(variables != "")
+			queryString = "select " + variables + " {";
+		
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {
-			queryString += queryTriplet + ".";
+			queryString += queryTriplet + ".";	
 		}
+		
 		queryString += "}";
+		System.out.println(queryString);
 		return queryString;
 	}
 	
@@ -109,7 +124,7 @@ public class DataReaderBetter implements IDataReader
 	 * @see #addQueryTriplet(String)
 	 * @return the query result as an XML document in an InputStream
 	 */
-	public InputStream runSelectQuery(String selectVariables) {
+	public InputStream runSelectQuery(List<String> selectVariables) {
 		String queryString = getComposedQuery(selectVariables);
 		
 		try {
@@ -130,7 +145,7 @@ public class DataReaderBetter implements IDataReader
 		return null;
 	}
 	
-	public void parseSPARQLResult(InputStream queryResult) throws Exception {
+	public void parseSPARQLResult(InputStream queryResult, List<String> variableList) throws Exception {
 
 		//create a parser for the XML that we will be getting
 		XMLInputFactory factory = XMLInputFactory.newInstance();
