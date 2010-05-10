@@ -1,6 +1,7 @@
 package org.wholebraincatalog.mcb;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import org.wholebraincatalog.mcb.DataReaderBetter;
@@ -66,6 +67,29 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		}
 		
 		assertNotNull(queryResult);
+	}
+	
+	public void testParseSPARQLResult() {
+		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
+		DataReaderBetter d = 
+			new DataReaderBetter(sparql);
+		
+		d.addQueryTriplet("$s $x <http://neurolex.org/wiki/Category:Globus_pallidus>");
+		d.addQueryTriplet("$y <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> $s");
+
+		InputStream queryResult = d.runSelectQuery("$s $x");
+		
+		HashMap<String, List<String>> results = null;
+		
+		try {
+			results = d.parseSPARQLResult(queryResult);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertNotNull(results);
+		assertNotNull(results.get("s"));
 	}
 
 }
