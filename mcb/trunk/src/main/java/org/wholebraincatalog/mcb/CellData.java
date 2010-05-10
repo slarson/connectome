@@ -7,7 +7,7 @@ public class CellData {
 	
 	public CellData(String neurotransmitter, String role){
 		this.neurotransmitter = neurotransmitter;
-		this.role = neurotransmitter;
+		this.role = role;
 	}
 	
 	public String getNeurotransmitter(){
