@@ -242,9 +242,4 @@ public class DataReaderBetter
 		return resultMap;
 	}
 	
-	public Node getNode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }
