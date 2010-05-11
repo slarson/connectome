@@ -19,12 +19,16 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
+
+import org.apache.commons.collections15.multimap.MultiHashMap;
 
 
 
@@ -36,14 +40,19 @@ import javax.xml.stream.XMLStreamReader;
 public class DataReaderBetter implements IDataReader
 {
 	/**
-	 * The URL of the sparql end point that will be queries
+	 * The URL of the sparql end point that will be queries.
 	 */
 	private String sparqlEndPointURL = null;
 	
 	/**
-	 * The list of triplets that will be used to query
+	 * The list of triplets that will be used to query.
 	 */
 	private List<String> queryTriplets = null;
+	
+	/**
+	 * The list of variables to select with.
+	 */
+	private List<String> variableList = null;
 	
 	/**
 	 * Constructor for DataReaderBetter
@@ -90,6 +99,8 @@ public class DataReaderBetter implements IDataReader
 		// SPARQL query
 		String queryString = "";
 		
+		this.variableList = selectVariables;
+		
 		// append variables 
 		for(String var : selectVariables ) {
 			variables+=" "+var;
@@ -135,6 +146,8 @@ public class DataReaderBetter implements IDataReader
 			URL sparqlConnection = new URL(this.sparqlEndPointURL + 
 					"?query=" + queryString);
 
+			System.out.println(sparqlConnection.toString());
+			
 			InputStream queryResult = sparqlConnection.openStream();
 
 			return queryResult;
@@ -145,8 +158,20 @@ public class DataReaderBetter implements IDataReader
 		return null;
 	}
 	
-	public void parseSPARQLResult(InputStream queryResult, List<String> variableList) throws Exception {
+	
+	/**
+	 * 
+	 * @param queryResult - an input stream that contains a SPARQL result XML
+	 * @return a Map with one key per $variable and a list of results as the value
+	 * @see MultiHashMap
+	 * @throws Exception
+	 */
+	public MultiHashMap<String, String> parseSPARQLResult(InputStream queryResult) 
+					throws Exception {
 
+		MultiHashMap<String, String> resultMap = 
+			new MultiHashMap<String,String>();
+		
 		//create a parser for the XML that we will be getting
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader parser = factory.createXMLStreamReader(queryResult);
@@ -157,14 +182,31 @@ public class DataReaderBetter implements IDataReader
 
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				System.out.println(parser.getLocalName());
-				if ("uri".equals(parser.getLocalName())) {
+				if ("binding".equals(parser.getLocalName())) {
 					
-				} else if ("binding".equals(parser.getLocalName())) {
-
-				}
-			}
-			if (event == XMLStreamConstants.END_ELEMENT) {
-
+					//look through variable list to see if we have a match
+					String selectedVariable = null;
+					for (String variable : this.variableList) {
+						//check for matching.  search the first attribute and
+						//leave off the "$" of the variable.
+						//if there's a match, put it in the selectedVariable
+						if (parser.getAttributeValue(0).equals(variable.substring(1))) {
+							selectedVariable = variable;
+						}
+					}
+					
+					if (selectedVariable != null) {
+						// skip to the URI start element
+						event = parser.next();
+						while (event != XMLStreamConstants.START_ELEMENT) {
+							event = parser.next();
+						}
+						
+						String elementText = 
+							parser.getElementText().replace('_', ' ');
+						resultMap.put(selectedVariable, elementText);
+					}					
+				} 
 			}
 			if (event == XMLStreamConstants.END_DOCUMENT) {
 				parser.close();
@@ -174,6 +216,8 @@ public class DataReaderBetter implements IDataReader
 		
 		System.out.println("Data processing finalized.");
 		queryResult.close();
+		
+		return resultMap;
 	}
 	
 	public Node getNode() {

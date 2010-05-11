@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebraincatalog.mcb.DataReaderBetter;
 
 import junit.framework.TestCase;
@@ -68,7 +69,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		InputStream queryResult = d.runSelectQuery(variableList);
 		
 		try {
-			d.parseSPARQLResult(queryResult, variableList);
+			d.parseSPARQLResult(queryResult);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,17 +92,19 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		
 		InputStream queryResult = d.runSelectQuery(variableList);
 		
-		HashMap<String, List<String>> results = null;
+		MultiHashMap<String, String> results = null;
 		
-		/**try {
+		try {
 			results = d.parseSPARQLResult(queryResult);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}**/
+		}
 		
-		//assertNotNull(results);
-		//assertNotNull(results.get("s"));
+		assertNotNull(results);
+		assertNotNull(results.get("$s"));
+		assertEquals("http://neurolex.org/wiki/Special:URIResolver/Category-3AGlobus pallidus", results.get("$s"));
+		assertEquals("http://semantic-mediawiki.org/swivt/1.0#page", results.get("$x"));
 	}
 
 }
