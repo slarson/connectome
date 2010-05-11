@@ -38,8 +38,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -58,6 +61,7 @@ import javax.swing.JTextArea;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.functors.ConstantTransformer;
+import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
@@ -171,7 +175,7 @@ public class BuildConnections extends JPanel{
 		graph = new DirectedSparseMultigraph();
 
 		//construct graph by making graph connections.
-		makeConnections(nodes, numberElements);
+		makeConnections(nodes);
 
 		collapser = new GraphCollapser(graph);
 
@@ -552,19 +556,71 @@ public class BuildConnections extends JPanel{
 	 *  @author Ruggero Carloz
 	 */
 	@SuppressWarnings("unchecked")
-	private void makeConnections(Node[] node, int numberElements) {
+	private void makeConnections(Node[] node) {
 
-		for(int i = 0; i < numberElements ; i++){
-			for(int j = 0; j < numberElements ; j++){
-				//check that node[i] has a sending structure to node[j]
-				if(node[i].getNode().getTree().contains(node[j].getVertexName())){
-					graph.addEdge(new Edge(node[i].getRegionToStrengthMap().get(node[j].getVertexName()),
-							node[i].getNode().getReferenceSet().get(node[j].getVertexName())),
-							node[i].getVertexName(),node[j].getVertexName(), EdgeType.DIRECTED);
-
+		for (int i = 0; i < node.length ; i++) {
+			for (int j = 0; j < node.length; j++) {
+				if (node[i].getRegionToStrengthMap().get(node[j].getURI()) != null) {
+					String strength = node[i].getRegionToStrengthMap().get(
+							node[j].getURI());
+					String reference = node[i].getReferenceSet().get(
+							node[j].getURI());
+					Edge e = new Edge(strength, reference);
+					graph.addEdge(e, node[i].getVertexName().replace('_', ' '), 
+							node[j].getVertexName().replace('_', ' '),
+							EdgeType.DIRECTED);
 				}
 			}
-		}		
+		}
+	}
+	
+	/**
+	 * Populate a data reader for BAMS data.
+	 * @param drb - the data reader to populate
+	 * @param brainRegionNames - the names of brain regions to populate it with.
+	 */
+	private static void populateBamsDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+		for (String brainRegionName : brainRegionNames){
+			drb.addQueryTriplet("$" + brainRegionName + 
+					" <http://ncmir.ucsd.edu/BAMS#sending_Structure>  <http://ncmir.ucsd.edu/BAMS#" + brainRegionName+">");
+			drb.addQueryTriplet("$" + brainRegionName + 
+					" <http://ncmir.ucsd.edu/BAMS#projection_Strength> $"+ brainRegionName + "_strength");
+			drb.addQueryTriplet("$" + brainRegionName + 
+					" <http://ncmir.ucsd.edu/BAMS#receiving_Structure> $" + brainRegionName +"_receiving");
+			drb.addQueryTriplet("$" + brainRegionName + 
+					" <http://ncmir.ucsd.edu/BAMS#reference> $"+ brainRegionName +"_reference");
+			
+			drb.addSelectVariable("$"+ brainRegionName + "_strength");
+			drb.addSelectVariable("$"+ brainRegionName + "_receiving");
+			drb.addSelectVariable("$"+ brainRegionName + "_reference");
+			
+			//add union between all sets of variables except the last
+			if (brainRegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
+				drb.addQueryTriplet("} UNION {");
+			}
+		}
+	}
+	
+	/**
+	 * Create Node elements from the results of getting info from the BAMS 
+	 * brain regions
+	 * @param brainRegions
+	 * @param results
+	 * @return
+	 */
+	private static Node[] createNodesFromResults(String[] brainRegions, 
+			MultiHashMap<String, String> results) {
+		List<Node> nodeList = new ArrayList<Node>();
+		for (String brainRegion : brainRegions) {
+			Node n = new Node(brainRegion);
+			n.store(results.get("$"+ brainRegion + "_receiving"), 
+					results.get("$"+ brainRegion + "_strength"));
+			n.addReference(results.get("$"+ brainRegion + "_receiving"), 
+					results.get("$"+ brainRegion + "_reference"));
+			nodeList.add(n);
+		}
+		Node[] nodes = new Node[nodeList.size()];
+		return nodeList.toArray(nodes);
 	}
 
 	/*
@@ -574,45 +630,36 @@ public class BuildConnections extends JPanel{
 	public static void main(String[] args) {
 
 		try {
-			Node[] data = new Node[7];
-
-			DataReader sGlobusPallidus = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Globus_pallidus%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Globus pallidus","http://api.talis.com/stores/neurolex/services/sparql?query=select+%24region+%24cellLabel+%24neurotransmitterLabel+%24roleLabel+{+%24region+%24x+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FCategory%3AGlobus_pallidus%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALocated_in%3E+%24region.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E++%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FCategory-3APrincipal_neuron_role%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24cellLabel.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ANeurotransmitter%3E+%24neurotransmitter.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24neurotransmitterLabel.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E+%24role.%0D%0A%24role+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24roleLabel.%0D%0A}");
-			// obtain the data from the URLs
-			/**DataReader sCaudoputamen = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Caudoputamen%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Caudoputamen");
-			DataReader sCentralNucleusOfAmygdala = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Central_nucleus_of_amygdala%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Central nucleus of amygdala");
-			DataReader sSubstantiaNigraCompactPart = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Substantia_nigra_compact_part%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Substantia nigra pars compacta","http://api.talis.com/stores/neurolex/services/sparql?query=select+%24region+%24cellLabel+%24neurotransmitterLabel+%24roleLabel+{+%24region+%24x+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FCategory%3ASubstantia_nigra_pars_compacta%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALocated_in%3E+%24region.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E++%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FCategory-3APrincipal_neuron_role%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24cellLabel.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ANeurotransmitter%3E+%24neurotransmitter.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24neurotransmitterLabel.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E+%24role.%0D%0A%24role+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24roleLabel.%0D%0A}");
-			DataReader sVentralTegmentalArea = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Ventral_tegmental_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Ventral tegmental area","http://api.talis.com/stores/neurolex/services/sparql?query=select+%24region+%24cellLabel+%24neurotransmitterLabel+%24roleLabel+{+%24region+%24x+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FCategory%3AVentral_tegmental_area%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALocated_in%3E+%24region.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E++%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FCategory-3APrincipal_neuron_role%3E.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24cellLabel.%0D%0A%24cell+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ANeurotransmitter%3E+%24neurotransmitter.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24neurotransmitterLabel.%0D%0A%24neurotransmitter+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3AHas_role%3E+%24role.%0D%0A%24role+%3Chttp%3A%2F%2Fneurolex.org%2Fwiki%2FSpecial%3AURIResolver%2FProperty-3ALabel%3E+%24roleLabel.%0D%0A}");
-			DataReader sPrelimbicArea = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Prelimbic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Prelimbic area");
-			DataReader sLateralPreopticArea = new DataReader(
-					"http://api.talis.com/stores/neurolex-dev1/services/sparql?query=select+%24structure+%24reference+%24oReceive+{+%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23sending_Structure%3E++%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23Lateral_preoptic_area%3E.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23projection_Strength%3E+%24oReceive.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23receiving_Structure%3E+%24structure.%0D%0A%24s+%3Chttp%3A%2F%2Fncmir.ucsd.edu%2FBAMS%23reference%3E+%24reference%0D%0A}",
-			"Lateral preoptic area");
-
-			// store node data
-			data[0] = sCaudoputamen.getNode();**/
-			data[1] = sGlobusPallidus.getNode();
-			/**data[2] = sCentralNucleusOfAmygdala.getNode();
-			data[3] = sSubstantiaNigraCompactPart.getNode();
-			data[4] = sVentralTegmentalArea.getNode();
-			data[5] = sPrelimbicArea.getNode();
-			data[6] = sLateralPreopticArea.getNode();**/
+			
+			String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
+			DataReaderBetter bamsReader = new DataReaderBetter(sparql);
+			
+			String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
+					"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
+					"Ventral_tegmental_area", "Prelimbic_area", 
+					"Lateral_preoptic_area"};
+			
+			populateBamsDataReader(bamsReader, brainRegions);
+					
+			InputStream queryResult = bamsReader.runSelectQuery();
+			
+			MultiHashMap<String, String> results = null;
+			
+			try {
+				results = bamsReader.parseSPARQLResult(queryResult);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			Node[] data = createNodesFromResults(brainRegions, results);
+			
 
 			f = new JFrame(
 			"Multi-Scale Connectome Browser version-0.1.5-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			f.getContentPane().add(new BuildConnections(data, 7));
+			f.getContentPane().add(new BuildConnections(data, data.length));
 			f.add(split);
 			f.pack();
 			f.setVisible(true);
