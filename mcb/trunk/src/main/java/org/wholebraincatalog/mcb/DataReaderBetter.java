@@ -37,7 +37,7 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class DataReaderBetter implements IDataReader
+public class DataReaderBetter
 {
 	/**
 	 * The URL of the sparql end point that will be queries.
