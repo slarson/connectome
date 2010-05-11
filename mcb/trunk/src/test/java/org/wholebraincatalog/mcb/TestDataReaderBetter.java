@@ -238,5 +238,51 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		//assertEquals("http://semantic-mediawiki.org/swivt/1.0#page", results.get("$x"));
 		
 	}
+	
+	public void testParseSPARQLResult5() {
+			String sparql = "http://api.talis.com/stores/neurolex/services/sparql";
+			DataReaderBetter cellReader = new DataReaderBetter(sparql);
+			
+			String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
+					"Central_nucleus_of_the_amygdala", "Substantia_nigra_pars_compacta",
+					"Ventral_tegmental_area", "Limbic_lobe", 
+					"Lateral_preoptic_nucleus"};
+			
+			populateCellDataReader(cellReader, brainRegions);
+					
+			InputStream queryResult = cellReader.runSelectQuery();
+			
+			MultiHashMap<String, String> results = null;
+			
+			try {
+				results = cellReader.parseSPARQLResult(queryResult);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println(results);
+			//Node[] data = createNodesFromResults(brainRegions, results);
+			//System.out.println(data);
+		}
+		
 
+		/**
+		 * Populate a data reader for BAMS data.
+		 * @param drb - the data reader to populate
+		 * @param brainRegionNames - the names of brain regions to populate it with.
+		 */
+		private static void populateCellDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+			for (String brainRegionName : brainRegionNames){
+				drb.addQueryTriplet("?" + brainRegionName + "_cell <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> " +
+						"<http://neurolex.org/wiki/Special:URIResolver/Category-3A" + brainRegionName+"> ");
+				
+				drb.addSelectVariable("$"+ brainRegionName + "_cell");
+				
+				//add union between all sets of variables except the last
+				if (brainRegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
+					drb.addQueryTriplet("} UNION {");
+				}
+			}
+		}
 }

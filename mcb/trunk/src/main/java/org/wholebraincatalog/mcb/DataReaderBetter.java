@@ -97,11 +97,10 @@ public class DataReaderBetter
 	}
 	
 	/**
-	 * Put the queryTriplet list together into a SPARQL query
-	 * @param selectVariables - the list of variables contained
-	 * in the query triplets that you want to report back on.  
+	 * Put the queryTriplet list together into a SPARQL query 
 	 * @return - a string containing a SPARQL query
 	 * @see #addQueryTriplet(String)
+	 * @see #addSelectVariable(String)
 	 */
 	protected String getComposedQuery() {
 		if (this.variableList.isEmpty()) {
