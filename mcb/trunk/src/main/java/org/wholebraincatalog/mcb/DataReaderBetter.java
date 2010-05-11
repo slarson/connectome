@@ -62,6 +62,7 @@ public class DataReaderBetter implements IDataReader
 	public DataReaderBetter(String sparqlEndPoint) {
 		this.sparqlEndPointURL = sparqlEndPoint;
 		this.queryTriplets = new ArrayList<String>();
+		this.variableList = new ArrayList<String>();
 	}
 
 	/**
@@ -71,7 +72,8 @@ public class DataReaderBetter implements IDataReader
 	 * executed.
 	 * @param queryTriplet - a triplet separated by spaces that
 	 *  is part of a SPARQL query, 
-	 *  such as $s <http://someurl/property> $y.
+	 *  such as $s <http://someurl/property> $y. NOTE:
+	 * you can include "} UNION {" between sets of queryTriplets.
 	 */
 	public void addQueryTriplet(String queryTriplet) {
 		queryTriplets.add(queryTriplet);
@@ -87,35 +89,58 @@ public class DataReaderBetter implements IDataReader
 	}
 	
 	/**
+	 * Add a variable to select output from.
+	 * @param selectVariable
+	 */
+	public void addSelectVariable(String selectVariable) {
+		variableList.add(selectVariable);
+	}
+	
+	/**
 	 * Put the queryTriplet list together into a SPARQL query
 	 * @param selectVariables - the list of variables contained
-	 * in the query triplets that you want to report back on.
+	 * in the query triplets that you want to report back on.  
 	 * @return - a string containing a SPARQL query
 	 * @see #addQueryTriplet(String)
 	 */
-	protected String getComposedQuery(List<String> selectVariables) {
+	protected String getComposedQuery() {
+		if (this.variableList.isEmpty()) {
+			throw new IllegalArgumentException("Can't compose a query with no " +
+					"select variables! Add some variables using addSelectVariable()!");
+		}
 		// variables that are used in the SPARQL query
 		String variables = "";
 		// SPARQL query
 		String queryString = "";
 		
-		this.variableList = selectVariables;
-		
 		// append variables 
-		for(String var : selectVariables ) {
+		for(String var : this.variableList ) {
 			variables+=" "+var;
 		}	
 		
+		//cheesy mechanism to allow UNION statements to parse correctly
+		String startBracket = " {";
+		String endBracket = "} ";
+		for (String queryTriplet : queryTriplets) {
+			if (queryTriplet.contains("UNION")) {
+				startBracket = " {{";
+				endBracket = " }}";
+			}
+		}
+		
 		// make sure we have some variables
 		if(variables != "")
-			queryString = "select " + variables + " {";
+			queryString = "select " + variables + startBracket;
 		
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {
-			queryString += queryTriplet + ".";	
+			queryString += queryTriplet;	
+			if (queryTriplet.contains("UNION") == false)
+				queryString += " . ";
+			
 		}
 		
-		queryString += "}";
+		queryString += endBracket;
 		System.out.println(queryString);
 		return queryString;
 	}
@@ -130,13 +155,11 @@ public class DataReaderBetter implements IDataReader
 	
 	/**
 	 * Execute a SPARQL query built up from a set of query triplets.
-	 * @param selectVariables - the list of variables contained
-	 * in the query triplets that you want to report back on.
 	 * @see #addQueryTriplet(String)
 	 * @return the query result as an XML document in an InputStream
 	 */
-	public InputStream runSelectQuery(List<String> selectVariables) {
-		String queryString = getComposedQuery(selectVariables);
+	public InputStream runSelectQuery() {
+		String queryString = getComposedQuery();
 		
 		try {
 			// URL encode query string
@@ -181,7 +204,6 @@ public class DataReaderBetter implements IDataReader
 			int event = parser.next();
 
 			if (event == XMLStreamConstants.START_ELEMENT) {
-				System.out.println(parser.getLocalName());
 				if ("binding".equals(parser.getLocalName())) {
 					
 					//look through variable list to see if we have a match
@@ -203,7 +225,7 @@ public class DataReaderBetter implements IDataReader
 						}
 						
 						String elementText = 
-							parser.getElementText().replace('_', ' ');
+							parser.getElementText();
 						resultMap.put(selectedVariable, elementText);
 					}					
 				} 

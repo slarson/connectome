@@ -93,7 +93,7 @@ public class DataReader
 	 */
 	public DataReader(String url,String str, String neuroTransmitterData)throws Exception{
 		this.url = url;
-		node = new Node(this.url,str,countURI(url));
+		node = new Node(str);
 		preProcessID(url,false);
 		preProcessID(neuroTransmitterData,true);
 	}
@@ -106,7 +106,7 @@ public class DataReader
 	 */
 	public DataReader(String url,String str)throws Exception{
 		this.url = url;
-		node = new Node(this.url,str,countURI(url));
+		node = new Node(str);
 		preProcessID(url,false);
 	}
 	

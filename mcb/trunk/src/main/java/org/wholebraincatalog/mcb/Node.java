@@ -1,6 +1,9 @@
 package org.wholebraincatalog.mcb;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.commons.collections15.Factory;
@@ -43,16 +46,9 @@ public class Node implements Factory{
 	
 	private HashMap<String,CellData> nodeCells;
 	
-	/**
-	 * URL that contains the node sending connections.
-	 */
-	private String URL = null;
-	
 	private String reference = null;
-	/**
-	 * Number of possible connections for node.
-	 */
-	private int numberOfConnections;
+	
+	private String URI;
 	
 
 	/**
@@ -61,10 +57,9 @@ public class Node implements Factory{
 	 * @param vertexName - name of node.
 	 * @param elementNum - the number of URIs in the node.
 	 **/
-	public Node(String URL, String vertexName, int elementNum){
-		this.URL = URL;
+	public Node(String vertexName){
 		this.name = vertexName;
-		this.numberOfConnections = elementNum;
+		this.URI = "http://ncmir.ucsd.edu/BAMS#" + vertexName ;
 		createURITreeSet();
 		createRegionToStrengthMap();
 		createReferenceMap();
@@ -73,14 +68,6 @@ public class Node implements Factory{
 
 	private void createNodeCellsMap(){
 		nodeCells = new HashMap<String,CellData>();
-	}
-
-	/**
-	 * Method returns the URL for the node.
-	 * @return URL
-	 */
-	public String getURL(){
-		return this.URL;
 	}
 	
 	/**
@@ -111,12 +98,32 @@ public class Node implements Factory{
 		uris.add(targetBrainRegion);
 	}
 	
+	public void store(Collection<String> targetBrainRegions, Collection<String> strengths) {
+		if (targetBrainRegions == null || strengths == null) {
+			throw new IllegalArgumentException("Can't pass null arguments!");
+		}
+		if (targetBrainRegions.size() != strengths.size()) {
+			throw new IllegalArgumentException("Can't store lists of different" +
+					" size! targetBrainRegions size: " + targetBrainRegions.size() + 
+					", strengths size: " + strengths.size());
+		}
+		
+		List<String> targetBrainRegionsList = new ArrayList<String>();
+		targetBrainRegionsList.addAll(targetBrainRegions);
+		List<String> strengthsList = new ArrayList<String>();
+		strengthsList.addAll(strengths);
+		
+		for (int i = 0; i < targetBrainRegions.size(); i++) {
+			store(targetBrainRegionsList.get(i), strengthsList.get(i));
+		}
+	}
+	
 	/**
 	 * This method returns the number of connections in a node.
 	 * @return numberOfConnections - number of connections in node.
 	 */
 	public int getNumberOfConnections(){
-		return numberOfConnections;
+		return regionToStrength.keySet().size();
 	}
 	
 	/**
@@ -171,13 +178,37 @@ public class Node implements Factory{
 	public void addReference(String node, String reference){
 		referenceMap.put(node, reference);
 	}
+	
+	public void addReference(Collection<String> node, Collection<String> reference) {
+		if (node == null || reference == null) {
+			throw new IllegalArgumentException("Can't pass null arguments!");
+		}
+		if (node.size() != reference.size()) {
+			throw new IllegalArgumentException("Can't store lists of different" +
+					" size! nodes size: " + node.size() + 
+					", references size: " + reference.size());
+		}
+		
+		List<String> nodesList = new ArrayList<String>();
+		nodesList.addAll(node);
+		List<String> referencesList = new ArrayList<String>();
+		referencesList.addAll(reference);
+		
+		for (int i = 0; i < nodesList.size(); i++) {
+			addReference(nodesList.get(i), referencesList.get(i));
+		}
+	}
+	
 	/**
 	 * Method creates a new node.  Method not used in this 
 	 * implementation.
 	 * @see org.apache.commons.collections15.Factory#create()
 	 */
 	public Object create() {
-		// TODO Auto-generated method stub
-		return new Node("W","",3);
+		return new Node("");
+	}
+
+	public String getURI() {
+		return URI;
 	}
 }
