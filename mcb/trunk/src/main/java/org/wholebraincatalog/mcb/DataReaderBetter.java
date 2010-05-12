@@ -16,6 +16,7 @@ package org.wholebraincatalog.mcb;
  */
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -170,8 +171,11 @@ public class DataReaderBetter
 
 			System.out.println(sparqlConnection.toString());
 			
-			InputStream queryResult = sparqlConnection.openStream();
-
+			
+			HttpURLConnection httpConnection = (HttpURLConnection)sparqlConnection.openConnection();
+			httpConnection.setRequestProperty("accept", "application/sparql-results+xml");
+			InputStream queryResult = httpConnection.getInputStream();
+			
 			return queryResult;
 			
 		} catch (Exception e) {

@@ -560,11 +560,11 @@ public class BuildConnections extends JPanel{
 
 		for (int i = 0; i < node.length ; i++) {
 			for (int j = 0; j < node.length; j++) {
-				if (node[i].getRegionToStrengthMap().get(node[j].getURI()) != null) {
+				if (node[i].getRegionToStrengthMap().get(node[j].getVertexName().replace('_', ' ')) != null) {
 					String strength = node[i].getRegionToStrengthMap().get(
-							node[j].getURI());
+							node[j].getVertexName().replace('_', ' '));
 					String reference = node[i].getReferenceSet().get(
-							node[j].getURI());
+							node[j].getVertexName().replace('_', ' '));
 					Edge e = new Edge(strength, reference);
 					graph.addEdge(e, node[i].getVertexName().replace('_', ' '), 
 							node[j].getVertexName().replace('_', ' '),

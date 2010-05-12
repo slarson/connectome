@@ -125,11 +125,32 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		}
 	}
 	
+	private void populateNIFDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+		for (String brainRegionName : brainRegionNames){
+			drb.addQueryTriplet("$" + brainRegionName + 
+					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
+					+ brainRegionName.replace("_", " ")+"\"");
+			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#projection_strength> $"+ brainRegionName + "_strength");
+			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#receiving_structure> $" + brainRegionName +"_receiving");
+			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#reference> $"+ brainRegionName +"_reference");
+			
+			drb.addSelectVariable("$"+ brainRegionName + "_strength");
+			drb.addSelectVariable("$"+ brainRegionName + "_receiving");
+			drb.addSelectVariable("$"+ brainRegionName + "_reference");
+			
+			//add union between all sets of variables except the last
+			if (brainRegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
+				drb.addQueryTriplet("} UNION {");
+			}
+		}
+	}
+	
 	private Node[] createNodesFromResults(String[] brainRegions, 
 			MultiHashMap<String, String> results) {
 		List<Node> nodeList = new ArrayList<Node>();
 		for (String brainRegion : brainRegions) {
 			Node n = new Node(brainRegion);
+			
 			n.store(results.get("$"+ brainRegion + "_receiving"), 
 					results.get("$"+ brainRegion + "_strength"));
 			n.addReference(results.get("$"+ brainRegion + "_receiving"), 
@@ -150,6 +171,36 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 				"Lateral_preoptic_area"};
 		
 		populateBamsDataReader(bamsReader, brainRegions);
+				
+		InputStream queryResult = bamsReader.runSelectQuery();
+		
+		MultiHashMap<String, String> results = null;
+		
+		try {
+			results = bamsReader.parseSPARQLResult(queryResult);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for (String key : results.keySet()) {
+			System.out.println("key: " + key + ", result: " + results.get(key));
+		}
+		
+		Node[] data = createNodesFromResults(brainRegions, results);
+		
+	}
+	
+	public void testParseSPARQLResultFromNIF() {
+		String sparql = "http://rdf-stage.neuinfo.org/sparql";
+		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
+		
+		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
+				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
+				"Ventral_tegmental_area", "Prelimbic_area", 
+				"Lateral_preoptic_area"};
+		
+		populateNIFDataReader(bamsReader, brainRegions);
 				
 		InputStream queryResult = bamsReader.runSelectQuery();
 		

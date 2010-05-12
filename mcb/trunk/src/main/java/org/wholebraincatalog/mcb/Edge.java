@@ -32,7 +32,9 @@ public class Edge implements Factory{
 		EXISTS("exists"),
 		VERY_LIGHT("very light"),
 		LIGHT("light"),
-		MODERATE("moderate");
+		MODERATE("moderate"),
+		STRONG_MODERATE("moderate/strong"),
+		STRONG("strong");
 		
 		String text; 
         
