@@ -13,7 +13,9 @@ public class ConnectionStatementLoader {
 	}
 	
 	public Node[] getNodes() {
-		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
+
+		String sparql = "http://rdf-stage.neuinfo.org/sparql";
+		//String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
 		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
 		
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
@@ -21,7 +23,8 @@ public class ConnectionStatementLoader {
 				"Ventral_tegmental_area", "Prelimbic_area", 
 				"Lateral_preoptic_area"};
 		
-		populateBamsDataReader(bamsReader, brainRegions);
+		populateNIFDataReader(bamsReader, brainRegions);
+		//populateBamsDataReader(bamsReader, brainRegions);
 				
 		InputStream queryResult = bamsReader.runSelectQuery();
 		
@@ -38,6 +41,25 @@ public class ConnectionStatementLoader {
 		return data;
 	}
 	
+	private void populateNIFDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+		for (String brainRegionName : brainRegionNames){
+			drb.addQueryTriplet("$" + brainRegionName + 
+					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
+					+ brainRegionName.replace("_", " ")+"\"");
+			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#projection_strength> $"+ brainRegionName + "_strength");
+			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#receiving_structure> $" + brainRegionName +"_receiving");
+			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#reference> $"+ brainRegionName +"_reference");
+			
+			drb.addSelectVariable("$"+ brainRegionName + "_strength");
+			drb.addSelectVariable("$"+ brainRegionName + "_receiving");
+			drb.addSelectVariable("$"+ brainRegionName + "_reference");
+			
+			//add union between all sets of variables except the last
+			if (brainRegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
+				drb.addQueryTriplet("} UNION {");
+			}
+		}
+	}
 
 	/**
 	 * Populate a data reader for BAMS data.
