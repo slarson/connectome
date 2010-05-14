@@ -104,6 +104,7 @@ public class DataReaderBetter
 	 * @see #addSelectVariable(String)
 	 */
 	protected String getComposedQuery() {
+
 		if (this.variableList.isEmpty()) {
 			throw new IllegalArgumentException("Can't compose a query with no " +
 					"select variables! Add some variables using addSelectVariable()!");
@@ -212,15 +213,18 @@ public class DataReaderBetter
 					//look through variable list to see if we have a match
 					String selectedVariable = null;
 					for (String variable : this.variableList) {
+						
 						//check for matching.  search the first attribute and
 						//leave off the "$" of the variable.
 						//if there's a match, put it in the selectedVariable
 						if (parser.getAttributeValue(0).equals(variable.substring(1))) {
 							selectedVariable = variable;
-						}
+
+					}
 					}
 					
 					if (selectedVariable != null) {
+						
 						// skip to the URI start element
 						event = parser.next();
 						while (event != XMLStreamConstants.START_ELEMENT) {

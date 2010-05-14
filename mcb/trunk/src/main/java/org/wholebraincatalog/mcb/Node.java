@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.commons.collections15.Factory;
+import org.apache.commons.collections15.multimap.MultiHashMap;
 
 /*Copyright (C) 2010 contact@wholebraincatalog.org
  *
@@ -44,6 +45,9 @@ public class Node implements Factory{
 	
 	private HashMap<String, String> referenceMap;
 	
+	/**
+	 * Store the node's cell name and data.
+	 */
 	private HashMap<String,CellData> nodeCells;
 	
 	private String reference = null;
@@ -64,10 +68,32 @@ public class Node implements Factory{
 		createRegionToStrengthMap();
 		createReferenceMap();
 		createNodeCellsMap();
+		
 	}
-
+	/**
+	 * Instantiate the hash map where the neurotransmitter
+	 * data will be stored.
+	 */
 	private void createNodeCellsMap(){
 		nodeCells = new HashMap<String,CellData>();
+	}
+	
+	/**
+	 * Return the hash map where the neurotransmitter
+	 * data is stored.
+	 * @return nodeCells - neurotransmitter data.
+	 */
+	public HashMap<String,CellData> getNodeCellsMap(){
+		return nodeCells;
+	}
+	
+	/**
+	 * Store the cell and its data.
+	 * @param cell - name of the cell.
+	 * @param cellData - the data corresponding to the cell.
+	 */
+	public void storeCellData(String cell, CellData cellData){
+		this.nodeCells.put(cell, cellData);
 	}
 	
 	/**
@@ -148,9 +174,7 @@ public class Node implements Factory{
 		return referenceMap;
 	}
 	
-	public HashMap<String,CellData> getNodeCellsMap(){
-		return nodeCells;
-	}
+	
 	/**
 	 * This method returns the current node.
 	 * @return this - current node.

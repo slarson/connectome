@@ -582,11 +582,11 @@ public class BuildConnections extends JPanel{
 	public static void main(String[] args) {
 		
 		Node[] data = new ConnectionStatementLoader().getNodes();
-
+		
 		try {
 
 			f = new JFrame(
-			"Multi-Scale Connectome Browser version-0.1.5-alpha");
+			"Multi-Scale Connectome Browser version-0.2.0-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(new BuildConnections(data, data.length));
