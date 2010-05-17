@@ -3,17 +3,18 @@ package org.wholebraincatalog.mcb;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
 
 public class CellDataLoader {
 
 	private Node[] nodes;
-	
+
 	public CellDataLoader(Node[] data) {
 		this.nodes = data;
 	}
-	
+
 	/**
 	 * Populate a data reader for BAMS data.
 	 * @param drb - the data reader to populate
@@ -22,11 +23,11 @@ public class CellDataLoader {
 	private static void populateCellDataReader(DataReaderBetter drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + "_region " + "$x " + "<http://neurolex.org/wiki/Category:"+
-				brainRegionName+">");
+					brainRegionName+">");
 			drb.addQueryTriplet("$" + brainRegionName + "_cells <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> " +
 					"$" + brainRegionName+"_region");
 			drb.addQueryTriplet("$" + brainRegionName + "_cells <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> " +
-					"<http://neurolex.org/wiki/Special:URIResolver/Category-3APrincipal_neuron_role>");
+			"<http://neurolex.org/wiki/Special:URIResolver/Category-3APrincipal_neuron_role>");
 			drb.addQueryTriplet("$" + brainRegionName + "_cells <http://neurolex.org/wiki/Special:URIResolver/Property-3ANeurotransmitter>" +
 					"$" + brainRegionName+"_neurotransmitter");
 			drb.addQueryTriplet("$" + brainRegionName+"_neurotransmitter <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role>" +
@@ -34,20 +35,19 @@ public class CellDataLoader {
 			drb.addSelectVariable("$"+ brainRegionName + "_cells");
 			drb.addSelectVariable("$"+ brainRegionName + "_neurotransmitter");
 			drb.addSelectVariable("$"+ brainRegionName + "_role");
-			
+
 			//add union between all sets of variables except the last
 			if (brainRegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
 				drb.addQueryTriplet("} UNION {");
 			}
 		}
 	}
-	
+
 	/**
-	 * Create Node elements from the results of getting info from the BAMS 
-	 * brain regions
-	 * @param brainRegions
-	 * @param results
-	 * @return
+	 * Method searches for the cell data that corresponds to a given node and 
+	 * stores it in the correct node field.
+	 * @param data -  nodes.
+	 * @param cellResults - cell data to be stored in the nodes.
 	 */
 	private void storeCellData(Node[] data, 
 			MultiHashMap<String, String> cellResults) {
@@ -56,7 +56,12 @@ public class CellDataLoader {
 		String searchKeyCell;
 		String searchKeyNeurotransmitter;
 		String searchKeyRole;
-		
+
+		//sotre the corresponding data in a stack
+		Stack<String> neuroStack = new Stack<String>();
+		Stack<String> roleStack = new Stack<String>();
+		Stack<String> cellStack = new Stack<String>();
+
 		for(Node node :  data){
 			//System.out.println("Node name: "+node.toString());
 			node.storeCellData(node.toString()+"_cells",new CellData());
@@ -66,37 +71,52 @@ public class CellDataLoader {
 			searchKeyCell = "$"+node.toString()+"_cells";
 			searchKeyNeurotransmitter = "$"+node.toString()+"_neurotransmitter";
 			searchKeyRole = "$"+node.toString()+"_role";
-			
+
 			String neurotransmitterStore = null;
 			String roleStore = null;
-			
+
 			//make sure cellRusults contains a searchKeyCell.
 			if(cellResults.containsKey(searchKeyCell)){
+				//obtain all the cells.
 				for(String cells : cellResults.get("$"+node.toString()+"_cells")){
-					if(cellResults.containsKey(searchKeyNeurotransmitter)){
-						System.out.println("cells:"+cells);
-						for(String neurotransmitter: cellResults.get(
-								"$"+node.toString()+"_neurotransmitter")){
-							System.out.println("neurotransmitter:"+neurotransmitter);
-							neurotransmitterStore = neurotransmitter;
-							if(cellResults.containsKey(searchKeyRole)){
-								for(String role: cellResults.get(
-										"$"+node.toString()+"_role")){
-									roleStore = role;
-									System.out.println("role:"+role);
-									break;
-								}
-							}
-							break;
-						}
-					}
-					NeurotransmitterData neurottransmitterCellData = 
-						new NeurotransmitterData(neurotransmitterStore,roleStore);
-					node.getNodeCellsMap().get(node.toString()+"_cells").
-					store(cells,neurottransmitterCellData);
+					cellStack.push(cells);
+				}	
+				//obtain all the nueurotransmitters.
+				for(String neurotransmitter: cellResults.get(
+						"$"+node.toString()+"_neurotransmitter")){
+					System.out.println("neurotransmitter:"+neurotransmitter);
+					neurotransmitterStore = neurotransmitter;
+					neuroStack.push(neurotransmitterStore);
+				}	
+				//obtain all the roles.
+				for(String role: cellResults.get(
+						"$"+node.toString()+"_role")){
+					roleStore = role;
+					System.out.println("role:"+role);
+					roleStack.push(roleStore);
 				}
-			}	
+				//store the cell data in node.
+				while( !(neuroStack.empty() && roleStack.empty()) ){
+					// neurotransmitter name.
+					String neuro_str = neuroStack.pop();
+					// role name.
+					String role_str = roleStack.pop();
+					//cell name.
+					String cell_str = cellStack.pop();
+					//data corresponding to a given cell.
+					NeurotransmitterData neurottransmitterCellData = 
+						new NeurotransmitterData(neuro_str,role_str);
+					//store the cell data corresponding to the node.
+					node.getNodeCellsMap().get(node.toString()+"_cells").
+					store(cell_str,neurottransmitterCellData);
+					System.out.println("cell: "+cell_str+" neurotransmitter: "+
+							neurottransmitterCellData.getNeurotransmitter()+
+							" role:"+neurottransmitterCellData.getRole());
+				}
+			}
 		}	
+
 	}
-	
+
+
 }
