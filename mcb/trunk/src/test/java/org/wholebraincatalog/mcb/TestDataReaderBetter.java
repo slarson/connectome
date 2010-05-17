@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
+
 import java.util.Vector;
 
 import javax.xml.stream.XMLInputFactory;
@@ -220,9 +222,9 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 			e.printStackTrace();
 		}
 
-		for (String key : results.keySet()) {
-			System.out.println("key: " + key + ", result: " + results.get(key));
-		}
+		//for (String key : results.keySet()) {
+		//System.out.println("key: " + key + ", result: " + results.get(key));
+		//}
 
 		Node[] data = createNodesFromResults(brainRegions, results);
 
@@ -330,10 +332,10 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 			e.printStackTrace();
 		}
 
-		//for (String key : cellResults.keySet()) {
-			//System.out.println("key: " + key + ", results: " + cellResults.get(key));
-		//}
-	
+		for (String key : cellResults.keySet()) {
+		  System.out.println("key: " + key + ", results: " + cellResults.get(key));
+		}
+
 		//assertNotNull(results);
 		//assertNotNull(results.get("$s"));
 		Node[] data = createNodesFromResults(brainRegions, results);
@@ -343,7 +345,12 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		//System.out.println("cellResutls :"+cellResults);
 	}
 
-
+	/**
+	 * Method searches for the cell data that corresponds to a given node and 
+	 * stores it in the correct node field.
+	 * @param data -  nodes.
+	 * @param cellResults - cell data to be stored in the nodes.
+	 */
 	private void storeCellData(Node[] data, 
 			MultiHashMap<String, String> cellResults) {
 
@@ -351,6 +358,11 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		String searchKeyCell;
 		String searchKeyNeurotransmitter;
 		String searchKeyRole;
+		
+		//sotre the corresponding data in a stack
+		Stack<String> neuroStack = new Stack<String>();
+		Stack<String> roleStack = new Stack<String>();
+		Stack<String> cellStack = new Stack<String>();
 		
 		for(Node node :  data){
 			//System.out.println("Node name: "+node.toString());
@@ -361,39 +373,53 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 			searchKeyCell = "$"+node.toString()+"_cells";
 			searchKeyNeurotransmitter = "$"+node.toString()+"_neurotransmitter";
 			searchKeyRole = "$"+node.toString()+"_role";
-			
+
 			String neurotransmitterStore = null;
 			String roleStore = null;
-			
+
 			//make sure cellRusults contains a searchKeyCell.
 			if(cellResults.containsKey(searchKeyCell)){
+				//obtain all the cells.
 				for(String cells : cellResults.get("$"+node.toString()+"_cells")){
-					if(cellResults.containsKey(searchKeyNeurotransmitter)){
-						System.out.println("cells:"+cells);
-						for(String neurotransmitter: cellResults.get(
+					cellStack.push(cells);
+				}	
+				//obtain all the nueurotransmitters.
+				for(String neurotransmitter: cellResults.get(
 								"$"+node.toString()+"_neurotransmitter")){
-							System.out.println("neurotransmitter:"+neurotransmitter);
-							neurotransmitterStore = neurotransmitter;
-							if(cellResults.containsKey(searchKeyRole)){
-								for(String role: cellResults.get(
-										"$"+node.toString()+"_role")){
-									roleStore = role;
-									System.out.println("role:"+role);
-									break;
-								}
-							}
-							break;
-						}
+					System.out.println("neurotransmitter:"+neurotransmitter);
+					neurotransmitterStore = neurotransmitter;
+					neuroStack.push(neurotransmitterStore);
+				}	
+				//obtain all the roles.
+				for(String role: cellResults.get(
+								"$"+node.toString()+"_role")){
+					roleStore = role;
+					System.out.println("role:"+role);
+					roleStack.push(roleStore);
+				}
+				//store the cell data in node.
+				while( !(neuroStack.empty() && roleStack.empty()) ){
+						// neurotransmitter name.
+						String neuro_str = neuroStack.pop();
+						// role name.
+						String role_str = roleStack.pop();
+						//cell name.
+						String cell_str = cellStack.pop();
+						//data corresponding to a given cell.
+						NeurotransmitterData neurottransmitterCellData = 
+							new NeurotransmitterData(neuro_str,role_str);
+						//store the cell data corresponding to the node.
+						node.getNodeCellsMap().get(node.toString()+"_cells").
+						store(cell_str,neurottransmitterCellData);
+						System.out.println("cell: "+cell_str+" neurotransmitter: "+
+								neurottransmitterCellData.getNeurotransmitter()+
+								" role:"+neurottransmitterCellData.getRole());
 					}
-					NeurotransmitterData neurottransmitterCellData = 
-						new NeurotransmitterData(neurotransmitterStore,roleStore);
-					node.getNodeCellsMap().get(node.toString()+"_cells").
-					store(cells,neurottransmitterCellData);
 				}
 			}	
-		}
+			
 	}
-	
+
 	/**
 	 * Populate a data reader for neurolex data.
 	 * @param drb - the data reader to populate
