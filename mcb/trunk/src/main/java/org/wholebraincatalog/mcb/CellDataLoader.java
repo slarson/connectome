@@ -16,22 +16,28 @@ public class CellDataLoader {
 	}
 
 	/**
-	 * Populate a data reader for BAMS data.
+	 * Populate a data reader for neurolex data.
 	 * @param drb - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
 	private static void populateCellDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+
 		for (String brainRegionName : brainRegionNames){
-			drb.addQueryTriplet("$" + brainRegionName + "_region " + "$x " + "<http://neurolex.org/wiki/Category:"+
+			drb.addQueryTriplet("$" + brainRegionName + "_region " + "$x" + "<http://neurolex.org/wiki/Category:"+
 					brainRegionName+">");
-			drb.addQueryTriplet("$" + brainRegionName + "_cells <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> " +
+			drb.addQueryTriplet("$y" + "<http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> " +
 					"$" + brainRegionName+"_region");
-			drb.addQueryTriplet("$" + brainRegionName + "_cells <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> " +
+			drb.addQueryTriplet("$y" +  "_cells <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> " +
 			"<http://neurolex.org/wiki/Special:URIResolver/Category-3APrincipal_neuron_role>");
-			drb.addQueryTriplet("$" + brainRegionName + "_cells <http://neurolex.org/wiki/Special:URIResolver/Property-3ANeurotransmitter>" +
+			drb.addQueryTriplet("$y"+ " <http://neurolex.org/wiki/Special:URIResolver/Property-3ANeurotransmitter>" +
+					"$" + brainRegionName+"_role_dum");
+			drb.addQueryTriplet("$" + brainRegionName+"_role_dum <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> " +
 					"$" + brainRegionName+"_neurotransmitter");
-			drb.addQueryTriplet("$" + brainRegionName+"_neurotransmitter <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role>" +
-					"$" + brainRegionName+"_role");
+			drb.addQueryTriplet("$"+brainRegionName+"_role_dum <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> "+
+					"$"+brainRegionName+"_role_dum_2");
+			drb.addQueryTriplet("$"+brainRegionName+"_role_dum_2 <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel>"+
+					"$"+brainRegionName+"_role");
+			
 			drb.addSelectVariable("$"+ brainRegionName + "_cells");
 			drb.addSelectVariable("$"+ brainRegionName + "_neurotransmitter");
 			drb.addSelectVariable("$"+ brainRegionName + "_role");
@@ -42,7 +48,6 @@ public class CellDataLoader {
 			}
 		}
 	}
-
 	/**
 	 * Method searches for the cell data that corresponds to a given node and 
 	 * stores it in the correct node field.
@@ -115,8 +120,5 @@ public class CellDataLoader {
 				}
 			}
 		}	
-
 	}
-
-
 }
