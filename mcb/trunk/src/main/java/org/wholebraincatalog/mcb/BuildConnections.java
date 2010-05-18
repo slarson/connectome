@@ -39,10 +39,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -60,7 +58,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
-import org.apache.commons.collections15.functors.ConstantTransformer;
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
@@ -181,8 +178,8 @@ public class BuildConnections extends JPanel{
 
 		layout = new CircleLayout(graph);
 
-		SlideShow slideShow = new SlideShow();
-		Slide slide = slideShow.createSlide();
+		//SlideShow slideShow = new SlideShow();
+		//Slide slide = slideShow.createSlide();
 
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel visualizationModel = 
@@ -221,7 +218,7 @@ public class BuildConnections extends JPanel{
 				}
 				return super.transform(v);
 			}});
-
+		
 		vv.setEdgeToolTipTransformer(new MyLabeller());
 		
 		 vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, BasicStroke>() {
@@ -580,10 +577,41 @@ public class BuildConnections extends JPanel{
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) {
+	
+		String sparqlNif = "http://rdf-stage.neuinfo.org/sparql";
+		DataReaderBetter bamsReader = new DataReaderBetter(sparqlNif);
+
+		String sparqlTalis = "http://api.talis.com/stores/neurolex/services/sparql";
+		DataReaderBetter cellReader = new DataReaderBetter(sparqlTalis);
+
+		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
+				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
+				"Ventral_tegmental_area", "Prelimbic_area", 
+		"Lateral_preoptic_area"};
+
+		String[] brainRegionsCellData = {"Globus_pallidus", "Caudoputamen", 
+				"Central_nucleus_of_amygdala", "Substantia_nigra_pars_compacta",
+				"Ventral_tegmental_area", "Prelimbic_area", 
+		"Lateral_preoptic_area"};
+
+		ConnectionStatementLoader.populateNIFDataReader(bamsReader, brainRegions);
+		CellDataLoader.populateCellDataReader(cellReader,brainRegionsCellData);		
+
+		MultiHashMap<String, String> results = null;
+		MultiHashMap<String, String> cellResults = null;
 		
-		Node[] data = new ConnectionStatementLoader().getNodes();
+		InputStream connectivityQueryResult = bamsReader.runSelectQuery();
+		InputStream cellQueryResult = cellReader.runSelectQuery();
+		
+		
 		
 		try {
+			results = bamsReader.parseSPARQLResult(connectivityQueryResult);
+			cellResults = cellReader.parseSPARQLResult(cellQueryResult);
+			//assertNotNull(results);
+			//assertNotNull(results.get("$s"));
+			Node[] data = ConnectionStatementLoader.createNodesFromResults(brainRegions, results);
+			CellDataLoader.storeCellData(data,cellResults);
 
 			f = new JFrame(
 			"Multi-Scale Connectome Browser version-0.2.0-alpha");
@@ -593,13 +621,21 @@ public class BuildConnections extends JPanel{
 			f.add(split);
 			f.pack();
 			f.setVisible(true);
-
-
+			
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		for (String key : cellResults.keySet()) {
+		  System.out.println("key: " + key + ", results: " + cellResults.get(key));
+		}
+
+		
+
+		
+		
 	}
 }
 

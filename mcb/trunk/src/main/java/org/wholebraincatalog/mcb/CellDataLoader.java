@@ -9,18 +9,13 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 
 public class CellDataLoader {
 
-	private Node[] nodes;
-
-	public CellDataLoader(Node[] data) {
-		this.nodes = data;
-	}
 
 	/**
 	 * Populate a data reader for neurolex data.
 	 * @param drb - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	private static void populateCellDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+	static void populateCellDataReader(DataReaderBetter drb, String[] brainRegionNames) {
 
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + "_region " + "$x" + "<http://neurolex.org/wiki/Category:"+
@@ -54,7 +49,7 @@ public class CellDataLoader {
 	 * @param data -  nodes.
 	 * @param cellResults - cell data to be stored in the nodes.
 	 */
-	private void storeCellData(Node[] data, 
+	static void storeCellData(Node[] data, 
 			MultiHashMap<String, String> cellResults) {
 
 		//Date key to search cellResults.

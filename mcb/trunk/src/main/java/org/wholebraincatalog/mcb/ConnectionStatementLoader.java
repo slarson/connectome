@@ -41,7 +41,7 @@ public class ConnectionStatementLoader {
 		return data;
 	}
 	
-	private void populateNIFDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+	static void populateNIFDataReader(DataReaderBetter drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + 
 					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
@@ -95,7 +95,7 @@ public class ConnectionStatementLoader {
 	 * @param results
 	 * @return
 	 */
-	private static Node[] createNodesFromResults(String[] brainRegions, 
+	static Node[] createNodesFromResults(String[] brainRegions, 
 			MultiHashMap<String, String> results) {
 		List<Node> nodeList = new ArrayList<Node>();
 		for (String brainRegion : brainRegions) {
