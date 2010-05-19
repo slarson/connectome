@@ -8,7 +8,7 @@ import org.apache.commons.collections15.Transformer;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
-public class NodeLabeller<V> implements Transformer<V, String> {
+public class NodeLabeller extends ToStringLabeller<Node> {
 
 	/*
 	 * (non-Javadoc)
@@ -16,14 +16,14 @@ public class NodeLabeller<V> implements Transformer<V, String> {
 	 * @seeedu.uci.ics.jung.visualization.decorators.DefaultToolTipFunction#
 	 * getToolTipText(java.lang.Object)
 	 */
-	public String transform(V v) {
+	public String transform(Node v) {
 
 		Node n = (Node) v;
 
 		String cell = "NOTHING";
 		String neurotransmitter;
 		String role;
-		String data_str = null;
+		String data_str = n.getVertexName().replace("_", " ");
 
 		for (String key : n.getNodeCellsMap().keySet()) {
 			System.out.println(cell);
