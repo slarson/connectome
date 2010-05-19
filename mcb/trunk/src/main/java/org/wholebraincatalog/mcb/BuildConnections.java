@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -119,12 +120,12 @@ public class BuildConnections extends JPanel{
 	/**
 	 * the graph
 	 */
-	Graph graph;
+	Graph<Node,Edge> graph;
 
 	/**
 	 * the visual component and renderer for the graph
 	 */
-	VisualizationViewer vv;
+	VisualizationViewer<Node,Edge> vv;
 
 	/**
 	 * graph layout.
@@ -165,32 +166,32 @@ public class BuildConnections extends JPanel{
 	LensSupport magnifyViewSupport;
 
 
-	@SuppressWarnings("unchecked")
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
 		// create a simple graph for the demo
-		graph = new DirectedSparseMultigraph();
+		graph = new DirectedSparseMultigraph<Node,Edge>();
 
 		//construct graph by making graph connections.
 		makeConnections(nodes);
 
 		collapser = new GraphCollapser(graph);
 
-		layout = new CircleLayout(graph);
+		layout = new CircleLayout<Node,Edge>(graph);
 
 		Dimension preferredSize = new Dimension(800,400);
-		final VisualizationModel visualizationModel = 
-			new DefaultVisualizationModel(layout, preferredSize);
-		vv =  new VisualizationViewer(visualizationModel, preferredSize);
+		final VisualizationModel<Node,Edge> visualizationModel = 
+			new DefaultVisualizationModel<Node,Edge>(layout, preferredSize);
+		vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize);
 
 		
 		//the regular graph mouse for the normal view
-		final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
+		final DefaultModalGraphMouse<Node,Edge> graphMouse = 
+			new DefaultModalGraphMouse<Node,Edge>();
 
 		vv.setGraphMouse(graphMouse);
 		
-		this.viewSupport = new MagnifyImageLensSupport<Number,Number>(vv);
-		this.modelSupport = new LayoutLensSupport<Number,Number>(vv);
+		this.viewSupport = new MagnifyImageLensSupport<Node,Edge>(vv);
+		this.modelSupport = new LayoutLensSupport<Node,Edge>(vv);
 
 	    graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
 		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());
@@ -234,12 +235,13 @@ public class BuildConnections extends JPanel{
 		menubar.add(modeMenu);
 		
 		
-		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction());
-		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
+		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
+		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<Node>());
+		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<Edge>());
 
 
-		final PredicatedParallelEdgeIndexFunction eif = PredicatedParallelEdgeIndexFunction.getInstance();
+		final PredicatedParallelEdgeIndexFunction<Node,Edge> eif =
+			PredicatedParallelEdgeIndexFunction.getInstance();
 		final Set exclusions = new HashSet();
 
 		eif.setPredicate(new Predicate() {
@@ -255,10 +257,10 @@ public class BuildConnections extends JPanel{
 		vv.setBackground(Color.white);
 
 		//***** add a listener for USE CLASS NodeLabeller*****
-		//vv.setVertexToolTipTransformer(new NodeLabeller());
-		vv.setVertexToolTipTransformer(new ToStringLabeller());
+		vv.setVertexToolTipTransformer(new NodeLabeller());
+		//vv.setVertexToolTipTransformer(new ToStringLabeller());
 
-		vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, BasicStroke>() {
+		vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, Stroke>() {
 			/**
 			 * Transforms the input by ignoring it and returning the stored constant instead.
 			 *
@@ -312,10 +314,10 @@ public class BuildConnections extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				Collection picked = new HashSet(vv.getPickedVertexState().getPicked());
 				if(picked.size() > 1) {
-					Graph inGraph = layout.getGraph();
-					Graph clusterGraph = collapser.getClusterGraph(inGraph, picked);
+					Graph<Node,Edge> inGraph = layout.getGraph();
+					Graph<Node,Edge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
 
-					Graph g = collapser.collapse(layout.getGraph(), clusterGraph);
+					Graph<Node,Edge> g = collapser.collapse(layout.getGraph(), clusterGraph);
 					double sumx = 0;
 					double sumy = 0;
 					for(Object v : picked) {
@@ -336,11 +338,11 @@ public class BuildConnections extends JPanel{
 		compressEdges.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				Collection picked = vv.getPickedVertexState().getPicked();
+				Collection<Node> picked = vv.getPickedVertexState().getPicked();
 				if(picked.size() == 2) {
-					Pair pair = new Pair(picked);
-					Graph graph = layout.getGraph();
-					Collection edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
+					Pair<Node> pair = new Pair<Node>(picked);
+					Graph<Node,Edge> graph = layout.getGraph();
+					Collection<Edge> edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
 					edges.retainAll(graph.getIncidentEdges(pair.getSecond()));
 					exclusions.addAll(edges);
 					vv.repaint();
@@ -546,7 +548,6 @@ public class BuildConnections extends JPanel{
 	 *  @param numberElements - number of nodes to be connected.
 	 *  @author Ruggero Carloz
 	 */
-	@SuppressWarnings("unchecked")
 	private void makeConnections(Node[] node) {
 
 		for (int i = 0; i < node.length ; i++) {
@@ -557,8 +558,8 @@ public class BuildConnections extends JPanel{
 					String reference = node[i].getReferenceSet().get(
 							node[j].getVertexName().replace('_', ' '));
 					Edge e = new Edge(strength, reference);
-					graph.addEdge(e, node[i].getVertexName().replace('_', ' '), 
-							node[j].getVertexName().replace('_', ' '),
+					graph.addEdge(e, node[i], 
+							node[j],
 							EdgeType.DIRECTED);
 				}
 			}
