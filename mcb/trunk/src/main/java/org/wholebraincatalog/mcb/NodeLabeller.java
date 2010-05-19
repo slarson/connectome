@@ -25,10 +25,10 @@ public class NodeLabeller extends ToStringLabeller<Node> {
 		String neurotransmitter;
 		String role;
 		
-		//trying to format string.
-		String data_str = n.getVertexName().replace("_", " ");
-		StringBuilder builder =null;
-		String newline = System.getProperty("line.separator");
+		//HTML can be used to format the tooltip.
+		//http://sourceforge.net/projects/jung/forums/forum/252062/topic/2294542
+		String data_str = "<html>";
+		data_str += n.getVertexName().replace("_", " ");
 		
 		for (String key : n.getNodeCellsMap().keySet()) {
 			for (String cellName : ((Node) v).getNodeCellsMap().get(key)
@@ -39,16 +39,13 @@ public class NodeLabeller extends ToStringLabeller<Node> {
 					neurotransmitter = data.getNeurotransmitter();
 					role = data.getRole();
 					//cell data to be displayed.
-					data_str += " -cell:"+cell + "  neurotransmitter:" + neurotransmitter + " role:" + role
+					data_str += "<br> cell:"+cell + "<br> neurotransmitter:" + 
+					neurotransmitter + "<br> role:" + role
 							+ "- \n";
-					//trying to format the output data.
-					builder = new StringBuilder(data_str);
-					builder.append(newline);
-					builder.append("\n");
-					data_str = builder.toString(); 
 				}
 			}
 		}
+		data_str += "</html>";
 		return data_str;
 
 	}

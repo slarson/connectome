@@ -130,7 +130,7 @@ public class BuildConnections extends JPanel{
 	/**
 	 * graph layout.
 	 */
-	Layout layout;
+	Layout<Node,Edge> layout;
 
 	/**
 	 * split that contains graph and instructions.
@@ -311,7 +311,7 @@ public class BuildConnections extends JPanel{
 		collapse.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				Collection picked = new HashSet(vv.getPickedVertexState().getPicked());
+				Collection<Node> picked = new HashSet<Node>(vv.getPickedVertexState().getPicked());
 				if(picked.size() > 1) {
 					Graph<Node,Edge> inGraph = layout.getGraph();
 					Graph<Node,Edge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
@@ -319,7 +319,7 @@ public class BuildConnections extends JPanel{
 					Graph<Node,Edge> g = collapser.collapse(layout.getGraph(), clusterGraph);
 					double sumx = 0;
 					double sumy = 0;
-					for(Object v : picked) {
+					for(Node v : picked) {
 						Point2D p = (Point2D)layout.transform(v);
 						sumx += p.getX();
 						sumy += p.getY();
@@ -327,7 +327,7 @@ public class BuildConnections extends JPanel{
 					Point2D cp = new Point2D.Double(sumx/picked.size(), sumy/picked.size());
 					vv.getRenderContext().getParallelEdgeIndexFunction().reset();
 					layout.setGraph(g);
-					layout.setLocation(clusterGraph, cp);
+					//layout.setLocation(clusterGraph, cp);
 					vv.getPickedVertexState().clear();
 					vv.repaint();
 				}
