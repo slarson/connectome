@@ -1,8 +1,5 @@
 package org.wholebraincatalog.mcb;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
@@ -11,7 +8,8 @@ public class CellDataLoader {
 
 
 	/**
-	 * Populate a data reader for neurolex data.
+	 * This class takes care of getting the cell data for each node 
+	 * and takes care of incorporating the data into the nodes.
 	 * @param drb - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
