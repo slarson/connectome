@@ -20,23 +20,27 @@ public class NodeLabeller extends ToStringLabeller<Node> {
 
 		Node n = (Node) v;
 
-		String cell = "NOTHING";
+		String cell;
 		String neurotransmitter;
 		String role;
 		String data_str = n.getVertexName().replace("_", " ");
-
+		StringBuilder builder =null;
+		String newline = System.getProperty("line.separator");
 		for (String key : n.getNodeCellsMap().keySet()) {
 			
 			for (String cellName : ((Node) v).getNodeCellsMap().get(key)
 					.getNeurotransmitterData().keySet()) {
 				cell = cellName;
-				System.out.println(cell);
 				for (NeurotransmitterData data : ((Node) v).getNodeCellsMap()
 						.get(key).getNeurotransmitter(cellName)) {
 					neurotransmitter = data.getNeurotransmitter();
 					role = data.getRole();
-					data_str += cell + " " + neurotransmitter + " " + role
-							+ "\n";
+					data_str += " -cell:"+cell + "  neurotransmitter:" + neurotransmitter + " role:" + role
+							+ "- \n";
+					builder = new StringBuilder(data_str);
+					builder.append(newline);
+					builder.append("\n");
+					data_str = builder.toString(); 
 				}
 			}
 		}
