@@ -586,8 +586,7 @@ public class BuildConnections extends JPanel{
 
 		String[] brainRegionsCellData = {"Globus_pallidus", "Caudoputamen", 
 				"Central_nucleus_of_amygdala", "Substantia_nigra_pars_compacta",
-				"Ventral_tegmental_area", "Prelimbic_area", 
-		"Lateral_preoptic_area"};
+				"Ventral_tegmental_area"};
 
 		ConnectionStatementLoader.populateNIFDataReader(bamsReader, brainRegions);
 		CellDataLoader.populateCellDataReader(cellReader,brainRegionsCellData);		
@@ -603,8 +602,9 @@ public class BuildConnections extends JPanel{
 		try {
 			results = bamsReader.parseSPARQLResult(connectivityQueryResult);
 			cellResults = cellReader.parseSPARQLResult(cellQueryResult);
-
+			System.out.println("cellResults: "+ cellResults.isEmpty());
 			Node[] data = ConnectionStatementLoader.createNodesFromResults(brainRegions, results);
+			System.out.println("data length: "+data.length);
 			CellDataLoader.storeCellData(data,cellResults);
 
 			f = new JFrame(

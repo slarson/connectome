@@ -26,10 +26,11 @@ public class NodeLabeller extends ToStringLabeller<Node> {
 		String data_str = n.getVertexName().replace("_", " ");
 
 		for (String key : n.getNodeCellsMap().keySet()) {
-			System.out.println(cell);
+			
 			for (String cellName : ((Node) v).getNodeCellsMap().get(key)
 					.getNeurotransmitterData().keySet()) {
 				cell = cellName;
+				System.out.println(cell);
 				for (NeurotransmitterData data : ((Node) v).getNodeCellsMap()
 						.get(key).getNeurotransmitter(cellName)) {
 					neurotransmitter = data.getNeurotransmitter();
