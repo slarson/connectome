@@ -254,19 +254,9 @@ public class BuildConnections extends JPanel{
 
 		vv.setBackground(Color.white);
 
-		// add a listener for ToolTips
-		vv.setVertexToolTipTransformer(new ToStringLabeller() {
-
-			/* (non-Javadoc)
-			 * @see edu.uci.ics.jung.visualization.decorators.DefaultToolTipFunction#getToolTipText(java.lang.Object)
-			 */
-			@Override
-			public String transform(Object v) {
-				if(v instanceof Graph) {
-					return ((Graph)v).getVertices().toString();
-				}
-				return super.transform(v);
-			}});
+		//***** add a listener for USE CLASS NodeLabeller*****
+		//vv.setVertexToolTipTransformer(new NodeLabeller());
+		vv.setVertexToolTipTransformer(new ToStringLabeller());
 
 		vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, BasicStroke>() {
 			/**
