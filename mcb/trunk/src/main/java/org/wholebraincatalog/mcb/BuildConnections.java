@@ -178,20 +178,70 @@ public class BuildConnections extends JPanel{
 
 		layout = new CircleLayout(graph);
 
-		//SlideShow slideShow = new SlideShow();
-		//Slide slide = slideShow.createSlide();
-
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel visualizationModel = 
 			new DefaultVisualizationModel(layout, preferredSize);
 		vv =  new VisualizationViewer(visualizationModel, preferredSize);
+
+		
+		//the regular graph mouse for the normal view
+		final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
+
+		vv.setGraphMouse(graphMouse);
+		
+		this.viewSupport = new MagnifyImageLensSupport<Number,Number>(vv);
+		this.modelSupport = new LayoutLensSupport<Number,Number>(vv);
+
+	    graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
+		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());
+
+		ButtonGroup radio = new ButtonGroup();
+		JRadioButton none = new JRadioButton("None");
+
+	
+		none.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(viewSupport != null) {
+					viewSupport.deactivate();
+				}
+				if(modelSupport != null) {
+					modelSupport.deactivate();
+				}
+			}
+		});
+
+		none.setSelected(true);
+		
+
+		JRadioButton hyperView = new JRadioButton("View");
+		hyperView.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				viewSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		JRadioButton hyperModel = new JRadioButton("Layout");
+		hyperModel.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+
+		radio.add(none);
+		radio.add(hyperView);
+		radio.add(hyperModel);
+		JMenuBar menubar = new JMenuBar();
+		JMenu modeMenu = graphMouse.getModeMenu();
+		menubar.add(modeMenu);
+		
+		
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction());
 		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
 
-		
+
 		final PredicatedParallelEdgeIndexFunction eif = PredicatedParallelEdgeIndexFunction.getInstance();
 		final Set exclusions = new HashSet();
+
 		eif.setPredicate(new Predicate() {
 
 			public boolean evaluate(Object e) {
@@ -207,7 +257,6 @@ public class BuildConnections extends JPanel{
 		// add a listener for ToolTips
 		vv.setVertexToolTipTransformer(new ToStringLabeller() {
 
-
 			/* (non-Javadoc)
 			 * @see edu.uci.ics.jung.visualization.decorators.DefaultToolTipFunction#getToolTipText(java.lang.Object)
 			 */
@@ -218,35 +267,31 @@ public class BuildConnections extends JPanel{
 				}
 				return super.transform(v);
 			}});
-		
-		vv.setEdgeToolTipTransformer(new MyLabeller());
-		
-		 vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, BasicStroke>() {
-			    /**
-			     * Transforms the input by ignoring it and returning the stored constant instead.
-			     *
-			     * @param input the input object which is ignored
-			     * @return the stored constant
-			     */
-			    public BasicStroke transform(Edge input) {
-			    	switch (input.getStrength()) {
-			    	case EXISTS:
-			    		return new BasicStroke(0.5f);
-			    	case VERY_LIGHT:
-			    		return new BasicStroke(1f);
-			    	case LIGHT:
-			    		return new BasicStroke(2f);
-			    	case MODERATE:
-			    		return new BasicStroke(3f);
-			    	}
-			        return new BasicStroke(2.5f);
-			    }
-		 });		
-		
-		//the regular graph mouse for the normal view
-		final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
 
-		vv.setGraphMouse(graphMouse);
+		vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, BasicStroke>() {
+			/**
+			 * Transforms the input by ignoring it and returning the stored constant instead.
+			 *
+			 * @param input the input object which is ignored
+			 * @return the stored constant
+			 */
+			public BasicStroke transform(Edge input) {
+				switch (input.getStrength()) {
+				case EXISTS:
+					return new BasicStroke(0.5f);
+				case VERY_LIGHT:
+					return new BasicStroke(1f);
+				case LIGHT:
+					return new BasicStroke(2f);
+				case MODERATE:
+					return new BasicStroke(3f);
+				}
+				return new BasicStroke(2.5f);
+			}
+		});
+
+		vv.setEdgeToolTipTransformer(new MyLabeller());
+	
 
 		Container content = this;
 		GraphZoomScrollPane gzsp = new GraphZoomScrollPane(vv);
@@ -409,48 +454,7 @@ public class BuildConnections extends JPanel{
 
 			}});
 
-
-		this.viewSupport = new MagnifyImageLensSupport<Number,Number>(vv);
-		this.modelSupport = new LayoutLensSupport<Number,Number>(vv);
-
-		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
-		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());
-
-		ButtonGroup radio = new ButtonGroup();
-		JRadioButton none = new JRadioButton("None");
-
-		none.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				if(viewSupport != null) {
-					viewSupport.deactivate();
-				}
-				if(modelSupport != null) {
-					modelSupport.deactivate();
-				}
-			}
-		});
-
-		none.setSelected(true);
-
-		JRadioButton hyperView = new JRadioButton("View");
-		hyperView.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				viewSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
-			}
-		});
-		JRadioButton hyperModel = new JRadioButton("Layout");
-		hyperModel.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
-			}
-		});
-
-		radio.add(none);
-		radio.add(hyperView);
-		radio.add(hyperModel);
-		JMenuBar menubar = new JMenuBar();
-		JMenu modeMenu = graphMouse.getModeMenu();
-		menubar.add(modeMenu);
+		
 
 		JPanel controls = new JPanel();
 		JPanel zoomControls = new JPanel(new GridLayout(2,1));
@@ -570,14 +574,14 @@ public class BuildConnections extends JPanel{
 			}
 		}
 	}
-	
+
 
 	/*
 	 * Driver for application
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) {
-	
+
 		String sparqlNif = "http://rdf-stage.neuinfo.org/sparql";
 		DataReaderBetter bamsReader = new DataReaderBetter(sparqlNif);
 
@@ -599,43 +603,42 @@ public class BuildConnections extends JPanel{
 
 		MultiHashMap<String, String> results = null;
 		MultiHashMap<String, String> cellResults = null;
-		
+
 		InputStream connectivityQueryResult = bamsReader.runSelectQuery();
 		InputStream cellQueryResult = cellReader.runSelectQuery();
-		
-		
-		
+
+
+
 		try {
 			results = bamsReader.parseSPARQLResult(connectivityQueryResult);
 			cellResults = cellReader.parseSPARQLResult(cellQueryResult);
-			//assertNotNull(results);
-			//assertNotNull(results.get("$s"));
+
 			Node[] data = ConnectionStatementLoader.createNodesFromResults(brainRegions, results);
 			CellDataLoader.storeCellData(data,cellResults);
 
 			f = new JFrame(
-			"Multi-Scale Connectome Browser version-0.2.0-alpha");
+					"Multi-Scale Connectome Browser version-0.2.0-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(new BuildConnections(data, data.length));
 			f.add(split);
 			f.pack();
 			f.setVisible(true);
-			
+
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
+
 		for (String key : cellResults.keySet()) {
-		  System.out.println("key: " + key + ", results: " + cellResults.get(key));
+			System.out.println("key: " + key + ", results: " + cellResults.get(key));
 		}
 
-		
 
-		
-		
+
+
+
 	}
 }
 
