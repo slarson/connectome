@@ -165,7 +165,6 @@ public class BuildConnections extends JPanel{
 	LensSupport magnifyLayoutSupport;
 	LensSupport magnifyViewSupport;
 
-
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
 		// create a simple graph for the demo
@@ -446,8 +445,6 @@ public class BuildConnections extends JPanel{
 
 			}});
 
-		
-
 		JPanel controls = new JPanel();
 		JPanel zoomControls = new JPanel(new GridLayout(2,1));
 		zoomControls.setBorder(BorderFactory.createTitledBorder("Zoom"));
@@ -565,8 +562,6 @@ public class BuildConnections extends JPanel{
 			}
 		}
 	}
-
-
 	/*
 	 * Driver for application
 	 * @throws Exception 
@@ -608,7 +603,7 @@ public class BuildConnections extends JPanel{
 			CellDataLoader.storeCellData(data,cellResults);
 
 			f = new JFrame(
-					"Multi-Scale Connectome Browser version-0.2.0-alpha");
+					"Multi-Scale Connectome Browser version-0.1.7-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(new BuildConnections(data, data.length));
