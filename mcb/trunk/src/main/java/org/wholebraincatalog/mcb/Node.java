@@ -45,56 +45,56 @@ public class Node implements Factory{
 	
 	private HashMap<String, String> referenceMap;
 	
-	/**
-	 * Store the node's cell name and data.
-	 */
-	private HashMap<String,CellData> nodeCells;
+	List<String> cells = null;
+	List<String> cellUrls = null;
+	List<String> neurotransmitters = null;
+	List<String> roles = null;
 	
 	private String reference = null;
 	
-	private String URI;
-	
-
 	/**
 	 * Constructor.
-	 * @param URL - the url of a given node.
 	 * @param vertexName - name of node.
-	 * @param elementNum - the number of URIs in the node.
 	 **/
 	public Node(String vertexName){
 		this.name = vertexName;
-		this.URI = "http://ncmir.ucsd.edu/BAMS#" + vertexName ;
 		createURITreeSet();
 		createRegionToStrengthMap();
 		createReferenceMap();
-		createNodeCellsMap();
-		
-	}
-	/**
-	 * Instantiate the hash map where the neurotransmitter
-	 * data will be stored.
-	 */
-	private void createNodeCellsMap(){
-		nodeCells = new HashMap<String,CellData>();
 	}
 	
-	/**
-	 * Return the hash map where the neurotransmitter
-	 * data is stored.
-	 * @return nodeCells - neurotransmitter data.
-	 */
-	public HashMap<String,CellData> getNodeCellsMap(){
-		return nodeCells;
+	public void setCellInfo(Collection<String> cells, Collection<String> cellUrls, 
+			Collection<String> neurotransmitters, Collection<String> roles) {
+		this.cells = new ArrayList<String>();
+		if (cells != null) this.cells.addAll(cells);
+		this.cellUrls = new ArrayList<String>();
+		if (cellUrls != null) this.cellUrls.addAll(cellUrls);
+		this.neurotransmitters = new ArrayList<String>();
+		if (neurotransmitters != null) this.neurotransmitters.addAll(neurotransmitters);
+		this.roles = new ArrayList<String>();
+		if (roles != null) this.roles.addAll(roles);
 	}
 	
-	/**
-	 * Store the cell and its data.
-	 * @param cell - name of the cell.
-	 * @param cellData - the data corresponding to the cell.
-	 */
-	public void storeCellData(String cell, CellData cellData){
-		this.nodeCells.put(cell, cellData);
+	public int getCellCount() {
+		return this.cells.size();
 	}
+	
+	public String getCellName(int index) {
+		return this.cells.get(index);
+	}
+	
+	public String getCellUrl(int index) {
+		return this.cellUrls.get(index);
+	}
+	
+	public String getNeurotransmitter(int index) {
+		return this.neurotransmitters.get(index);
+	}
+	
+	public String getRole(int index) {
+		return this.roles.get(index);
+	}
+	
 	
 	/**
 	 * This method instantiates the tree to store URIs.
@@ -232,7 +232,4 @@ public class Node implements Factory{
 		return new Node("");
 	}
 
-	public String getURI() {
-		return URI;
-	}
 }

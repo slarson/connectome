@@ -19,32 +19,20 @@ public class NodeLabeller extends ToStringLabeller<Node> {
 	public String transform(Node v) {
 
 		Node n = (Node) v;
-
-		//the cell data.
-		String cell;
-		String neurotransmitter;
-		String role;
 		
 		//HTML can be used to format the tooltip.
 		//http://sourceforge.net/projects/jung/forums/forum/252062/topic/2294542
 		String data_str = "<html>";
 		data_str += n.getVertexName().replace("_", " ");
 		
-		for (String key : n.getNodeCellsMap().keySet()) {
-			for (String cellName : ((Node) v).getNodeCellsMap().get(key)
-					.getNeurotransmitterData().keySet()) {
-				cell = cellName;
-				for (NeurotransmitterData data : ((Node) v).getNodeCellsMap()
-						.get(key).getNeurotransmitter(cellName)) {
-					neurotransmitter = data.getNeurotransmitter();
-					role = data.getRole();
-					//cell data to be displayed.
-					data_str += "<br> cell:"+cell + "<br> neurotransmitter:" + 
-					neurotransmitter + "<br> role:" + role
-							+ "- \n";
-				}
-			}
+		for (int i = 0; i < n.getCellCount(); i++) {
+			data_str += "<a href=\"" + n.getCellUrl(i) + "\">" + 
+			n.getCellName(i) + "</a><br>";
+			data_str += n.getNeurotransmitter(i) + "<br>";
+			data_str += n.getRole(i) + "<br>";
+			
 		}
+		
 		data_str += "</html>";
 		return data_str;
 

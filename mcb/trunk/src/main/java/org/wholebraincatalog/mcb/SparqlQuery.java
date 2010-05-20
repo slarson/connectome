@@ -134,7 +134,7 @@ public class SparqlQuery
 		
 		// make sure we have some variables
 		if(variables != "")
-			queryString = "select " + variables + startBracket;
+			queryString = "select DISTINCT" + variables + startBracket;
 		
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {

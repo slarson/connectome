@@ -26,6 +26,7 @@ public class HyperLinkToolTip extends JToolTip {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					// do whatever you want with the url
+					BareBonesBrowserLaunch.openURL(e.getURL().toString());
 					System.out.println("clicked on link : " + e.getURL());
 				}
 			}
