@@ -34,11 +34,14 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 
 
 /**
- * Reads the RDF from a Category page of NeuroLex.org.  
+ * Executes a SPARQL query against a specified end point.
+ * 
+ * Provides abstractions to automate query construction.
+ * 
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
-public class DataReaderBetter
+public class SparqlQuery
 {
 	/**
 	 * The URL of the sparql end point that will be queries.
@@ -56,11 +59,11 @@ public class DataReaderBetter
 	private List<String> variableList = null;
 	
 	/**
-	 * Constructor for DataReaderBetter
+	 * Constructor for SparqlQuery
 	 * @param sparqlEndPoint - the URL of the SPARQL
 	 * end point you wish to execute queries against.
 	 */
-	public DataReaderBetter(String sparqlEndPoint) {
+	public SparqlQuery(String sparqlEndPoint) {
 		this.sparqlEndPointURL = sparqlEndPoint;
 		this.queryTriplets = new ArrayList<String>();
 		this.variableList = new ArrayList<String>();

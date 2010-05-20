@@ -578,10 +578,10 @@ public class BuildConnections extends JPanel{
 	public static void main(String[] args) {
 
 		String sparqlNif = "http://rdf-stage.neuinfo.org/sparql";
-		DataReaderBetter bamsReader = new DataReaderBetter(sparqlNif);
+		SparqlQuery bamsReader = new SparqlQuery(sparqlNif);
 
 		String sparqlTalis = "http://api.talis.com/stores/neurolex/services/sparql";
-		DataReaderBetter cellReader = new DataReaderBetter(sparqlTalis);
+		SparqlQuery cellReader = new SparqlQuery(sparqlTalis);
 
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
 				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
