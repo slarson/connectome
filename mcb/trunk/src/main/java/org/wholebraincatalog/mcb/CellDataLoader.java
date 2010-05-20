@@ -1,5 +1,7 @@
 package org.wholebraincatalog.mcb;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Stack;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
@@ -117,77 +119,24 @@ public class CellDataLoader {
 	/**
 	 * Method searches for the cell data that corresponds to a given node and 
 	 * stores it in the correct node field.
-	 * @param data -  nodes.
+	 * @param existingNodes -  nodes.
 	 * @param cellResults - cell data to be stored in the nodes.
 	 */
-	static void storeCellData(Node[] data, 
+	static void storeCellData(Node[] existingNodes, 
 			MultiHashMap<String, String> cellResults) {
 
-		//Date key to search cellResults.
-		String searchKeyCell;
-		String searchKeyNeurotransmitter;
-		String searchKeyRole;
-
-		//sotre the corresponding data in a stack
-		Stack<String> neuroStack = new Stack<String>();
-		Stack<String> roleStack = new Stack<String>();
-		Stack<String> cellStack = new Stack<String>();
-
-		for(Node node :  data){
-			//System.out.println("Node name: "+node.toString());
-			node.storeCellData(node.toString()+"_cells_label",new CellData());
-			//System.out.println("Node name: "+node.toString());
-
-			//construct key to search cellResults.
-			searchKeyCell = "$"+node.toString()+"_cells_label";
-			searchKeyNeurotransmitter = "$"+node.toString()+"_neurotransmitter_label";
-			searchKeyRole = "$"+node.toString()+"_transmitter_role_label";
-
-			String neurotransmitterStore = null;
-			String roleStore = null;
-
-			//make sure cellRusults contains a searchKeyCell.
-			if(cellResults.containsKey(searchKeyCell)){
-				//obtain all the cells.
-				
-				for(String cells : cellResults.get("$"+node.toString()+"_cells_label")){
-					
-					cellStack.push(cells);
-				}	
-				System.out.println("cellStack size: "+cellStack.size());
-				//obtain all the nueurotransmitters.
-				for(String neurotransmitter: cellResults.get(
-						"$"+node.toString()+"_neurotransmitter_label")){
-					System.out.println("neurotransmitter:"+neurotransmitter);
-					neurotransmitterStore = neurotransmitter;
-					neuroStack.push(neurotransmitterStore);
-				}	
-				//obtain all the roles.
-				for(String role: cellResults.get(
-						"$"+node.toString()+"_transmitter_role_label")){
-					roleStore = role;
-					System.out.println("role:"+role);
-					roleStack.push(roleStore);
-				}
-				//store the cell data in node.
-				while( !(neuroStack.empty() && roleStack.empty()) ){
-					// neurotransmitter name.
-					String neuro_str = neuroStack.pop();
-					// role name.
-					String role_str = roleStack.pop();
-					//cell name.
-					String cell_str = cellStack.pop();
-					//data corresponding to a given cell.
-					NeurotransmitterData neurottransmitterCellData = 
-						new NeurotransmitterData(neuro_str,role_str);
-					//store the cell data corresponding to the node.
-					node.getNodeCellsMap().get(node.toString()+"_cells_label").
-					store(cell_str,neurottransmitterCellData);
-					System.out.println("cell: "+cell_str+" neurotransmitter: "+
-							neurottransmitterCellData.getNeurotransmitter()+
-							" role:"+neurottransmitterCellData.getRole());
-				}
-			}
+		for(Node node :  existingNodes){
+			String brainRegionName = node.toString();
+			Collection<String> cells = 
+				cellResults.get("$" + brainRegionName + "_cells_label");
+			Collection<String> cellUrls = 
+				cellResults.get("$" + brainRegionName + "_cells_url");
+			Collection<String> transmitters = 
+				cellResults.get("$" + brainRegionName + "_neurotransmitter_label");
+			Collection<String> roles = 
+				cellResults.get("$" + brainRegionName + "_transmitter_role_label");
+			
+			node.setCellInfo(cells, cellUrls, transmitters, roles);
 		}	
 	}
 }
