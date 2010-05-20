@@ -57,6 +57,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.JToolTip;
+
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.multimap.MultiHashMap;
@@ -180,7 +182,14 @@ public class BuildConnections extends JPanel{
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel<Node,Edge> visualizationModel = 
 			new DefaultVisualizationModel<Node,Edge>(layout, preferredSize);
-		vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize);
+		vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize) {
+			//override tool tip method with a tool tip that supports hyperlinks
+			public JToolTip createToolTip() {
+				JToolTip tip = new HyperLinkToolTip();
+				tip.setComponent(this);
+				return tip;
+			}
+		};
 
 		
 		//the regular graph mouse for the normal view
