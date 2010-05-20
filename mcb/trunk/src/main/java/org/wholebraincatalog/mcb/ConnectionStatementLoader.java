@@ -15,7 +15,6 @@ public class ConnectionStatementLoader {
 	public Node[] getNodes() {
 
 		String sparql = "http://rdf-stage.neuinfo.org/sparql";
-		//String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
 		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
 		
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
@@ -24,7 +23,6 @@ public class ConnectionStatementLoader {
 				"Lateral_preoptic_area"};
 		
 		populateNIFDataReader(bamsReader, brainRegions);
-		//populateBamsDataReader(bamsReader, brainRegions);
 				
 		InputStream queryResult = bamsReader.runSelectQuery();
 		

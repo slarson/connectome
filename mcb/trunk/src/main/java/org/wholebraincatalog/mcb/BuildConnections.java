@@ -290,7 +290,7 @@ public class BuildConnections extends JPanel{
 			}
 		});
 
-		vv.setEdgeToolTipTransformer(new MyLabeller());
+		vv.setEdgeToolTipTransformer(new EdgeLabeller());
 	
 
 		Container content = this;
