@@ -15,7 +15,7 @@ public class ConnectionStatementLoader {
 	public Node[] getNodes() {
 
 		String sparql = "http://rdf-stage.neuinfo.org/sparql";
-		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
+		SparqlQuery bamsReader = new SparqlQuery(sparql);
 		
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
 				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
@@ -39,7 +39,7 @@ public class ConnectionStatementLoader {
 		return data;
 	}
 	
-	static void populateNIFDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+	static void populateNIFDataReader(SparqlQuery drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + 
 					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
@@ -64,7 +64,7 @@ public class ConnectionStatementLoader {
 	 * @param drb - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	private static void populateBamsDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+	private static void populateBamsDataReader(SparqlQuery drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + 
 					" <http://ncmir.ucsd.edu/BAMS#sending_Structure>  <http://ncmir.ucsd.edu/BAMS#" + brainRegionName+">");
