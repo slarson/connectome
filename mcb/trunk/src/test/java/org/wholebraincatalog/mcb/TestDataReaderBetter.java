@@ -17,7 +17,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
-import org.wholebraincatalog.mcb.DataReaderBetter;
+import org.wholebraincatalog.mcb.SparqlQuery;
 
 import junit.framework.TestCase;
 
@@ -36,8 +36,8 @@ public class TestDataReaderBetter extends TestCase {
 
 	public void testDataReaderBetter() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		DataReaderBetter d = 
-			new DataReaderBetter(sparql);
+		SparqlQuery d = 
+			new SparqlQuery(sparql);
 		variableList = new ArrayList<String>();
 
 		assertNotNull(d);
@@ -48,7 +48,7 @@ public class TestDataReaderBetter extends TestCase {
 		String triplet1 = "$x <http://someurl/property> $y";
 		String triplet2 = "$z <http://someurl/property2> $a";
 
-		DataReaderBetter d = new DataReaderBetter("http://xyz");
+		SparqlQuery d = new SparqlQuery("http://xyz");
 
 		d.addQueryTriplet(triplet1);
 		d.addQueryTriplet(triplet2);
@@ -58,8 +58,8 @@ public class TestDataReaderBetter extends TestCase {
 
 	public void testRunSelectQuery() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		DataReaderBetter d = 
-			new DataReaderBetter(sparql);
+		SparqlQuery d = 
+			new SparqlQuery(sparql);
 
 		/**
 		 * select $s $y $z $r { $s $x <http://neurolex.org/wiki/Category:Globus_pallidus>.
@@ -90,7 +90,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 	public void testParseSPARQLResult2() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
+		SparqlQuery bamsReader = new SparqlQuery(sparql);
 
 		bamsReader.addQueryTriplet("$gp <http://ncmir.ucsd.edu/BAMS#sending_Structure>  <http://ncmir.ucsd.edu/BAMS#Globus_pallidus>");
 		bamsReader.addQueryTriplet("$gp <http://ncmir.ucsd.edu/BAMS#projection_Strength> $gp_strength");
@@ -116,7 +116,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		System.out.println(results);
 	}
 
-	private void populateBamsDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+	private void populateBamsDataReader(SparqlQuery drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + " <http://ncmir.ucsd.edu/BAMS#sending_Structure>  <http://ncmir.ucsd.edu/BAMS#" + brainRegionName+">");
 			drb.addQueryTriplet("$" + brainRegionName + " <http://ncmir.ucsd.edu/BAMS#projection_Strength> $"+ brainRegionName + "_strength");
@@ -134,7 +134,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		}
 	}
 
-	private void populateNIFDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+	private void populateNIFDataReader(SparqlQuery drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + 
 					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
@@ -172,7 +172,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 	public void testParseSPARQLResult4() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
+		SparqlQuery bamsReader = new SparqlQuery(sparql);
 
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
 				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
@@ -202,7 +202,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 	public void testParseSPARQLResultFromNIF() {
 		String sparql = "http://rdf-stage.neuinfo.org/sparql";
-		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
+		SparqlQuery bamsReader = new SparqlQuery(sparql);
 
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
 				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
@@ -232,7 +232,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 	public void testParseSPARQLResult3() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		DataReaderBetter bamsReader = new DataReaderBetter(sparql);
+		SparqlQuery bamsReader = new SparqlQuery(sparql);
 
 		//globus pallidus
 		bamsReader.addQueryTriplet("$gp <http://ncmir.ucsd.edu/BAMS#sending_Structure>  <http://ncmir.ucsd.edu/BAMS#Globus_pallidus>");
@@ -271,8 +271,8 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 	public void testParseSPARQLResult() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		DataReaderBetter d = 
-			new DataReaderBetter(sparql);
+		SparqlQuery d = 
+			new SparqlQuery(sparql);
 
 		d.addQueryTriplet("$s $x <http://neurolex.org/wiki/Category:Globus_pallidus>");
 		d.addQueryTriplet("$y <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> $s");
@@ -301,10 +301,10 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 	public void testParseSPARQLResult5() {
 		String sparqlNif = "http://rdf-stage.neuinfo.org/sparql";
-		DataReaderBetter bamsReader = new DataReaderBetter(sparqlNif);
+		SparqlQuery bamsReader = new SparqlQuery(sparqlNif);
 
 		String sparqlTalis = "http://api.talis.com/stores/neurolex/services/sparql";
-		DataReaderBetter cellReader = new DataReaderBetter(sparqlTalis);
+		SparqlQuery cellReader = new SparqlQuery(sparqlTalis);
 
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
 				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
@@ -424,7 +424,7 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 	 * @param drb - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	private static void populateCellDataReader(DataReaderBetter drb, String[] brainRegionNames) {
+	private static void populateCellDataReader(SparqlQuery drb, String[] brainRegionNames) {
 
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + "_region " + "$x" + "<http://neurolex.org/wiki/Category:"+
