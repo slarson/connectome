@@ -24,7 +24,7 @@ import org.apache.commons.collections15.Factory;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
-public class Edge implements Factory{
+public class ConnectionEdge implements Factory{
 	
 	enum STRENGTH {
 		NOT_PRESENT("not present"),
@@ -66,7 +66,7 @@ public class Edge implements Factory{
 	/**
 	 * Default constructor
 	 */
-	public Edge(String strength, String reference) {
+	public ConnectionEdge(String strength, String reference) {
 		this.strength = STRENGTH.myValueOf(strength);
 		this.reference = reference;
 	}
@@ -74,7 +74,7 @@ public class Edge implements Factory{
 	/**
 	 * Constructor
 	 */
-	public Edge(Node node1, Node node2){
+	public ConnectionEdge(Node node1, Node node2){
 		
 	}
 	
@@ -100,6 +100,6 @@ public class Edge implements Factory{
 	  */
 	public Object create() {
 		// TODO Auto-generated method stub
-		return new Edge("s","");
+		return new ConnectionEdge("s","");
 	}
 }

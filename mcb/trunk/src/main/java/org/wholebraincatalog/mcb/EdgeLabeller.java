@@ -2,13 +2,13 @@ package org.wholebraincatalog.mcb;
 
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
-public class EdgeLabeller extends ToStringLabeller<Edge>{
+public class EdgeLabeller extends ToStringLabeller<ConnectionEdge>{
 
 	/* (non-Javadoc)
 	 * @see edu.uci.ics.jung.visualization.decorators.DefaultToolTipFunction#getToolTipText(java.lang.Object)
 	 */
 	@Override
-	public String transform(Edge v) {
+	public String transform(ConnectionEdge v) {
 		String out = "";
 		String reference = v.getReference();
 		out += "<a href=\"http://" + reference + "\">" + reference + "</a>";
