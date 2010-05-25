@@ -74,8 +74,8 @@ public class CellDataLoader {
 					brainRegionName+">");
 			
 			drb.addQueryTriplet("$"+brainRegionName+cells_suffix +
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> " +
-					"$"+brainRegionName + region_suffix );
+					" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> $" +
+					brainRegionName + region_suffix );
 			
 			drb.addQueryTriplet("$"+brainRegionName+cells_suffix+
 					" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
