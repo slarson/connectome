@@ -28,6 +28,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.List;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
@@ -42,10 +44,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -55,25 +59,40 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
 import javax.swing.JToolTip;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+
 
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.poi.hslf.model.Picture;
+
+
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 
+import edu.uci.ics.jung.algorithms.blockmodel.VertexPartition;
+import edu.uci.ics.jung.algorithms.cluster.EdgeBetweennessClusterer;
+import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.event.GraphEvent.Edge;
+import edu.uci.ics.jung.graph.event.GraphEvent.Vertex;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
+import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
@@ -82,11 +101,16 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EllipseVertexShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape.Box;
+import edu.uci.ics.jung.visualization.picking.MultiPickedState;
+import edu.uci.ics.jung.visualization.picking.PickedState;
+import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
 import edu.uci.ics.jung.visualization.subLayout.GraphCollapser;
 import edu.uci.ics.jung.visualization.transform.LayoutLensSupport;
 import edu.uci.ics.jung.visualization.transform.LensSupport;
 import edu.uci.ics.jung.visualization.transform.shape.MagnifyImageLensSupport;
 import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
+import edu.uci.ics.jung.visualization3d.PluggableRenderContext;
 
 
 
@@ -132,7 +156,7 @@ public class BuildConnections extends JPanel{
 	/**
 	 * graph layout.
 	 */
-	Layout<Node,ConnectionEdge> layout;
+	Layout<Node,ConnectionEdge> layout1;
 
 	/**
 	 * split that contains graph and instructions.
@@ -167,6 +191,24 @@ public class BuildConnections extends JPanel{
 	LensSupport magnifyLayoutSupport;
 	LensSupport magnifyViewSupport;
 
+	AggregateLayout layout;
+
+	private static final Object DEMOKEY = "DEMOKEY";
+
+	public final Color[] similarColors =
+	{
+			new Color(216, 134, 134),
+			new Color(135, 137, 211),
+			new Color(134, 206, 189),
+			new Color(206, 176, 134),
+			new Color(194, 204, 134),
+			new Color(145, 214, 134),
+			new Color(133, 178, 209),
+			new Color(103, 148, 255),
+			new Color(60, 220, 220),
+			new Color(30, 250, 100)
+	};
+
 	public BuildConnections(Node[] nodes, int numberElements) throws IOException {
 
 		// create a simple graph for the demo
@@ -176,9 +218,14 @@ public class BuildConnections extends JPanel{
 		makeConnections(nodes);
 
 		collapser = new GraphCollapser(graph);
+		//------------------------------------------------------------
+		layout1 = new CircleLayout<Node,ConnectionEdge>(graph);
 
-		layout = new CircleLayout<Node,ConnectionEdge>(graph);
+		layout = new AggregateLayout(layout1); 
+		PickedState ps = new MultiPickedState();
+		//PluggableRenderContext<Node, ConnectionEdge> pr = new PluggableRenderContext<Node, ConnectionEdge>();
 
+		//------------------------------------------------------------
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel<Node,ConnectionEdge> visualizationModel = 
 			new DefaultVisualizationModel<Node,ConnectionEdge>(layout, preferredSize);
@@ -191,23 +238,23 @@ public class BuildConnections extends JPanel{
 			}
 		};
 
-		
+
 		//the regular graph mouse for the normal view
 		final DefaultModalGraphMouse<Node,ConnectionEdge> graphMouse = 
 			new DefaultModalGraphMouse<Node,ConnectionEdge>();
 
 		vv.setGraphMouse(graphMouse);
-		
+
 		this.viewSupport = new MagnifyImageLensSupport<Node,ConnectionEdge>(vv);
 		this.modelSupport = new LayoutLensSupport<Node,ConnectionEdge>(vv);
 
-	    graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
+		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
 		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());
 
 		ButtonGroup radio = new ButtonGroup();
 		JRadioButton none = new JRadioButton("None");
 
-	
+
 		none.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				if(viewSupport != null) {
@@ -220,7 +267,7 @@ public class BuildConnections extends JPanel{
 		});
 
 		none.setSelected(true);
-		
+
 
 		JRadioButton hyperView = new JRadioButton("View");
 		hyperView.addItemListener(new ItemListener(){
@@ -241,8 +288,8 @@ public class BuildConnections extends JPanel{
 		JMenuBar menubar = new JMenuBar();
 		JMenu modeMenu = graphMouse.getModeMenu();
 		menubar.add(modeMenu);
-		
-		
+
+
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
 		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<Node>());
 		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<ConnectionEdge>());
@@ -291,7 +338,75 @@ public class BuildConnections extends JPanel{
 		});
 
 		vv.setEdgeToolTipTransformer(new EdgeLabeller());
-	
+
+		//------------------------------------------------
+		//add restart button
+		JButton scramble = new JButton("Restart");
+		scramble.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				vv.repaint();
+			}
+
+		});
+
+		DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
+		vv.setGraphMouse(gm);
+		//vv.setPickSupport(new ShapePickSupport());
+		vv.setPickedEdgeState(ps);
+		vv.setPickedVertexState(ps);
+
+		final JToggleButton groupVertices = new JToggleButton("Group Clusters");
+
+		//Create slider to adjust the number of edges to remove when clustering
+		final JSlider edgeBetweennessSlider = new JSlider(JSlider.HORIZONTAL);
+		edgeBetweennessSlider.setBackground(Color.WHITE);
+		edgeBetweennessSlider.setPreferredSize(new Dimension(210, 50));
+		edgeBetweennessSlider.setPaintTicks(true);
+		edgeBetweennessSlider.setMaximum(graph.getEdgeCount());
+		edgeBetweennessSlider.setMinimum(0);
+		edgeBetweennessSlider.setValue(0);
+		edgeBetweennessSlider.setMajorTickSpacing(10);
+		edgeBetweennessSlider.setPaintLabels(true);
+		edgeBetweennessSlider.setPaintTicks(true);
+
+		//TO DO: edgeBetweennessSlider.add(new JLabel("Node Size (PageRank With Priors):"));
+		//I also want the slider value to appear
+		final JPanel eastControls = new JPanel();
+		eastControls.setOpaque(true);
+		eastControls.setLayout(new BoxLayout(eastControls, BoxLayout.Y_AXIS));
+		eastControls.add(this);
+		eastControls.add(edgeBetweennessSlider);
+		final String COMMANDSTRING = "Edges removed for clusters: ";
+		final String eastSize = COMMANDSTRING + edgeBetweennessSlider.getValue();
+
+		final TitledBorder sliderBorder = BorderFactory.createTitledBorder(eastSize);
+		eastControls.setBorder(sliderBorder);
+		//eastControls.add(eastSize);
+		eastControls.add(this);
+		groupVertices.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				clusterAndRecolor(layout, edgeBetweennessSlider.getValue(),
+						similarColors, e.getStateChange() == ItemEvent.SELECTED);
+			}});
+		clusterAndRecolor(layout, 0, similarColors, groupVertices.isSelected());
+
+		edgeBetweennessSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				if (!source.getValueIsAdjusting()) {
+					int numEdgesToRemove = source.getValue();
+					clusterAndRecolor(layout, numEdgesToRemove, similarColors,
+							groupVertices.isSelected());
+					sliderBorder.setTitle(
+							COMMANDSTRING + edgeBetweennessSlider.getValue());
+					eastControls.repaint();
+					vv.validate();
+					vv.repaint();
+				}
+			}
+		});
+
+		//------------------------------------------------
 
 		Container content = this;
 		GraphZoomScrollPane gzsp = new GraphZoomScrollPane(vv);
@@ -470,12 +585,25 @@ public class BuildConnections extends JPanel{
 		JPanel saveFile = new JPanel(new GridLayout(1,3));
 		saveFile.setBorder(BorderFactory.createTitledBorder("Save"));
 		saveFile.add(graph_save);
+		//----------------------------------------
 
+		JPanel south = new JPanel();
+		JPanel grid = new JPanel(new GridLayout(2,1));
+		grid.add(scramble);
+		grid.add(groupVertices);
+		south.add(grid);
+		south.add(eastControls);
+		JPanel p = new JPanel();
+		p.setBorder(BorderFactory.createTitledBorder("Mouse Mode"));
+		p.add(gm.getModeComboBox());
+		south.add(p);
+
+		//----------------------------------------
 		controls.add(collapseControls);
 		controls.add(modeBox);
 		controls.add(saveFile);
 		content.add(controls, BorderLayout.SOUTH);
-
+		
 
 		JTextArea label = new JTextArea(instructions);
 		label.setEnabled(false);
@@ -571,6 +699,50 @@ public class BuildConnections extends JPanel{
 			}
 		}
 	}
+
+	public void clusterAndRecolor(AggregateLayout layout,
+			int numEdgesToRemove,
+			Color[] colors, boolean groupClusters) {
+		//Now cluster the vertices by removing the top 50 edges with highest betweenness
+		//		if (numEdgesToRemove == 0) {
+		//			colorCluster( g.getVertices(), colors[0] );
+		//		} else {
+
+		Graph g = layout.getGraph();
+		//layout.removeAllSubLayouts();??????
+
+		EdgeBetweennessClusterer<Node,ConnectionEdge> clusterer =
+			new EdgeBetweennessClusterer<Node,ConnectionEdge>(numEdgesToRemove);
+		java.util.List<ConnectionEdge> edges =  
+			 clusterer.getEdgesRemoved();
+		//List edges = (List)clusterer.getEdgesRemoved();
+
+		/*
+		for (Iterator it = g.getEdges().iterator(); it.hasNext();) {
+			Point e = (Point) it.next();
+			if (edges.contains(e)) {
+				//((Point)e).setUserDatum(DEMOKEY, Color.LIGHT_GRAY, UserData.REMOVE);
+			} else {
+				//e.setUserDatum(DEMOKEY, Color.BLACK);
+			}
+		}*/
+
+	}
+	private void colorCluster(Set vertices, Color c) {
+		for (Iterator iter = vertices.iterator(); iter.hasNext();) {
+			Vertex v = (Vertex) iter.next();
+			//v.setUserDatum(DEMOKEY, c, UserData.REMOVE);
+		}
+	}
+
+	private void groupCluster(AggregateLayout layout, Set vertices) {
+		if(vertices.size() < layout.getGraph().getVertexCount()) {
+			//Point2D center = layout.getLocation((ArchetypeVertex)vertices.iterator().next());
+			AggregateLayout subLayout = new AggregateLayout(layout);
+			layout.setDelegate(subLayout);
+		}
+	}
+
 	/*
 	 * Driver for application
 	 * @throws Exception 
@@ -590,7 +762,7 @@ public class BuildConnections extends JPanel{
 
 		String[] brainRegionsCellData = {"Globus_pallidus", "Caudoputamen", 
 				"Central_nucleus_of_amygdala", "Substantia_nigra_pars_compacta",
-				"Ventral_tegmental_area"};
+		"Ventral_tegmental_area"};
 
 		ConnectionStatementLoader.populateNIFDataReader(bamsReader, brainRegions);
 		CellDataLoader.populateCellDataReader(cellReader,brainRegionsCellData);		
@@ -612,7 +784,7 @@ public class BuildConnections extends JPanel{
 			CellDataLoader.storeCellData(data,cellResults);
 
 			f = new JFrame(
-					"Multi-Scale Connectome Browser version-0.1.7-alpha");
+			"Multi-Scale Connectome Browser version-0.1.7-alpha");
 			f.setSize(500, 900);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(new BuildConnections(data, data.length));
