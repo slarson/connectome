@@ -332,5 +332,15 @@
 			<artifactId>jung-jai</artifactId>
 			<version>2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.cedarsoft.commons</groupId>
+			<artifactId>objectaccess</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jung</groupId>
+			<artifactId>jung-3d</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 	</dependencies>
 </project>
