@@ -24,6 +24,7 @@ package org.wholebraincatalog.mcb;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -346,17 +347,17 @@ public class BuildConnections extends JPanel{
 			public void actionPerformed(ActionEvent arg0) {
 				vv.repaint();
 			}
-
 		});
 
 		DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
 		vv.setGraphMouse(gm);
 		//vv.setPickSupport(new ShapePickSupport());
-		vv.setPickedEdgeState(ps);
-		vv.setPickedVertexState(ps);
+		//vv.setPickedEdgeState(ps);
+		//vv.setPickedVertexState(ps);
 
+		
 		final JToggleButton groupVertices = new JToggleButton("Group Clusters");
-
+		
 		//Create slider to adjust the number of edges to remove when clustering
 		final JSlider edgeBetweennessSlider = new JSlider(JSlider.HORIZONTAL);
 		edgeBetweennessSlider.setBackground(Color.WHITE);
@@ -368,19 +369,19 @@ public class BuildConnections extends JPanel{
 		edgeBetweennessSlider.setMajorTickSpacing(10);
 		edgeBetweennessSlider.setPaintLabels(true);
 		edgeBetweennessSlider.setPaintTicks(true);
-
+		
 		//TO DO: edgeBetweennessSlider.add(new JLabel("Node Size (PageRank With Priors):"));
 		//I also want the slider value to appear
 		final JPanel eastControls = new JPanel();
 		eastControls.setOpaque(true);
 		eastControls.setLayout(new BoxLayout(eastControls, BoxLayout.Y_AXIS));
 		eastControls.add(this);
-		eastControls.add(edgeBetweennessSlider);
+		//eastControls.add(edgeBetweennessSlider);
 		final String COMMANDSTRING = "Edges removed for clusters: ";
 		final String eastSize = COMMANDSTRING + edgeBetweennessSlider.getValue();
 
 		final TitledBorder sliderBorder = BorderFactory.createTitledBorder(eastSize);
-		eastControls.setBorder(sliderBorder);
+		//eastControls.setBorder(sliderBorder);
 		//eastControls.add(eastSize);
 		eastControls.add(this);
 		groupVertices.addItemListener(new ItemListener() {
@@ -412,9 +413,7 @@ public class BuildConnections extends JPanel{
 		GraphZoomScrollPane gzsp = new GraphZoomScrollPane(vv);
 		content.add(gzsp);
 
-		JComboBox modeBox = graphMouse.getModeComboBox();
-		modeBox.addItemListener(graphMouse.getModeListener());
-		graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+
 
 		final ScalingControl scaler = new CrossoverScalingControl();
 
@@ -597,13 +596,9 @@ public class BuildConnections extends JPanel{
 		p.setBorder(BorderFactory.createTitledBorder("Mouse Mode"));
 		p.add(gm.getModeComboBox());
 		south.add(p);
-
 		//----------------------------------------
 		controls.add(collapseControls);
-		controls.add(modeBox);
 		controls.add(saveFile);
-		content.add(controls, BorderLayout.SOUTH);
-		
 
 		JTextArea label = new JTextArea(instructions);
 		label.setEnabled(false);
@@ -622,7 +617,10 @@ public class BuildConnections extends JPanel{
 		lensPanel.add(hyperView);
 		lensPanel.add(hyperModel);
 		controls.add(lensPanel);
-
+		//----------------------
+		controls.add(south);
+		controls.add(grid);
+		//----------------------
 
 	}
 	/**
@@ -700,6 +698,38 @@ public class BuildConnections extends JPanel{
 		}
 	}
 
+	/**
+	 *  Method creates graph by building connections between nodes.
+	 *  @param nodes - array containing the nodes used to make graph.
+	 *  @param numberElements - number of nodes to be connected.
+	 *  @author Ruggero Carloz
+	 */
+	private Graph makeConnectionsSubgraph(Graph subGraph, Set vertices) {
+		Node[] node = new Node[vertices.size()];
+		int k = 0;
+		//Iterator<Node> iter = vertices.iterator();
+		for(Iterator iter = vertices.iterator(); iter.hasNext();){
+			node[k] = (Node)iter.next();
+			k++;
+		}
+		
+		for (int i = 0; i < node.length ; i++) {
+			for (int j = 0; j < node.length; j++) {
+				if (node[i].getRegionToStrengthMap().get(node[j].getVertexName().replace('_', ' ')) != null) {
+					String strength = node[i].getRegionToStrengthMap().get(
+							node[j].getVertexName().replace('_', ' '));
+					String reference = node[i].getReferenceSet().get(
+							node[j].getVertexName().replace('_', ' '));
+					ConnectionEdge e = new ConnectionEdge(strength, reference);
+					subGraph.addEdge(e, node[i], 
+							node[j],
+							EdgeType.DIRECTED);
+				}
+			}
+		}
+		return subGraph;
+	}
+
 	public void clusterAndRecolor(AggregateLayout layout,
 			int numEdgesToRemove,
 			Color[] colors, boolean groupClusters) {
@@ -709,24 +739,27 @@ public class BuildConnections extends JPanel{
 		//		} else {
 
 		Graph g = layout.getGraph();
-		//layout.removeAllSubLayouts();??????
+		//layout.removeAllSubLayouts();????????
 
 		EdgeBetweennessClusterer<Node,ConnectionEdge> clusterer =
 			new EdgeBetweennessClusterer<Node,ConnectionEdge>(numEdgesToRemove);
-		java.util.List<ConnectionEdge> edges =  
-			 clusterer.getEdgesRemoved();
-		//List edges = (List)clusterer.getEdgesRemoved();
+		Set clusterSet = clusterer.transform(g);
+		java.util.List<ConnectionEdge> edges =  clusterer.getEdgesRemoved();
 
-		/*
-		for (Iterator it = g.getEdges().iterator(); it.hasNext();) {
-			Point e = (Point) it.next();
-			if (edges.contains(e)) {
-				//((Point)e).setUserDatum(DEMOKEY, Color.LIGHT_GRAY, UserData.REMOVE);
-			} else {
-				//e.setUserDatum(DEMOKEY, Color.BLACK);
+
+		int i = 0;
+		//Set the colors of each node so that each cluster's vertices have the same color
+		for (Iterator cIt = clusterSet.iterator(); cIt.hasNext();) {
+
+			Set vertices = (Set) cIt.next();
+			//Color c = colors[i % colors.length];
+
+			//colorCluster(vertices, c);
+			if(groupClusters == true) {
+				groupCluster(layout, vertices);
 			}
-		}*/
-
+			i++;
+		}
 	}
 	private void colorCluster(Set vertices, Color c) {
 		for (Iterator iter = vertices.iterator(); iter.hasNext();) {
@@ -737,9 +770,22 @@ public class BuildConnections extends JPanel{
 
 	private void groupCluster(AggregateLayout layout, Set vertices) {
 		if(vertices.size() < layout.getGraph().getVertexCount()) {
-			//Point2D center = layout.getLocation((ArchetypeVertex)vertices.iterator().next());
-			AggregateLayout subLayout = new AggregateLayout(layout);
-			layout.setDelegate(subLayout);
+			//create a new Graph (new DirectedSparseMultigraph<Node,ConnectionEdge>();)
+			//iterate over vertices and add each one to graph
+			//create new aggregate layout
+			//create new circle layout
+			//set radius on circle layout
+			//put(Layout<V,E> layout, Point2D center) on the aggregatelayout (passing in circle layout)
+			//use any random point as "center" to start
+			//add aggregatelayout (layout.addSubLayout(subLayout);)
+			Graph subGraph = new DirectedSparseMultigraph<Node,ConnectionEdge>();
+			subGraph = makeConnectionsSubgraph(subGraph,vertices);
+			CircleLayout circleLayout = new CircleLayout(subGraph);
+			AggregateLayout aggregateLayout = new AggregateLayout(circleLayout);
+			Point2D center = aggregateLayout.get(circleLayout);
+			aggregateLayout.put(circleLayout, center);
+			layout.setDelegate(aggregateLayout);
+
 		}
 	}
 
