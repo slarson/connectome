@@ -24,7 +24,7 @@ import org.apache.commons.collections15.Factory;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
-public class ConnectionEdge implements Factory{
+public class ConnectionEdge implements Factory {
 	
 	enum STRENGTH {
 		NOT_PRESENT("not present"),
@@ -71,12 +71,6 @@ public class ConnectionEdge implements Factory{
 		this.reference = reference;
 	}
 
-	/**
-	 * Constructor
-	 */
-	public ConnectionEdge(Node node1, Node node2){
-		
-	}
 	
 	/**
 	 * Method makes the edges value printable.
