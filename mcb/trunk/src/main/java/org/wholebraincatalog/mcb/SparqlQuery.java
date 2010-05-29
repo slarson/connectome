@@ -205,27 +205,23 @@ public class SparqlQuery
 		//create a parser for the XML that we will be getting
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader parser = factory.createXMLStreamReader(queryResult);
-	
+		
 		while (true) {
 
 			int event = parser.next();
 
 			if (event == XMLStreamConstants.START_ELEMENT) {
-				if ("binding".equals(parser.getLocalName())) {
-					
+				if ("binding".equals(parser.getLocalName())) {					
 					//look through variable list to see if we have a match
 					String selectedVariable = null;
-					for (String variable : this.variableList) {
-						
+					for (String variable : this.variableList) {						
 						//check for matching.  search the first attribute and
 						//leave off the "$" of the variable.
 						//if there's a match, put it in the selectedVariable
 						if (parser.getAttributeValue(0).equals(variable.substring(1))) {
 							selectedVariable = variable;
-
 					}
-					}
-					
+					}					
 					if (selectedVariable != null) {
 						
 						// skip to the URI start element
@@ -245,8 +241,7 @@ public class SparqlQuery
 				break;
 			}
 		}
-		
-		System.out.println("Data processing finalized.");
+		System.out.println("Data processing finalized.");	
 		queryResult.close();
 		
 		return resultMap;
