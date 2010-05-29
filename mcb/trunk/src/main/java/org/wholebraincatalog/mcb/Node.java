@@ -49,6 +49,7 @@ public class Node implements Factory{
 	List<String> cellUrls = null;
 	List<String> neurotransmitters = null;
 	List<String> roles = null;
+	List<String> partOf = null;
 	
 	private String reference = null;
 	
@@ -64,7 +65,7 @@ public class Node implements Factory{
 	}
 	
 	public void setCellInfo(Collection<String> cells, Collection<String> cellUrls, 
-			Collection<String> neurotransmitters, Collection<String> roles) {
+			Collection<String> neurotransmitters, Collection<String> roles, Collection<String> partOf) {
 		this.cells = new ArrayList<String>();
 		if (cells != null) this.cells.addAll(cells);
 		this.cellUrls = new ArrayList<String>();
@@ -73,6 +74,8 @@ public class Node implements Factory{
 		if (neurotransmitters != null) this.neurotransmitters.addAll(neurotransmitters);
 		this.roles = new ArrayList<String>();
 		if (roles != null) this.roles.addAll(roles);
+		this.partOf = new ArrayList<String>();
+		if(partOf != null) this.partOf.addAll(partOf);
 	}
 	
 	public int getCellCount() {
@@ -95,7 +98,9 @@ public class Node implements Factory{
 		return this.roles.get(index);
 	}
 	
-	
+	public String getPartOf(int index){
+		return this.partOf.get(index);
+	}
 	/**
 	 * This method instantiates the tree to store URIs.
 	 */
