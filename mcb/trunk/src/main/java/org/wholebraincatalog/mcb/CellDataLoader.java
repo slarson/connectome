@@ -163,9 +163,13 @@ public class CellDataLoader {
 	 */
 	static void storeCellData(Node[] existingNodes, 
 			MultiHashMap<String, String> cellResults) {
-
+		String brainRegionName = null;
+		
 		for(Node node :  existingNodes){
-			String brainRegionName = node.toString();
+
+			if(brainRegionName == null)
+				brainRegionName=  reduceBrainRegionName(node.toString());
+			
 			Collection<String> cells = 
 				cellResults.get("$" + brainRegionName + "_cl");
 			Collection<String> cellUrls = 
@@ -178,6 +182,8 @@ public class CellDataLoader {
 				cellResults.get("$" + brainRegionName + "_ipo");
 
 			node.setCellInfo(cells, cellUrls, transmitters, roles, partOf);
+			
+			brainRegionName = null;
 		}	
 	}
 }
