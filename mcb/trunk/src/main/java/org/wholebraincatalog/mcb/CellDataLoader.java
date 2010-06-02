@@ -110,12 +110,12 @@ public class CellDataLoader {
 					"<http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
 					brainRegionSufixName+"_trl");
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+region_suffix +
+			drb.addQueryTriplet("$"+brainRegionSufixName+part_suffix +
 					" <http://neurolex.org/wiki/Special:URIResolver/Property-3AIs_part_of> $"+
-					brainRegionSufixName+part_suffix);
+					brainRegionSufixName+region_suffix);
 
 			drb.addQueryTriplet("$"+brainRegionSufixName+part_suffix+" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
-					brainRegionSufixName+"_is_part_of");
+					brainRegionSufixName+"_ipo");
 
 			drb.addSelectVariable("$"+ brainRegionSufixName + "_cl");
 			drb.addSelectVariable("$"+ brainRegionSufixName + "_cu");
@@ -149,7 +149,6 @@ public class CellDataLoader {
 		while(brainRegionName.indexOf('_') != -1){
 			index = brainRegionName.indexOf('_')+1;
 			reducedName+=brainRegionName.charAt(index);
-			System.out.println("dumName: "+reducedName.toLowerCase());
 			brainRegionName = brainRegionName.substring(index);	
 		}
 		
