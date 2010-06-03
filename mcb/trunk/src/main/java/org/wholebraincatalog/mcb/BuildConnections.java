@@ -63,6 +63,11 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
+import org.wholebraincatalog.mcb.graph.ConnectionEdge;
+import org.wholebraincatalog.mcb.graph.EdgeLabeller;
+import org.wholebraincatalog.mcb.graph.Node;
+import org.wholebraincatalog.mcb.graph.NodeLabeller;
+import org.wholebraincatalog.mcb.util.SparqlQuery;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;

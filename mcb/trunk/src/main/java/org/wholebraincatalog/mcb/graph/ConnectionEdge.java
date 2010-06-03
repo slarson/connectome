@@ -1,4 +1,4 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.graph;
 
 import java.util.EnumSet;
 
@@ -26,7 +26,7 @@ import org.apache.commons.collections15.Factory;
  */
 public class ConnectionEdge implements Factory {
 	
-	enum STRENGTH {
+	public enum STRENGTH {
 		NOT_PRESENT("not present"),
 		NOT_CLEAR("not clear"),
 		EXISTS("exists"),

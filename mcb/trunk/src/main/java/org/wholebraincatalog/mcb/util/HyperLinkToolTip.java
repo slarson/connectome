@@ -1,9 +1,11 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.util;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.ToolTipUI;
+
+
 import java.awt.*;
  
 /**

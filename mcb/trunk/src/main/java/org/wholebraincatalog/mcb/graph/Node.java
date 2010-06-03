@@ -1,4 +1,4 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;

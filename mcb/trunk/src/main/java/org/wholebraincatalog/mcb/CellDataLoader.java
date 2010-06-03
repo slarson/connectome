@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Stack;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
+import org.wholebraincatalog.mcb.graph.Node;
+import org.wholebraincatalog.mcb.util.SparqlQuery;
 
 public class CellDataLoader {
 

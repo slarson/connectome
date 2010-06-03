@@ -14,7 +14,7 @@
  * limitations under the License
  */
 
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.util;
 
 // /////////////////////////////////////////////////////// 
 // Bare Bones Browser Launch // 
