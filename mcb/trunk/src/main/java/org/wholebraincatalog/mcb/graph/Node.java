@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.commons.collections15.Factory;
-import org.apache.commons.collections15.multimap.MultiHashMap;
 
 /*Copyright (C) 2010 contact@wholebraincatalog.org
  *

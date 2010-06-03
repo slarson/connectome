@@ -1,4 +1,4 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.data;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ConnectionStatementLoader {
 		return data;
 	}
 	
-	static void populateNIFDataReader(SparqlQuery drb, String[] brainRegionNames) {
+	public static void populateNIFDataReader(SparqlQuery drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + 
 					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
@@ -95,7 +95,7 @@ public class ConnectionStatementLoader {
 	 * @param results
 	 * @return
 	 */
-	static Node[] createNodesFromResults(String[] brainRegions, 
+	public static Node[] createNodesFromResults(String[] brainRegions, 
 			MultiHashMap<String, String> results) {
 		List<Node> nodeList = new ArrayList<Node>();
 		for (String brainRegion : brainRegions) {
