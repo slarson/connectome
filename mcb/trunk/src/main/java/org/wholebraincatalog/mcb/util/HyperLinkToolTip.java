@@ -1,12 +1,16 @@
 package org.wholebraincatalog.mcb.util;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JToolTip;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.ToolTipUI;
-
-
-import java.awt.*;
  
 /**
  * Class for putting hyperlinks into tool tips.  Snagged from: 

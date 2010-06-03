@@ -1,8 +1,6 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.data;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Stack;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebraincatalog.mcb.graph.Node;
@@ -61,7 +59,7 @@ public class CellDataLoader {
 	 * @param drb - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	static void populateCellDataReader(SparqlQuery drb, String[] brainRegionNames) {
+	public static void populateCellDataReader(SparqlQuery drb, String[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String cells_suffix = "_c";
@@ -162,7 +160,7 @@ public class CellDataLoader {
 	 * @param existingNodes -  nodes.
 	 * @param cellResults - cell data to be stored in the nodes.
 	 */
-	static void storeCellData(Node[] existingNodes, 
+	public static void storeCellData(Node[] existingNodes, 
 			MultiHashMap<String, String> cellResults) {
 		String brainRegionName = null;
 		
