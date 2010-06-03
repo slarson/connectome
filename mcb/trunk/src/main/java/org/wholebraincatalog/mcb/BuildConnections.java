@@ -158,6 +158,11 @@ public class BuildConnections extends JPanel{
 	JFileChooser file_chooser;
 
 	/**
+	 * Exclusions set
+	 */
+	final Set exclusions = new HashSet();
+
+	/**
 	 * the gui frame
 	 */
 	static JFrame f;	
@@ -199,46 +204,7 @@ public class BuildConnections extends JPanel{
 		this.modelSupport = new LayoutLensSupport<Node,ConnectionEdge>(vv);
 
 	    graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
-		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());
-
-		ButtonGroup radio = new ButtonGroup();
-		JRadioButton none = new JRadioButton("None");
-
-	
-		none.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				if(viewSupport != null) {
-					viewSupport.deactivate();
-				}
-				if(modelSupport != null) {
-					modelSupport.deactivate();
-				}
-			}
-		});
-
-		none.setSelected(true);
-		
-
-		JRadioButton hyperView = new JRadioButton("View");
-		hyperView.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				viewSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
-			}
-		});
-		JRadioButton hyperModel = new JRadioButton("Layout");
-		hyperModel.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
-			}
-		});
-
-		radio.add(none);
-		radio.add(hyperView);
-		radio.add(hyperModel);
-		JMenuBar menubar = new JMenuBar();
-		JMenu modeMenu = graphMouse.getModeMenu();
-		menubar.add(modeMenu);
-		
+		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());		
 		
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
 		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<Node>());
@@ -247,7 +213,7 @@ public class BuildConnections extends JPanel{
 
 		final PredicatedParallelEdgeIndexFunction<Node,ConnectionEdge> eif =
 			PredicatedParallelEdgeIndexFunction.getInstance();
-		final Set exclusions = new HashSet();
+		
 
 		eif.setPredicate(new Predicate() {
 
@@ -288,11 +254,59 @@ public class BuildConnections extends JPanel{
 		});
 
 		vv.setEdgeToolTipTransformer(new EdgeLabeller());
+
+		buildGUI();
+	}
 	
+	private void buildGUI() {
+
+
+		ButtonGroup radio = new ButtonGroup();
+		JRadioButton none = new JRadioButton("None");
+
+	
+		none.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(viewSupport != null) {
+					viewSupport.deactivate();
+				}
+				if(modelSupport != null) {
+					modelSupport.deactivate();
+				}
+			}
+		});
+
+		none.setSelected(true);
+		
+
+		JRadioButton hyperView = new JRadioButton("View");
+		hyperView.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				viewSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		JRadioButton hyperModel = new JRadioButton("Layout");
+		hyperModel.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+
+		radio.add(none);
+		radio.add(hyperView);
+		radio.add(hyperModel);
+		
+		JMenuBar menubar = new JMenuBar();
+
+		DefaultModalGraphMouse<Node, ConnectionEdge> graphMouse 
+		= (DefaultModalGraphMouse<Node, ConnectionEdge>) vv.getGraphMouse();
+		JMenu modeMenu = graphMouse.getModeMenu();
+		menubar.add(modeMenu);
 
 		Container content = this;
 		GraphZoomScrollPane gzsp = new GraphZoomScrollPane(vv);
 		content.add(gzsp);
+		
 
 		JComboBox modeBox = graphMouse.getModeComboBox();
 		modeBox.addItemListener(graphMouse.getModeListener());
@@ -493,9 +507,8 @@ public class BuildConnections extends JPanel{
 		lensPanel.add(hyperView);
 		lensPanel.add(hyperModel);
 		controls.add(lensPanel);
-
-
 	}
+	
 	/**
 	 * A demo class that will create a vertex shape that is either a
 	 * polygon or star. The number of sides corresponds to the number
@@ -631,11 +644,6 @@ public class BuildConnections extends JPanel{
 		for (String key : cellResults.keySet()) {
 			System.out.println("key: " + key + ", results: " + cellResults.get(key));
 		}
-
-
-
-
-
 	}
 }
 
