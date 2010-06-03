@@ -1,4 +1,5 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.graph;
+
 
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 /**

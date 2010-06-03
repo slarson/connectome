@@ -1,4 +1,4 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.util;
 
 /* Copyright (C) 2010 contact@wholebraincatalog.org
  *

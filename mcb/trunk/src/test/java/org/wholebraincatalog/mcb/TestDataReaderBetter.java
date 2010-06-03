@@ -17,7 +17,8 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
-import org.wholebraincatalog.mcb.SparqlQuery;
+import org.wholebraincatalog.mcb.graph.Node;
+import org.wholebraincatalog.mcb.util.SparqlQuery;
 
 import junit.framework.TestCase;
 

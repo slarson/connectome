@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
+import org.wholebraincatalog.mcb.graph.Node;
+import org.wholebraincatalog.mcb.util.SparqlQuery;
 
 public class ConnectionStatementLoader {
 
