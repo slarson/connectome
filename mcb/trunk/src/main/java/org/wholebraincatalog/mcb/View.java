@@ -20,6 +20,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 import org.wholebraincatalog.mcb.graph.ConnectionEdge;
+import org.wholebraincatalog.mcb.graph.GraphManager;
 import org.wholebraincatalog.mcb.graph.Node;
 
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;

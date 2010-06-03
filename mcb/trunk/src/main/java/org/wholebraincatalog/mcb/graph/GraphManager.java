@@ -1,4 +1,4 @@
-package org.wholebraincatalog.mcb;
+package org.wholebraincatalog.mcb.graph;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -25,10 +25,6 @@ import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 import org.wholebraincatalog.mcb.data.BuildConnections;
-import org.wholebraincatalog.mcb.graph.ConnectionEdge;
-import org.wholebraincatalog.mcb.graph.EdgeLabeller;
-import org.wholebraincatalog.mcb.graph.Node;
-import org.wholebraincatalog.mcb.graph.NodeLabeller;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
