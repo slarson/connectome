@@ -97,8 +97,8 @@ public class Node implements Factory{
 		return this.roles.get(index);
 	}
 	
-	public String getPartOf(int index){
-		return this.partOf.get(index);
+	public List<String> getPartOf(){
+		return this.partOf;
 	}
 	/**
 	 * This method instantiates the tree to store URIs.

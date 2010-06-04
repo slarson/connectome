@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -52,9 +53,9 @@ import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
  *
  */
 public class GraphManager {
-	
+
 	private static GraphManager instance = null;
-	
+
 	/**
 	 * the graph
 	 */
@@ -79,7 +80,7 @@ public class GraphManager {
 	 * Scales the graph.
 	 */
 	final ScalingControl scaler;
-	
+
 	/**
 	 * Lens objects
 	 */
@@ -87,30 +88,30 @@ public class GraphManager {
 	LensSupport modelSupport;
 	LensSupport magnifyLayoutSupport;
 	LensSupport magnifyViewSupport;
-	
+
 
 	/**
 	 * Exclusions set
 	 */
 	final Set exclusions = new HashSet();
-	
+
 	public static GraphManager getInstance() {
 		if (instance == null) {
 			instance = new GraphManager();
 		}
 		return instance;
 	}
-	
+
 	private GraphManager() {
 
 		graph = new DirectedSparseMultigraph<Node,ConnectionEdge>();
-		
+
 		BuildConnections.getDataAndCreateGraph(graph);
-		
+
 		collapser = new GraphCollapser(graph);
 
 		layout = new CircleLayout<Node,ConnectionEdge>(graph);
-		
+
 		scaler = new CrossoverScalingControl();
 
 		Dimension preferredSize = new Dimension(800,400);
@@ -118,19 +119,19 @@ public class GraphManager {
 			new DefaultVisualizationModel<Node,ConnectionEdge>(layout, preferredSize);
 		vv =  new VisualizationViewer<Node,ConnectionEdge>(visualizationModel, preferredSize);
 
-		
+
 		//the regular graph mouse for the normal view
 		final DefaultModalGraphMouse<Node,ConnectionEdge> graphMouse = 
 			new DefaultModalGraphMouse<Node,ConnectionEdge>();
 
 		vv.setGraphMouse(graphMouse);
-		
+
 		this.viewSupport = new MagnifyImageLensSupport<Node,ConnectionEdge>(vv);
 		this.modelSupport = new LayoutLensSupport<Node,ConnectionEdge>(vv);
 
-	    graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
+		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
 		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());		
-		
+
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
 		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<Node>());
 		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<ConnectionEdge>());
@@ -138,7 +139,7 @@ public class GraphManager {
 
 		final PredicatedParallelEdgeIndexFunction<Node,ConnectionEdge> eif =
 			PredicatedParallelEdgeIndexFunction.getInstance();
-		
+
 
 		eif.setPredicate(new Predicate() {
 
@@ -179,18 +180,20 @@ public class GraphManager {
 		});
 
 		vv.setEdgeToolTipTransformer(new EdgeLabeller());
+		//Collapse nodes in subgraph.
+		collapseSubGraph();
 
 	}
-	
+
 	public GraphZoomScrollPane getGraphZoomScrollPane() {
 		return new GraphZoomScrollPane(vv);
 	}
-	
+
 	public VisualizationViewer<Node,ConnectionEdge> getVisualizationViewer() {
 		return vv;
 	}
-	
-	
+
+
 	public void collapse() {
 		Collection picked = new HashSet(vv.getPickedVertexState().getPicked());
 		if(picked.size() > 1) {
@@ -213,7 +216,7 @@ public class GraphManager {
 			vv.repaint();
 		}
 	}
-	
+
 	public void expand() {
 		Collection picked = new HashSet(vv.getPickedVertexState().getPicked());
 		for(Object v : picked) {
@@ -227,7 +230,7 @@ public class GraphManager {
 			vv.repaint();
 		}
 	}
-	
+
 	public void compressEdges() {
 		Collection<Node> picked = vv.getPickedVertexState().getPicked();
 		if(picked.size() == 2) {
@@ -239,7 +242,7 @@ public class GraphManager {
 			vv.repaint();
 		}
 	}
-	
+
 	public void expandEdges() {
 		Collection picked = vv.getPickedVertexState().getPicked();
 		if(picked.size() == 2) {
@@ -251,7 +254,7 @@ public class GraphManager {
 			vv.repaint();
 		}
 	}
-	
+
 	public void lensNone() {
 		if(viewSupport != null) {
 			viewSupport.deactivate();
@@ -260,33 +263,33 @@ public class GraphManager {
 			modelSupport.deactivate();
 		}
 	}
-	
+
 	public void lensView(ItemEvent e) {
 		viewSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
 	}
-	
+
 	public void lensLayout(ItemEvent e) {
 		modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
 	}
-	
+
 	public DefaultModalGraphMouse<Node, ConnectionEdge> getGraphMouse() {
 		return (DefaultModalGraphMouse<Node, ConnectionEdge>) vv.getGraphMouse();
 	}
-	
+
 	public void zoomIn() {
 		scaler.scale(vv, 1.1f, vv.getCenter());
 	}
-	
+
 	public void zoomOut() {
 		scaler.scale(vv, 1/1.1f, vv.getCenter());
 	}
-	
+
 	public void reset() {
 		layout.setGraph(graph);
 		exclusions.clear();
 		vv.repaint();
 	}
-	
+
 	public void saveImage() {
 		File file;
 		int value;
@@ -337,7 +340,61 @@ public class GraphManager {
 			e2.printStackTrace();
 		}catch(Exception e1){e1.printStackTrace();}
 	}
+
+	/**
+	 * Method collapses the nodes that are part of a particular brain region.
+	 */
+	private void collapseSubGraph(){
+
+		Collection picked = null;
+
+		for(Node node: graph.getVertices()){
+
+			if(node.getPartOf()!= null && !node.getPartOf().isEmpty())
+				picked = getPickedNodes(node);
+			else if(node.getPartOf() ==  null)
+				continue;
+			if(picked != null && picked.size() > 1) {
+				Graph<Node,ConnectionEdge> inGraph = layout.getGraph();
+				Graph<Node,ConnectionEdge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
+				Graph<Node,ConnectionEdge> g = collapser.collapse(layout.getGraph(), clusterGraph);
+
+				double sumx = 0;
+				double sumy = 0;
+				for(Object v : picked) {
+					Point2D p = (Point2D)layout.transform(v);
+					sumx += p.getX();
+					sumy += p.getY();
+				}
+				Point2D cp = new Point2D.Double(sumx/picked.size(), sumy/picked.size());
+				vv.getRenderContext().getParallelEdgeIndexFunction().reset();
+				layout.setGraph(g);
+				layout.setLocation(clusterGraph, cp);
+				vv.getPickedVertexState().clear();
+				vv.repaint();
+			}
+			picked = null;
+		}
+	}
 	
+	/**
+	 * Given a node this method returns the children of the node.
+	 * @param node - the node used to check for its children.
+	 * @return pickedNodes - collection containing the children of the node and
+	 * 						 the node itself.
+	 */
+	private Collection<Node> getPickedNodes(Node node){
+		Collection<Node> pickedNodes = new Vector<Node>();
+		for(String subNode : node.getPartOf()){
+			for(Node currentNode: graph.getVertices()){
+				if(subNode.equals(currentNode.toString().replace('_', ' '))){
+					pickedNodes.add(currentNode);
+				}
+			}
+			pickedNodes.add(node);
+		}
+		return pickedNodes;
+	}
 	/**
 	 * A demo class that will create a vertex shape that is either a
 	 * polygon or star. The number of sides corresponds to the number
@@ -368,7 +425,7 @@ public class GraphManager {
 			return super.transform(v);
 		}
 	}
-	
+
 	/**
 	 * A demo class that will make vertices larger if they represent
 	 * a collapsed collection of original vertices

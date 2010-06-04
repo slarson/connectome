@@ -27,9 +27,7 @@ public class MultiScaleConnectomeBrowser {
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			View v = new View();
 			f.getContentPane().add(v.getMainPanel());
-			f.add(v.getSplitPanel());
-			
-			
+			f.add(v.getSplitPanel());						
 			f.pack();
 			f.setVisible(true);
 

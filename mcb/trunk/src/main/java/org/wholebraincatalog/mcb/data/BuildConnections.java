@@ -21,7 +21,9 @@ package org.wholebraincatalog.mcb.data;
  */
 
 
+import java.awt.List;
 import java.io.InputStream;
+import java.util.Vector;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebraincatalog.mcb.graph.ConnectionEdge;
@@ -42,7 +44,7 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 public class BuildConnections {
 
-	
+
 	public static void getDataAndCreateGraph(Graph graph) {
 		try {
 			String sparqlNif = "http://rdf-stage.neuinfo.org/sparql";
@@ -70,14 +72,11 @@ public class BuildConnections {
 
 			InputStream connectivityQueryResult = bamsReader.runSelectQuery();
 			InputStream cellQueryResult = cellReader.runSelectQuery();
-			System.out.println("GOING SAVAGE" + cellQueryResult);
 
 			results = bamsReader.parseSPARQLResult(connectivityQueryResult);
 			cellResults = cellReader.parseSPARQLResult(cellQueryResult);
-			System.out.println("cellResults: " + cellResults.isEmpty());
 			Node[] data = ConnectionStatementLoader.createNodesFromResults(
 					brainRegions, results);
-			System.out.println("data length: " + data.length);
 			CellDataLoader.storeCellData(data, cellResults);
 
 			makeConnections(graph, data);
@@ -94,8 +93,6 @@ public class BuildConnections {
 		}
 
 	}
-	
-
 	/**
 	 *  Method creates graph by building connections between nodes.
 	 *  @param nodes - array containing the nodes used to make graph.
@@ -117,7 +114,26 @@ public class BuildConnections {
 							EdgeType.DIRECTED);
 				}
 			}
+		}	
+		subNodesConnection(graph,node);
+	}
+
+	private static void subNodesConnection(Graph graph, Node[] node){
+		Vector<String> repeats = new Vector<String>();
+		
+		for(int i = 0; i < node.length; i++){
+			if(!node[i].getPartOf().isEmpty()){
+				for(String partOf: node[i].getPartOf()){
+					if(!repeats.contains(partOf)){
+						Node subNode = new Node(partOf);
+						graph.addEdge(new ConnectionEdge("not clear","not clear"),
+								subNode,node[i], EdgeType.DIRECTED);
+						repeats.add(partOf);
+					}	
+				}
+			}
 		}
+
 	}
 
 }
