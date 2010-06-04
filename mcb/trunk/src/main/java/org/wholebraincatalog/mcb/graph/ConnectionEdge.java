@@ -63,6 +63,13 @@ public class ConnectionEdge implements Factory {
 	private STRENGTH strength;
 
 	private String reference;
+
+	/**
+	 * Default constructor.
+	 */
+	public ConnectionEdge(){
+		
+	}
 	/**
 	 * Default constructor
 	 */
