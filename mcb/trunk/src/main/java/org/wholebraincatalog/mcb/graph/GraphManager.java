@@ -22,6 +22,7 @@ import javax.swing.JFileChooser;
 
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.collections15.functors.ChainedTransformer;
 import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
@@ -41,11 +42,14 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EllipseVertexShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.jai.TransformingImageVertexIconRenderer;
 import edu.uci.ics.jung.visualization.subLayout.GraphCollapser;
 import edu.uci.ics.jung.visualization.transform.LayoutLensSupport;
 import edu.uci.ics.jung.visualization.transform.LensSupport;
 import edu.uci.ics.jung.visualization.transform.shape.MagnifyImageLensSupport;
 import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
+import edu.uci.ics.jung.visualization.renderers.Renderer;
+import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
 
 /**
  * The GraphManager holds the graph model, handles layout, and handles modifications
@@ -114,6 +118,7 @@ public class GraphManager {
 
 		scaler = new CrossoverScalingControl();
 
+		
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel<Node,ConnectionEdge> visualizationModel = 
 			new DefaultVisualizationModel<Node,ConnectionEdge>(layout, preferredSize);
@@ -131,12 +136,17 @@ public class GraphManager {
 
 		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
 		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());		
+		
+		VertexLabelAsShapeRenderer vlasr = new VertexLabelAsShapeRenderer(vv.getRenderContext());
 
-		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
-		vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<Node>());
+		vv.getRenderContext().setVertexShapeTransformer(vlasr);
+
+		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+		//vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<Node>());
 		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<ConnectionEdge>());
+		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 
-
+		
 		final PredicatedParallelEdgeIndexFunction<Node,ConnectionEdge> eif =
 			PredicatedParallelEdgeIndexFunction.getInstance();
 
@@ -354,6 +364,7 @@ public class GraphManager {
 				picked = getPickedNodes(node);
 			else if(node.getPartOf() ==  null)
 				continue;
+			
 			if(picked != null && picked.size() > 1) {
 				Graph<Node,ConnectionEdge> inGraph = layout.getGraph();
 				Graph<Node,ConnectionEdge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
