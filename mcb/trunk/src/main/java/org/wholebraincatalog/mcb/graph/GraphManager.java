@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ItemEvent;
@@ -48,6 +49,7 @@ import edu.uci.ics.jung.visualization.transform.LayoutLensSupport;
 import edu.uci.ics.jung.visualization.transform.LensSupport;
 import edu.uci.ics.jung.visualization.transform.shape.MagnifyImageLensSupport;
 import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
+import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
 
@@ -118,7 +120,7 @@ public class GraphManager {
 
 		scaler = new CrossoverScalingControl();
 
-		
+
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel<Node,ConnectionEdge> visualizationModel = 
 			new DefaultVisualizationModel<Node,ConnectionEdge>(layout, preferredSize);
@@ -136,21 +138,31 @@ public class GraphManager {
 
 		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
 		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());		
-		
+
 		VertexLabelAsShapeRenderer vlasr = new VertexLabelAsShapeRenderer(vv.getRenderContext());
 
 		vv.getRenderContext().setVertexShapeTransformer(vlasr);
 
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-		//vv.getRenderContext().setVertexShapeTransformer(new ClusterVertexShapeFunction<Node>());
+
+		vv.getRenderContext().setVertexLabelRenderer(new DefaultVertexLabelRenderer(Color.RED));
 		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<ConnectionEdge>());
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 
+		// Setup up a new vertex to paint transformer to change node color.
+		Transformer vertexPaint = new Transformer() {
+		public Object transform(Object input) {
+			// TODO Auto-generated method stub
+			return Color.WHITE;
+		}
+		};
+		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
 		
+
 		final PredicatedParallelEdgeIndexFunction<Node,ConnectionEdge> eif =
 			PredicatedParallelEdgeIndexFunction.getInstance();
 
-
+		
 		eif.setPredicate(new Predicate() {
 
 			public boolean evaluate(Object e) {
@@ -161,7 +173,7 @@ public class GraphManager {
 
 		vv.getRenderContext().setParallelEdgeIndexFunction(eif);
 
-		vv.setBackground(Color.white);
+		vv.setBackground(Color.LIGHT_GRAY);
 
 		//***** add a listener for USE CLASS NodeLabeller*****
 		vv.setVertexToolTipTransformer(new NodeLabeller());
@@ -297,6 +309,7 @@ public class GraphManager {
 	public void reset() {
 		layout.setGraph(graph);
 		exclusions.clear();
+		collapseSubGraph();
 		vv.repaint();
 	}
 
@@ -344,7 +357,7 @@ public class GraphManager {
 			out.close();
 			file.deleteOnExit();
 			file_chooser = null;
-			;
+			
 		} catch (IOException e2) {
 			System.out.println(e2);
 			e2.printStackTrace();
@@ -364,12 +377,12 @@ public class GraphManager {
 				picked = getPickedNodes(node);
 			else if(node.getPartOf() ==  null)
 				continue;
-			
+
 			if(picked != null && picked.size() > 1) {
 				Graph<Node,ConnectionEdge> inGraph = layout.getGraph();
 				Graph<Node,ConnectionEdge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
 				Graph<Node,ConnectionEdge> g = collapser.collapse(layout.getGraph(), clusterGraph);
-
+				
 				double sumx = 0;
 				double sumy = 0;
 				for(Object v : picked) {
@@ -379,6 +392,7 @@ public class GraphManager {
 				}
 				Point2D cp = new Point2D.Double(sumx/picked.size(), sumy/picked.size());
 				vv.getRenderContext().getParallelEdgeIndexFunction().reset();
+				//vv.getRenderContext().setVertexLabelTransformer(new NodeLabeller());
 				layout.setGraph(g);
 				layout.setLocation(clusterGraph, cp);
 				vv.getPickedVertexState().clear();
@@ -387,7 +401,7 @@ public class GraphManager {
 			picked = null;
 		}
 	}
-	
+
 	/**
 	 * Given a node this method returns the children of the node.
 	 * @param node - the node used to check for its children.
@@ -398,7 +412,7 @@ public class GraphManager {
 		Collection<Node> pickedNodes = new Vector<Node>();
 		for(String subNode : node.getPartOf()){
 			for(Node currentNode: graph.getVertices()){
-				if(subNode.equals(currentNode.toString().replace('_', ' '))){
+				if(subNode.equals(currentNode.getVertexName().replace('_', ' '))){
 					pickedNodes.add(currentNode);
 				}
 			}
