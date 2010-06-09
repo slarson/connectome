@@ -109,7 +109,7 @@ public class CellDataLoader {
 			drb.addQueryTriplet("$"+brainRegionSufixName+transmitter_role_suffix +
 					"<http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
 					brainRegionSufixName+"_trl");
-
+			
 			drb.addQueryTriplet("$"+brainRegionSufixName+part_suffix +
 					" <http://neurolex.org/wiki/Special:URIResolver/Property-3AIs_part_of> $"+
 					brainRegionSufixName+region_suffix);

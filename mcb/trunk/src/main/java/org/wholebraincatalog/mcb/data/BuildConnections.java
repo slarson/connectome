@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebraincatalog.mcb.graph.ConnectionEdge;
+import org.wholebraincatalog.mcb.graph.GraphManager;
 import org.wholebraincatalog.mcb.graph.Node;
 import org.wholebraincatalog.mcb.util.SparqlQuery;
 

@@ -62,7 +62,7 @@ public class View extends JPanel{
 		buildGUI();
 	}
 
-	public void buildGUI() {
+	private void buildGUI() {
 		ButtonGroup radio = new ButtonGroup();
 		JRadioButton none = new JRadioButton("None");
 
