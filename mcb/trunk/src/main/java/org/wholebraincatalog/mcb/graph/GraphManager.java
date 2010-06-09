@@ -29,10 +29,13 @@ import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 import org.wholebraincatalog.mcb.data.BuildConnections;
 
+import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.Tree;
 import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
@@ -60,6 +63,9 @@ import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
  */
 public class GraphManager {
 
+	/**
+	 * The singleton instance
+	 */
 	private static GraphManager instance = null;
 
 	/**
@@ -75,7 +81,7 @@ public class GraphManager {
 	/**
 	 * graph layout.
 	 */
-	Layout layout;
+	AggregateLayout<Node, ConnectionEdge> layout;
 
 	/**
 	 * graph collapser.
@@ -116,16 +122,17 @@ public class GraphManager {
 
 		collapser = new GraphCollapser(graph);
 
-		layout = new CircleLayout<Node,ConnectionEdge>(graph);
+		layout = 
+			new AggregateLayout<Node,ConnectionEdge>(
+					new CircleLayout<Node,ConnectionEdge>(graph));
 
 		scaler = new CrossoverScalingControl();
 
-
+		
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel<Node,ConnectionEdge> visualizationModel = 
 			new DefaultVisualizationModel<Node,ConnectionEdge>(layout, preferredSize);
 		vv =  new VisualizationViewer<Node,ConnectionEdge>(visualizationModel, preferredSize);
-
 
 		//the regular graph mouse for the normal view
 		final DefaultModalGraphMouse<Node,ConnectionEdge> graphMouse = 
@@ -202,8 +209,16 @@ public class GraphManager {
 		});
 
 		vv.setEdgeToolTipTransformer(new EdgeLabeller());
+		
 		//Collapse nodes in subgraph.
 		collapseSubGraph();
+
+		//temporary hack for demo purposes
+		for (Node n : graph.getVertices()) {
+			if (n.getVertexName().startsWith("Glo")) {
+				applyTreeLayout(n);
+			}
+		}
 
 	}
 
@@ -226,14 +241,14 @@ public class GraphManager {
 			double sumx = 0;
 			double sumy = 0;
 			for(Object v : picked) {
-				Point2D p = (Point2D)layout.transform(v);
+				Point2D p = (Point2D)layout.transform((Node) v);
 				sumx += p.getX();
 				sumy += p.getY();
 			}
 			Point2D cp = new Point2D.Double(sumx/picked.size(), sumy/picked.size());
 			vv.getRenderContext().getParallelEdgeIndexFunction().reset();
 			layout.setGraph(g);
-			layout.setLocation(clusterGraph, cp);
+			layout.setLocation((Node) clusterGraph, cp);
 			vv.getPickedVertexState().clear();
 			vv.repaint();
 		}
@@ -369,7 +384,7 @@ public class GraphManager {
 	 */
 	private void collapseSubGraph(){
 
-		Collection picked = null;
+		Collection<Node> picked = null;
 
 		for(Node node: graph.getVertices()){
 
@@ -385,7 +400,7 @@ public class GraphManager {
 				
 				double sumx = 0;
 				double sumy = 0;
-				for(Object v : picked) {
+				for(Node v : picked) {
 					Point2D p = (Point2D)layout.transform(v);
 					sumx += p.getX();
 					sumy += p.getY();
@@ -394,7 +409,7 @@ public class GraphManager {
 				vv.getRenderContext().getParallelEdgeIndexFunction().reset();
 				//vv.getRenderContext().setVertexLabelTransformer(new NodeLabeller());
 				layout.setGraph(g);
-				layout.setLocation(clusterGraph, cp);
+				//layout.setLocation(clusterGraph, cp);
 				vv.getPickedVertexState().clear();
 				vv.repaint();
 			}
@@ -402,6 +417,38 @@ public class GraphManager {
 		}
 	}
 
+
+	public void applyTreeLayout(Node n) {
+
+		Tree<Node, ConnectionEdge> subGraph;
+		try {
+			subGraph = n.getChildTree();
+			Collection<Node> picked = subGraph.getVertices();
+			Point2D center = new Point2D.Double();
+			double x = 0;
+			double y = 0;
+			for (Node vertex : picked) {
+				Point2D p = layout.transform(vertex);
+				x += p.getX();
+				y += p.getY();
+			}
+			x /= picked.size();
+			y /= picked.size();
+			center.setLocation(x, y);
+
+			Layout<Node, ConnectionEdge> subLayout =
+				new TreeLayout<Node, ConnectionEdge>(subGraph);
+			subLayout.setInitializer(vv.getGraphLayout());
+			//subLayout.setSize(new Dimension(100, 100));
+			layout.put(subLayout, center);
+			vv.setGraphLayout(layout);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 	/**
 	 * Given a node this method returns the children of the node.
 	 * @param node - the node used to check for its children.
@@ -471,4 +518,6 @@ public class GraphManager {
 			return size;
 		}
 	}
+	
+	
 }

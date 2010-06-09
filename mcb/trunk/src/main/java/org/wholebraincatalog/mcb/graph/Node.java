@@ -8,6 +8,15 @@ import java.util.TreeSet;
 
 import org.apache.commons.collections15.Factory;
 
+import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
+import edu.uci.ics.jung.graph.DelegateTree;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.Forest;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.Tree;
+import edu.uci.ics.jung.graph.util.EdgeType;
+import edu.uci.ics.jung.graph.util.Pair;
+
 /*Copyright (C) 2010 contact@wholebraincatalog.org
  *
  * Whole Brain Catalog is Licensed under the GNU Lesser Public License (LGPL), Version 2.0 (the "License");
@@ -28,7 +37,7 @@ import org.apache.commons.collections15.Factory;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
-public class Node implements Factory{
+public class Node extends DirectedSparseMultigraph implements Factory{
 
 	/**
 	 * Name of vertex.
@@ -149,6 +158,25 @@ public class Node implements Factory{
 	}
 	
 	/**
+	 * For this node, return a tree graph that hangs under
+	 * this node that can be used to display part-of relations
+	 * and cells that are associated with this node.  Makes
+	 * this node the root of the tree.
+	 * @return
+	 */
+	public Tree<Node, ConnectionEdge> getChildTree() {
+		Tree<Node,ConnectionEdge> treeGraph = 
+			new DelegateTree<Node,ConnectionEdge>();
+		
+		treeGraph.addVertex(this);
+	    treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node("A1"));
+		treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node("A2"));
+		treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node("A3"));
+		
+		return treeGraph;
+	}
+	
+	/**
 	 * This method returns the number of connections in a node.
 	 * @return numberOfConnections - number of connections in node.
 	 */
@@ -226,14 +254,10 @@ public class Node implements Factory{
 			addReference(nodesList.get(i), referencesList.get(i));
 		}
 	}
-	
-	/**
-	 * Method creates a new node.  Method not used in this 
-	 * implementation.
-	 * @see org.apache.commons.collections15.Factory#create()
-	 */
+
 	public Object create() {
-		return new Node("");
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
