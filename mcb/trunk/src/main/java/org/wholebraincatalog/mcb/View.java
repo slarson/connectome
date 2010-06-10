@@ -158,6 +158,13 @@ public class View extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				GraphManager.getInstance().reset();
 			}});
+		JButton test = new JButton("test");
+		test.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				GraphManager.getInstance().test();
+			}
+		});
 		JButton graph_save = new JButton("Save Image");
 		graph_save.addActionListener(new ActionListener() {
 
@@ -179,6 +186,7 @@ public class View extends JPanel{
 		collapseControls.add(compressEdges);
 		collapseControls.add(expandEdges);
 		collapseControls.add(reset);
+		collapseControls.add(test);
 		JPanel saveFile = new JPanel(new GridLayout(1,3));
 		saveFile.setBorder(BorderFactory.createTitledBorder("Save"));
 		saveFile.add(graph_save);

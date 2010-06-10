@@ -169,9 +169,9 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 			new DelegateTree<Node,ConnectionEdge>();
 		
 		treeGraph.addVertex(this);
-	    treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node("A1"));
-		treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node("A2"));
-		treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node("A3"));
+		for (String partof : getPartOf()) {
+			treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node(partof));
+		}
 		
 		return treeGraph;
 	}
