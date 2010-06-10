@@ -24,7 +24,7 @@ public class NodeLabeller extends ToStringLabeller<Node> {
 		//HTML can be used to format the tooltip.
 		//http://sourceforge.net/projects/jung/forums/forum/252062/topic/2294542
 		String data_str = "<html>";
-		data_str += n.getVertexName().replace("_", " ");
+		data_str += n.getVertexName().replace('_', ' ');
 		
 		for (int i = 0; i < n.getCellCount(); i++) {
 			data_str += "<a href=\"" + n.getCellUrl(i) + "\">" + 
