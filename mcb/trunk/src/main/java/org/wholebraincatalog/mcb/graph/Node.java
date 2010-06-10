@@ -73,7 +73,7 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 	}
 	
 	public void setCellInfo(Collection<String> cells, Collection<String> cellUrls, 
-			Collection<String> neurotransmitters, Collection<String> roles, Collection<String> partOf) {
+			Collection<String> neurotransmitters, Collection<String> roles) {
 		this.cells = new ArrayList<String>();
 		if (cells != null) this.cells.addAll(cells);
 		this.cellUrls = new ArrayList<String>();
@@ -82,8 +82,12 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 		if (neurotransmitters != null) this.neurotransmitters.addAll(neurotransmitters);
 		this.roles = new ArrayList<String>();
 		if (roles != null) this.roles.addAll(roles);
+	}
+	
+
+	public void setBrainRegionInfo(Collection<String> partOf2) {
 		this.partOf = new ArrayList<String>();
-		if(partOf != null) this.partOf.addAll(partOf);
+		if(partOf2 != null) this.partOf.addAll(partOf2);
 	}
 	
 	public int getCellCount() {
@@ -259,5 +263,6 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

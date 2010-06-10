@@ -53,6 +53,8 @@ public class BuildConnections {
 
 			String sparqlTalis = "http://api.talis.com/stores/neurolex/services/sparql";
 			SparqlQuery cellReader = new SparqlQuery(sparqlTalis);
+			
+			SparqlQuery brainRegionReader = new SparqlQuery(sparqlTalis);
 
 			String[] brainRegions = { "Globus_pallidus", "Caudoputamen",
 					"Central_nucleus_of_amygdala",
@@ -63,22 +65,25 @@ public class BuildConnections {
 					"Caudoputamen", "Central_nucleus_of_amygdala",
 					"Substantia_nigra_pars_compacta", "Ventral_tegmental_area" };
 
-			ConnectionStatementLoader.populateNIFDataReader(bamsReader,
+			ConnectionStatementLoader.populate(bamsReader,
 					brainRegions);
-			CellDataLoader.populateCellDataReader(cellReader,
+			CellDataLoader.populate(cellReader,
 					brainRegionsCellData);
-
-			MultiHashMap<String, String> results = null;
-			MultiHashMap<String, String> cellResults = null;
-
+			BrainRegionDataLoader.populate(brainRegionReader,
+					brainRegionsCellData);
+			
 			InputStream connectivityQueryResult = bamsReader.runSelectQuery();
 			InputStream cellQueryResult = cellReader.runSelectQuery();
+			InputStream brainRegionQueryResult = brainRegionReader.runSelectQuery();
 
-			results = bamsReader.parseSPARQLResult(connectivityQueryResult);
-			cellResults = cellReader.parseSPARQLResult(cellQueryResult);
+			MultiHashMap<String, String> results = bamsReader.parseSPARQLResult(connectivityQueryResult);
+			MultiHashMap<String, String> cellResults = cellReader.parseSPARQLResult(cellQueryResult);
+			MultiHashMap<String, String> brainRegionResults = brainRegionReader.parseSPARQLResult(brainRegionQueryResult);
+			
 			Node[] data = ConnectionStatementLoader.createNodesFromResults(
 					brainRegions, results);
-			CellDataLoader.storeCellData(data, cellResults);
+			CellDataLoader.storeData(data, cellResults);
+			BrainRegionDataLoader.storeData(data, brainRegionResults);
 
 			makeConnections(graph, data);
 

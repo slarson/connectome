@@ -24,7 +24,7 @@ public class ConnectionStatementLoader {
 				"Ventral_tegmental_area", "Prelimbic_area", 
 				"Lateral_preoptic_area"};
 		
-		populateNIFDataReader(bamsReader, brainRegions);
+		populate(bamsReader, brainRegions);
 				
 		InputStream queryResult = bamsReader.runSelectQuery();
 		
@@ -41,7 +41,7 @@ public class ConnectionStatementLoader {
 		return data;
 	}
 	
-	public static void populateNIFDataReader(SparqlQuery drb, String[] brainRegionNames) {
+	public static void populate(SparqlQuery drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
 			drb.addQueryTriplet("$" + brainRegionName + 
 					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
