@@ -59,11 +59,10 @@ public class CellDataLoader {
 	 * @param drb - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	public static void populateCellDataReader(SparqlQuery drb, String[] brainRegionNames) {
+	public static void populate(SparqlQuery drb, String[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String cells_suffix = "_c";
-		String part_suffix = "_p";
 		String neurotransmitter_suffix = "_n";
 		String transmitter_role_suffix = "_t_r";
 		String brainRegionSufixName = null;
@@ -110,18 +109,10 @@ public class CellDataLoader {
 					"<http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
 					brainRegionSufixName+"_trl");
 			
-			drb.addQueryTriplet("$"+brainRegionSufixName+part_suffix +
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3AIs_part_of> $"+
-					brainRegionSufixName+region_suffix);
-
-			drb.addQueryTriplet("$"+brainRegionSufixName+part_suffix+" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
-					brainRegionSufixName+"_ipo");
-
 			drb.addSelectVariable("$"+ brainRegionSufixName + "_cl");
 			drb.addSelectVariable("$"+ brainRegionSufixName + "_cu");
 			drb.addSelectVariable("$"+ brainRegionSufixName + "_nl");
 			drb.addSelectVariable("$"+ brainRegionSufixName + "_trl");
-			drb.addSelectVariable("$"+ brainRegionSufixName + "_ipo");
 
 			//add union between all sets of variables except the last
 			if (RegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
@@ -160,7 +151,7 @@ public class CellDataLoader {
 	 * @param existingNodes -  nodes.
 	 * @param cellResults - cell data to be stored in the nodes.
 	 */
-	public static void storeCellData(Node[] existingNodes, 
+	public static void storeData(Node[] existingNodes, 
 			MultiHashMap<String, String> cellResults) {
 		String brainRegionName = null;
 		
@@ -177,10 +168,8 @@ public class CellDataLoader {
 				cellResults.get("$" + brainRegionName + "_nl");
 			Collection<String> roles = 
 				cellResults.get("$" + brainRegionName + "_trl");
-			Collection<String> partOf = 
-				cellResults.get("$" + brainRegionName + "_ipo");
 
-			node.setCellInfo(cells, cellUrls, transmitters, roles, partOf);
+			node.setCellInfo(cells, cellUrls, transmitters, roles);
 			
 			brainRegionName = null;
 		}	
