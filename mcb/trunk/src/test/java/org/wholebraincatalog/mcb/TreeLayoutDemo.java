@@ -119,11 +119,14 @@ public class TreeLayoutDemo extends JApplet {
         // create a simple graph for the demo
         graph = new DelegateForest<String,Integer>();
 
+        //populate the graph object with the tree edges
         createTree();
         
+        //initialize the layouts on the tree graph
         treeLayout = new TreeLayout<String,Integer>(graph);
         radialLayout = new RadialTreeLayout<String,Integer>(graph);
         radialLayout.setSize(new Dimension(600,600));
+        //initialize the visualization viewer on the tree graph
         vv =  new VisualizationViewer<String,Integer>(treeLayout, new Dimension(600,600));
         vv.setBackground(Color.white);
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line());
