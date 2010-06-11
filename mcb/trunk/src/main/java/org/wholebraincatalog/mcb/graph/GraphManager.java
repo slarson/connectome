@@ -73,17 +73,17 @@ public class GraphManager {
 	/**
 	 * the graph
 	 */
-	Graph<Node,ConnectionEdge> graph;
+	Graph<Node,Edge> graph;
 
 	/**
 	 * the visual component and renderer for the graph
 	 */
-	VisualizationViewer<Node,ConnectionEdge> vv;
+	VisualizationViewer<Node,Edge> vv;
 
 	/**
 	 * graph layout.
 	 */
-	AggregateLayout<Node, ConnectionEdge> layout;
+	AggregateLayout<Node, Edge> layout;
 
 	/**
 	 * graph collapser.
@@ -118,32 +118,32 @@ public class GraphManager {
 
 	private GraphManager() {
 
-		graph = new DirectedSparseMultigraph<Node,ConnectionEdge>();
+		graph = new DirectedSparseMultigraph<Node,Edge>();
 
 		BuildConnections.getDataAndCreateGraph(graph);
 
 		collapser = new GraphCollapser(graph);
 
 		layout = 
-			new AggregateLayout<Node,ConnectionEdge>(
-					new CircleLayout<Node,ConnectionEdge>(graph));
+			new AggregateLayout<Node,Edge>(
+					new CircleLayout<Node,Edge>(graph));
 
 		scaler = new CrossoverScalingControl();
 
 		
 		Dimension preferredSize = new Dimension(800,400);
-		final VisualizationModel<Node,ConnectionEdge> visualizationModel = 
-			new DefaultVisualizationModel<Node,ConnectionEdge>(layout, preferredSize);
-		vv =  new VisualizationViewer<Node,ConnectionEdge>(visualizationModel, preferredSize);
+		final VisualizationModel<Node,Edge> visualizationModel = 
+			new DefaultVisualizationModel<Node,Edge>(layout, preferredSize);
+		vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize);
 
 		//the regular graph mouse for the normal view
-		final DefaultModalGraphMouse<Node,ConnectionEdge> graphMouse = 
-			new DefaultModalGraphMouse<Node,ConnectionEdge>();
+		final DefaultModalGraphMouse<Node,Edge> graphMouse = 
+			new DefaultModalGraphMouse<Node,Edge>();
 
 		vv.setGraphMouse(graphMouse);
 
-		this.viewSupport = new MagnifyImageLensSupport<Node,ConnectionEdge>(vv);
-		this.modelSupport = new LayoutLensSupport<Node,ConnectionEdge>(vv);
+		this.viewSupport = new MagnifyImageLensSupport<Node,Edge>(vv);
+		this.modelSupport = new LayoutLensSupport<Node,Edge>(vv);
 
 		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
 		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());		
@@ -155,7 +155,7 @@ public class GraphManager {
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 
 		vv.getRenderContext().setVertexLabelRenderer(new DefaultVertexLabelRenderer(Color.RED));
-		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<ConnectionEdge>());
+		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<Edge>());
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 
 		// Setup up a new vertex to paint transformer to change node color.
@@ -168,7 +168,7 @@ public class GraphManager {
 		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
 		
 
-		final PredicatedParallelEdgeIndexFunction<Node,ConnectionEdge> eif =
+		final PredicatedParallelEdgeIndexFunction<Node,Edge> eif =
 			PredicatedParallelEdgeIndexFunction.getInstance();
 
 		
@@ -188,25 +188,15 @@ public class GraphManager {
 		vv.setVertexToolTipTransformer(new NodeLabeller());
 		//vv.setVertexToolTipTransformer(new ToStringLabeller());
 
-		vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<ConnectionEdge, Stroke>() {
+		vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, Stroke>() {
 			/**
 			 * Transforms the input by ignoring it and returning the stored constant instead.
 			 *
 			 * @param input the input object which is ignored
 			 * @return the stored constant
 			 */
-			public BasicStroke transform(ConnectionEdge input) {
-				switch (input.getStrength()) {
-				case EXISTS:
-					return new BasicStroke(0.5f);
-				case VERY_LIGHT:
-					return new BasicStroke(1f);
-				case LIGHT:
-					return new BasicStroke(2f);
-				case MODERATE:
-					return new BasicStroke(3f);
-				}
-				return new BasicStroke(2.5f);
+			public BasicStroke transform(Edge input) {
+				return input.getStroke();
 			}
 		});
 
@@ -221,7 +211,7 @@ public class GraphManager {
 		return new GraphZoomScrollPane(vv);
 	}
 
-	public VisualizationViewer<Node,ConnectionEdge> getVisualizationViewer() {
+	public VisualizationViewer<Node,Edge> getVisualizationViewer() {
 		return vv;
 	}
 
@@ -229,10 +219,10 @@ public class GraphManager {
 	public void collapse() {
 		Collection picked = new HashSet(vv.getPickedVertexState().getPicked());
 		if(picked.size() > 1) {
-			Graph<Node,ConnectionEdge> inGraph = layout.getGraph();
-			Graph<Node,ConnectionEdge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
+			Graph<Node,Edge> inGraph = layout.getGraph();
+			Graph<Node,Edge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
 
-			Graph<Node,ConnectionEdge> g = collapser.collapse(layout.getGraph(), clusterGraph);
+			Graph<Node,Edge> g = collapser.collapse(layout.getGraph(), clusterGraph);
 			double sumx = 0;
 			double sumy = 0;
 			for(Object v : picked) {
@@ -271,8 +261,8 @@ public class GraphManager {
 		Collection<Node> picked = vv.getPickedVertexState().getPicked();
 		if(picked.size() == 2) {
 			Pair<Node> pair = new Pair<Node>(picked);
-			Graph<Node,ConnectionEdge> graph = layout.getGraph();
-			Collection<ConnectionEdge> edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
+			Graph<Node,Edge> graph = layout.getGraph();
+			Collection<Edge> edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
 			edges.retainAll(graph.getIncidentEdges(pair.getSecond()));
 			exclusions.addAll(edges);
 			vv.repaint();
@@ -308,8 +298,8 @@ public class GraphManager {
 		modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
 	}
 
-	public DefaultModalGraphMouse<Node, ConnectionEdge> getGraphMouse() {
-		return (DefaultModalGraphMouse<Node, ConnectionEdge>) vv.getGraphMouse();
+	public DefaultModalGraphMouse<Node, Edge> getGraphMouse() {
+		return (DefaultModalGraphMouse<Node, Edge>) vv.getGraphMouse();
 	}
 
 	public void zoomIn() {
@@ -393,9 +383,9 @@ public class GraphManager {
 				continue;
 
 			if(picked != null && picked.size() > 1) {
-				Graph<Node,ConnectionEdge> inGraph = layout.getGraph();
-				Graph<Node,ConnectionEdge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
-				Graph<Node,ConnectionEdge> g = collapser.collapse(layout.getGraph(), clusterGraph);
+				Graph<Node,Edge> inGraph = layout.getGraph();
+				Graph<Node,Edge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
+				Graph<Node,Edge> g = collapser.collapse(layout.getGraph(), clusterGraph);
 				
 				double sumx = 0;
 				double sumy = 0;
@@ -417,11 +407,11 @@ public class GraphManager {
 	}
 
 
-	public void applyTreeLayout(DirectedGraph<Node,ConnectionEdge> tree) {
+	public void applyTreeLayout(DirectedGraph<Node,Edge> tree) {
 		if (tree == null) throw new IllegalArgumentException();
-		Tree<Node, ConnectionEdge> subGraph;
+		Tree<Node, Edge> subGraph;
 		try {
-			subGraph = new DelegateTree<Node,ConnectionEdge>(tree);
+			subGraph = new DelegateTree<Node,Edge>(tree);
 			Collection<Node> picked = subGraph.getVertices();
 			Point2D center = new Point2D.Double();
 			double x = 0;
@@ -435,8 +425,8 @@ public class GraphManager {
 			y /= picked.size();
 			center.setLocation(x, y);
 
-			Layout<Node, ConnectionEdge> subLayout =
-				new TreeLayout<Node, ConnectionEdge>(subGraph);
+			Layout<Node, Edge> subLayout =
+				new TreeLayout<Node, Edge>(subGraph);
 			subLayout.setInitializer(vv.getGraphLayout());
 			subLayout.setSize(new Dimension(100, 100));
 			layout.put(subLayout, center);
@@ -452,15 +442,15 @@ public class GraphManager {
 	public void test() {
 		///temporary hack for demo purposes
 		for (Node n : graph.getVertices()) {
-			if (n.getVertexName().startsWith("Glo")) {
+			//if (n.getVertexName().startsWith("Glo")) {
 				applyTreeLayoutNode(n);
-			}
+			//}
 		}
 	}
 	
 	public void applyTreeLayoutNode(Node n) {
 
-		Tree<Node, ConnectionEdge> subGraph;
+		Tree<Node, Edge> subGraph;
 		try {
 			subGraph = n.getChildTree(); //get the tree graph from the Node
 			Collection<Node> picked = subGraph.getVertices();
@@ -478,8 +468,8 @@ public class GraphManager {
 			y /= picked.size();
 			center.setLocation(x, y);
 
-			Layout<Node, ConnectionEdge> subLayout =
-				new TreeLayout<Node, ConnectionEdge>(subGraph);
+			Layout<Node, Edge> subLayout =
+				new TreeLayout<Node, Edge>(subGraph);
 			subLayout.setInitializer(vv.getGraphLayout());
 			
 			layout.put(subLayout, center);

@@ -168,9 +168,9 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 	 * this node the root of the tree.
 	 * @return
 	 */
-	public Tree<Node, ConnectionEdge> getChildTree() {
-		Tree<Node,ConnectionEdge> treeGraph = 
-			new DelegateTree<Node,ConnectionEdge>();
+	public Tree<Node, Edge> getChildTree() {
+		Tree<Node,Edge> treeGraph = 
+			new DelegateTree<Node,Edge>();
 		
 		treeGraph.addVertex(this);
 		for (String partof : getPartOf()) {
