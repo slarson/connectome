@@ -20,6 +20,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 import org.wholebraincatalog.mcb.graph.ConnectionEdge;
+import org.wholebraincatalog.mcb.graph.Edge;
 import org.wholebraincatalog.mcb.graph.GraphManager;
 import org.wholebraincatalog.mcb.graph.Node;
 
@@ -94,7 +95,7 @@ public class View extends JPanel{
 		
 		JMenuBar menubar = new JMenuBar();
 
-		DefaultModalGraphMouse<Node, ConnectionEdge> graphMouse 
+		DefaultModalGraphMouse<Node, Edge> graphMouse 
 		= GraphManager.getInstance().getGraphMouse();
 		JMenu modeMenu = graphMouse.getModeMenu();
 		menubar.add(modeMenu);

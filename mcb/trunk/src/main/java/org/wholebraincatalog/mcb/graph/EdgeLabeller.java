@@ -1,19 +1,14 @@
 package org.wholebraincatalog.mcb.graph;
 
 
+import org.apache.commons.collections15.Transformer;
+
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
-public class EdgeLabeller extends ToStringLabeller<ConnectionEdge>{
+public class EdgeLabeller implements Transformer<Edge, String>{
 
-	/* (non-Javadoc)
-	 * @see edu.uci.ics.jung.visualization.decorators.DefaultToolTipFunction#getToolTipText(java.lang.Object)
-	 */
-	@Override
-	public String transform(ConnectionEdge v) {
-		String out = "";
-		String reference = v.getReference();
-		out += "<a href=\"http://" + reference + "\">" + reference + "</a>";
-		return out;
+	public String transform(Edge input) {
+		return input.getLabel();
 	}
 
 }

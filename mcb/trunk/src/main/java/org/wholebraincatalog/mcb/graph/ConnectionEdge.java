@@ -1,5 +1,6 @@
 package org.wholebraincatalog.mcb.graph;
 
+import java.awt.BasicStroke;
 import java.util.EnumSet;
 
 import org.apache.commons.collections15.Factory;
@@ -24,7 +25,7 @@ import org.apache.commons.collections15.Factory;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
-public class ConnectionEdge implements Factory {
+public class ConnectionEdge extends Edge{
 	
 	public enum STRENGTH {
 		NOT_PRESENT("not present"),
@@ -94,13 +95,25 @@ public class ConnectionEdge implements Factory {
 	public String getReference(){
 		return this.reference;
 	}
-	 /**
-	  * Possible method implemented to create an edge.  Method not 
-	  * used in this implementation.
-	  * @see org.apache.commons.collections15.Factory#create()
-	  */
-	public Object create() {
-		// TODO Auto-generated method stub
-		return new ConnectionEdge("s","");
+	
+	public String getLabel() {
+		String out = "";
+		String reference = getReference();
+		out += "<a href=\"http://" + reference + "\">" + reference + "</a>";
+		return out;
+	}
+	
+	public BasicStroke getStroke() {
+		switch (getStrength()) {
+		case EXISTS:
+			return new BasicStroke(0.5f);
+		case VERY_LIGHT:
+			return new BasicStroke(1f);
+		case LIGHT:
+			return new BasicStroke(2f);
+		case MODERATE:
+			return new BasicStroke(3f);
+		}
+		return super.getStroke();
 	}
 }
