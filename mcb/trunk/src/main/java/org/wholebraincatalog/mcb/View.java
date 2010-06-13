@@ -28,6 +28,8 @@ import org.wholebraincatalog.mcb.graph.Node;
 import org.wholebraincatalog.mcb.util.HyperLinkToolTip;
 
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
@@ -69,9 +71,9 @@ public class View extends JPanel{
 	private void buildGUI() {
 		JMenuBar menubar = new JMenuBar();
 
-		DefaultModalGraphMouse<Node, Edge> graphMouse = GraphManager
+		VisualizationViewer.GraphMouse graphMouse = GraphManager
 				.getInstance().getGraphMouse();
-		JMenu modeMenu = graphMouse.getModeMenu();
+		JMenu modeMenu = ((AbstractModalGraphMouse) graphMouse).getModeMenu();
 		menubar.add(modeMenu);
 
 		Container content = this;
@@ -79,9 +81,9 @@ public class View extends JPanel{
 				.getGraphZoomScrollPane();
 		content.add(gzsp);
 		
-		JComboBox modeBox = graphMouse.getModeComboBox();
-		modeBox.addItemListener(graphMouse.getModeListener());
-		graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+		JComboBox modeBox = ((AbstractModalGraphMouse) graphMouse).getModeComboBox();
+		modeBox.addItemListener(((AbstractModalGraphMouse) graphMouse).getModeListener());
+		((AbstractModalGraphMouse) graphMouse).setMode(ModalGraphMouse.Mode.PICKING);
 
 		JPanel controls = new JPanel();
 		
