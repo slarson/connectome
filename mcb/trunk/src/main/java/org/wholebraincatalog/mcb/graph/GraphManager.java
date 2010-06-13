@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JPopupMenu;
 import javax.swing.JToolTip;
 
 import org.apache.commons.collections15.Predicate;
@@ -47,6 +48,8 @@ import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EllipseVertexShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
@@ -145,19 +148,7 @@ public class GraphManager {
 			}
 		};
 
-		//the regular graph mouse for the normal view
-		final DefaultModalGraphMouse<Node,Edge> graphMouse = 
-			new DefaultModalGraphMouse<Node,Edge>();
-
-		vv.setGraphMouse(graphMouse);
-
-		/*
-		this.viewSupport = new MagnifyImageLensSupport<Node,Edge>(vv);
-		this.modelSupport = new LayoutLensSupport<Node,Edge>(vv);
-
-		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
-		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());		
-		*/
+		setGraphMouse();
 
 		VertexLabelAsShapeRenderer vlasr = new VertexLabelAsShapeRenderer(vv.getRenderContext());
 
@@ -212,6 +203,40 @@ public class GraphManager {
 		//Collapse nodes in subgraph.
 		//collapseSubGraph();
 
+	}
+
+	private void setGraphMouse() {
+		/*
+		 * //the regular graph mouse for the normal view final
+		 * DefaultModalGraphMouse<Node,Edge> graphMouse = new
+		 * DefaultModalGraphMouse<Node,Edge>();
+		 * 
+		 * vv.setGraphMouse(graphMouse); this.viewSupport = new
+		 * MagnifyImageLensSupport<Node,Edge>(vv); this.modelSupport = new
+		 * LayoutLensSupport<Node,Edge>(vv);
+		 * 
+		 * 
+		 * graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener
+		 * ());
+		 * graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener
+		 * ());
+		 */
+
+		EditingModalGraphMouse gm = new EditingModalGraphMouse(vv
+				.getRenderContext(), null, null);
+		
+		// Trying out our new popup menu mouse plugin...
+		PopupVertexEdgeMenuMousePlugin myPlugin = new PopupVertexEdgeMenuMousePlugin();
+		// Add some popup menus for the edges and vertices to our mouse plugin.
+		JPopupMenu edgeMenu = new MouseMenus.EdgeMenu();
+		JPopupMenu vertexMenu = new MouseMenus.VertexMenu();
+		myPlugin.setEdgePopup(edgeMenu);
+		myPlugin.setVertexPopup(vertexMenu);
+		gm.remove(gm.getPopupEditingPlugin()); // Removes the existing popup
+												// editing plugin
+		gm.add(myPlugin); // Add our new plugin to the mouse
+
+		vv.setGraphMouse(gm);
 	}
 
 	public GraphZoomScrollPane getGraphZoomScrollPane() {
@@ -305,8 +330,8 @@ public class GraphManager {
 		modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
 	}
 
-	public DefaultModalGraphMouse<Node, Edge> getGraphMouse() {
-		return (DefaultModalGraphMouse<Node, Edge>) vv.getGraphMouse();
+	public VisualizationViewer.GraphMouse getGraphMouse() {
+		return vv.getGraphMouse();
 	}
 
 	public void zoomIn() {
