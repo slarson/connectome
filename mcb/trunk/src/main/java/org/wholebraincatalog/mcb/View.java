@@ -1,6 +1,7 @@
 package org.wholebraincatalog.mcb;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,11 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.JToolTip;
 
 import org.wholebraincatalog.mcb.graph.ConnectionEdge;
 import org.wholebraincatalog.mcb.graph.Edge;
 import org.wholebraincatalog.mcb.graph.GraphManager;
 import org.wholebraincatalog.mcb.graph.Node;
+import org.wholebraincatalog.mcb.util.HyperLinkToolTip;
 
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
@@ -64,10 +67,50 @@ public class View extends JPanel{
 	}
 
 	private void buildGUI() {
-		ButtonGroup radio = new ButtonGroup();
+		JMenuBar menubar = new JMenuBar();
+
+		DefaultModalGraphMouse<Node, Edge> graphMouse = GraphManager
+				.getInstance().getGraphMouse();
+		JMenu modeMenu = graphMouse.getModeMenu();
+		menubar.add(modeMenu);
+
+		Container content = this;
+		GraphZoomScrollPane gzsp = GraphManager.getInstance()
+				.getGraphZoomScrollPane();
+		content.add(gzsp);
+		
+		JComboBox modeBox = graphMouse.getModeComboBox();
+		modeBox.addItemListener(graphMouse.getModeListener());
+		graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+
+		JPanel controls = new JPanel();
+		
+		controls.add(getZoomControls());
+		controls.add(getCollapseControls());
+		controls.add(modeBox);
+		controls.add(getSaveFile());
+		controls.add(getLensPanel());
+		
+		content.add(controls, BorderLayout.SOUTH);
+
+		JTextArea label = new JTextArea(instructions);
+		label.setEnabled(false);
+
+		// Splitting the window in two parts.
+		split_graph_help = 
+			new JSplitPane(JSplitPane.VERTICAL_SPLIT,label,
+					GraphManager.getInstance().getVisualizationViewer());
+		split_graph_help.setOneTouchExpandable(false);
+		split_graph_help.setDividerLocation(100);
+		// Splitting the window in two parts.
+		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,split_graph_help,controls);
+		split.setOneTouchExpandable(false);
+		split.setDividerLocation(500);
+	}
+	
+	protected Component getLensPanel() {
 		JRadioButton none = new JRadioButton("None");
 
-	
 		none.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				GraphManager.getInstance().lensNone();
@@ -88,27 +131,23 @@ public class View extends JPanel{
 				GraphManager.getInstance().lensLayout(e);
 			}
 		});
-
+		
+		ButtonGroup radio = new ButtonGroup();
 		radio.add(none);
 		radio.add(hyperView);
 		radio.add(hyperModel);
 		
-		JMenuBar menubar = new JMenuBar();
-
-		DefaultModalGraphMouse<Node, Edge> graphMouse 
-		= GraphManager.getInstance().getGraphMouse();
-		JMenu modeMenu = graphMouse.getModeMenu();
-		menubar.add(modeMenu);
-
-		Container content = this;
-		GraphZoomScrollPane gzsp = GraphManager.getInstance().getGraphZoomScrollPane();
-		content.add(gzsp);
+		JPanel lensPanel = new JPanel(new GridLayout(2,0));
+		lensPanel.setBorder(BorderFactory.createTitledBorder("Lens"));
+		lensPanel.add(none);
+		lensPanel.add(hyperView);
+		lensPanel.add(hyperModel);
 		
+		
+		return lensPanel;
+	}
 
-		JComboBox modeBox = graphMouse.getModeComboBox();
-		modeBox.addItemListener(graphMouse.getModeListener());
-		graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-
+	protected JPanel getZoomControls() {
 
 		JButton plus = new JButton("+");
 		plus.addActionListener(new ActionListener() {
@@ -122,7 +161,15 @@ public class View extends JPanel{
 				GraphManager.getInstance().zoomOut();
 			}
 		});
-
+		
+		JPanel zoomControls = new JPanel(new GridLayout(2,1));
+		zoomControls.setBorder(BorderFactory.createTitledBorder("Zoom"));
+		zoomControls.add(plus);
+		zoomControls.add(minus);
+		return zoomControls;
+	}
+	
+	protected JPanel getCollapseControls() {
 		JButton collapse = new JButton("Collapse");
 		collapse.addActionListener(new ActionListener() {
 
@@ -166,20 +213,7 @@ public class View extends JPanel{
 				GraphManager.getInstance().test();
 			}
 		});
-		JButton graph_save = new JButton("Save Image");
-		graph_save.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e){
-				GraphManager.getInstance().saveImage();
-
-			}});
-
-		JPanel controls = new JPanel();
-		JPanel zoomControls = new JPanel(new GridLayout(2,1));
-		zoomControls.setBorder(BorderFactory.createTitledBorder("Zoom"));
-		zoomControls.add(plus);
-		zoomControls.add(minus);
-		controls.add(zoomControls);
+		
 		JPanel collapseControls = new JPanel(new GridLayout(3,1));
 		collapseControls.setBorder(BorderFactory.createTitledBorder("Picked"));
 		collapseControls.add(collapse);
@@ -188,35 +222,24 @@ public class View extends JPanel{
 		collapseControls.add(expandEdges);
 		collapseControls.add(reset);
 		collapseControls.add(test);
+		
+		return collapseControls;
+	}
+	
+	protected JPanel getSaveFile() {
+
+		JButton graph_save = new JButton("Save Image");
+		graph_save.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e){
+				GraphManager.getInstance().saveImage();
+
+			}});
+		
 		JPanel saveFile = new JPanel(new GridLayout(1,3));
 		saveFile.setBorder(BorderFactory.createTitledBorder("Save"));
 		saveFile.add(graph_save);
-
-		controls.add(collapseControls);
-		controls.add(modeBox);
-		controls.add(saveFile);
-		content.add(controls, BorderLayout.SOUTH);
-
-
-		JTextArea label = new JTextArea(instructions);
-		label.setEnabled(false);
-
-		// Splitting the window in two parts.
-		split_graph_help = 
-			new JSplitPane(JSplitPane.VERTICAL_SPLIT,label,
-					GraphManager.getInstance().getVisualizationViewer());
-		split_graph_help.setOneTouchExpandable(false);
-		split_graph_help.setDividerLocation(100);
-		// Splitting the window in two parts.
-		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,split_graph_help,controls);
-		split.setOneTouchExpandable(false);
-		split.setDividerLocation(500);
-		JPanel lensPanel = new JPanel(new GridLayout(2,0));
-		lensPanel.setBorder(BorderFactory.createTitledBorder("Lens"));
-		lensPanel.add(none);
-		lensPanel.add(hyperView);
-		lensPanel.add(hyperModel);
-		controls.add(lensPanel);
+		return saveFile;
 	}
 	
 	public JPanel getMainPanel() {

@@ -1,6 +1,10 @@
 package org.wholebraincatalog.mcb;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JToolTip;
+
+import org.wholebraincatalog.mcb.util.HyperLinkToolTip;
 
 /**
  * Main entrance point to the application.

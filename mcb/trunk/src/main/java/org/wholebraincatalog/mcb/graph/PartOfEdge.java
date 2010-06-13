@@ -9,4 +9,7 @@ package org.wholebraincatalog.mcb.graph;
  */
 public class PartOfEdge extends Edge {
 
+	public String getLabel() {
+		return "part of";
+	}
 }

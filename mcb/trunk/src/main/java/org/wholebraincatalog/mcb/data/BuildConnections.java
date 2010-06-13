@@ -29,6 +29,7 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebraincatalog.mcb.graph.ConnectionEdge;
 import org.wholebraincatalog.mcb.graph.GraphManager;
 import org.wholebraincatalog.mcb.graph.Node;
+import org.wholebraincatalog.mcb.graph.PartOfEdge;
 import org.wholebraincatalog.mcb.util.SparqlQuery;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -132,7 +133,7 @@ public class BuildConnections {
 				for(String partOf: node[i].getPartOf()){
 					if(!repeats.contains(partOf)){
 						Node subNode = new Node(partOf);
-						graph.addEdge(new ConnectionEdge("not clear","not clear"),
+						graph.addEdge(new PartOfEdge(),
 								subNode,node[i], EdgeType.DIRECTED);
 						repeats.add(partOf);
 					}	

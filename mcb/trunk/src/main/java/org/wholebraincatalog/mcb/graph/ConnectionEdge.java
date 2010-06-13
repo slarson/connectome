@@ -78,15 +78,6 @@ public class ConnectionEdge extends Edge{
 		this.strength = STRENGTH.myValueOf(strength);
 		this.reference = reference;
 	}
-
-	
-	/**
-	 * Method makes the edges value printable.
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		return this.strength.toString();
-	}
 	
 	public STRENGTH getStrength() {
 		return this.strength;
@@ -97,9 +88,13 @@ public class ConnectionEdge extends Edge{
 	}
 	
 	public String getLabel() {
+		return getStrength().toString();
+	}
+	
+	public String getToolTipLabel() {
 		String out = "";
 		String reference = getReference();
-		out += "<a href=\"http://" + reference + "\">" + reference + "</a>";
+		out += "<html><a href=\"http://" + reference + "\">" + reference + "</a></html>";
 		return out;
 	}
 	

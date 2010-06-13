@@ -91,7 +91,10 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 	}
 	
 	public int getCellCount() {
-		return this.cells.size();
+		if (this.cells != null) {
+			return this.cells.size();
+		}
+		return 0;
 	}
 	
 	public String getCellName(int index) {
