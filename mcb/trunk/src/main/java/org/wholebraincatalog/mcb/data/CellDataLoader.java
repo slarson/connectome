@@ -56,67 +56,69 @@ public class CellDataLoader {
 	/**
 	 * This class takes care of getting the cell data for each node 
 	 * and takes care of incorporating the data into the nodes.
-	 * @param drb - the data reader to populate
+	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	public static void populate(SparqlQuery drb, String[] brainRegionNames) {
+	public static void populate(SparqlQuery query, String[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String cells_suffix = "_c";
 		String neurotransmitter_suffix = "_n";
 		String transmitter_role_suffix = "_t_r";
 		String brainRegionSufixName = null;
+		
+		query.addPrefixMapping("swivt", "<http://semantic-mediawiki.org/swivt/1.0#>");
+		query.addPrefixMapping("nlx_prop", "<http://neurolex.org/wiki/Special:URIResolver/Property-3A>");
+		query.addPrefixMapping("nlx_cat", "<http://neurolex.org/wiki/Special:URIResolver/Category-3A>");
 
 		for(String RegionName : brainRegionNames){
 
 			if(brainRegionSufixName == null)
 				brainRegionSufixName =  reduceBrainRegionName(RegionName);
 
-			drb.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
-					" <http://semantic-mediawiki.org/swivt/1.0#page> " + 
-					" <http://neurolex.org/wiki/Category:"+
-					RegionName+">");
+			query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
+					" swivt:page " + 
+					" <http://neurolex.org/wiki/Category:"+RegionName+">");
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+cells_suffix +
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> $" +
+			query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix +
+					" nlx_prop:Located_in $" +
 					brainRegionSufixName + region_suffix );
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+cells_suffix+
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
+			query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix+
+					" nlx_prop:Label $"+
 					brainRegionSufixName+"_cl");
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+cells_suffix+
-					" <http://semantic-mediawiki.org/swivt/1.0#page> $"+
+			query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix+
+					" swivt:page $"+
 					brainRegionSufixName+"_cu");
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+cells_suffix
-					+" <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role>" +
-			" <http://neurolex.org/wiki/Special:URIResolver/Category-3APrincipal_neuron_role>");
+			query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix
+					+" nlx_prop:Has_role" + " nlx_cat:Principal_neuron_role");
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+cells_suffix +
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3ANeurotransmitter> $" +
+			query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix +
+					" nlx_prop:Neurotransmitter $" +
 					brainRegionSufixName+neurotransmitter_suffix);
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+neurotransmitter_suffix +
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $" +
+			query.addQueryTriplet("$"+brainRegionSufixName+neurotransmitter_suffix +
+					" nlx_prop:Label $" +
 					brainRegionSufixName+"_nl");
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+neurotransmitter_suffix +
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $"+
+			query.addQueryTriplet("$"+brainRegionSufixName+neurotransmitter_suffix +
+					" nlx_prop:Has_role $"+
 					brainRegionSufixName+transmitter_role_suffix);
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+transmitter_role_suffix +
-					"<http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
+			query.addQueryTriplet("$"+brainRegionSufixName+transmitter_role_suffix +
+					" nlx_prop:Label $"+
 					brainRegionSufixName+"_trl");
 			
-			drb.addSelectVariable("$"+ brainRegionSufixName + "_cl");
-			drb.addSelectVariable("$"+ brainRegionSufixName + "_cu");
-			drb.addSelectVariable("$"+ brainRegionSufixName + "_nl");
-			drb.addSelectVariable("$"+ brainRegionSufixName + "_trl");
+			query.addSelectVariable("$"+ brainRegionSufixName + "_cl");
+			query.addSelectVariable("$"+ brainRegionSufixName + "_cu");
+			query.addSelectVariable("$"+ brainRegionSufixName + "_nl");
+			query.addSelectVariable("$"+ brainRegionSufixName + "_trl");
 
 			//add union between all sets of variables except the last
 			if (RegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
-				drb.addQueryTriplet("} UNION {");
+				query.addQueryTriplet("} UNION {");
 			}
 			brainRegionSufixName = null;
 		}
