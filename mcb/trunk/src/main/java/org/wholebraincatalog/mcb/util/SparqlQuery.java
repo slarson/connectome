@@ -189,7 +189,6 @@ public class SparqlQuery
 	 * @see #addQueryTriplet(String)
 	 * @return a Map with one key per $variable and a list of results as the value
 	 * @see MultiHashMap
-	 * MultiHashMap<String, String>
 	 */
 	public MultiHashMap<String, String> runSelectQuery() {
 		String queryString = getComposedQuery();
