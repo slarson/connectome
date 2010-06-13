@@ -16,4 +16,9 @@ public abstract class Edge {
 		return this.toString();
 	}
 
+	public String getToolTipLabel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

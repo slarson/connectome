@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JToolTip;
 
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
@@ -28,6 +29,7 @@ import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 import org.wholebraincatalog.mcb.data.BuildConnections;
+import org.wholebraincatalog.mcb.util.HyperLinkToolTip;
 
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
@@ -134,7 +136,14 @@ public class GraphManager {
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel<Node,Edge> visualizationModel = 
 			new DefaultVisualizationModel<Node,Edge>(layout, preferredSize);
-		vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize);
+		vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize) {
+			// Override create tool tip method to use HyperLinkTooltip
+			public JToolTip createToolTip() {
+				JToolTip tip = new HyperLinkToolTip();
+				tip.setComponent(this);
+				return tip;
+			}
+		};
 
 		//the regular graph mouse for the normal view
 		final DefaultModalGraphMouse<Node,Edge> graphMouse = 
@@ -142,36 +151,34 @@ public class GraphManager {
 
 		vv.setGraphMouse(graphMouse);
 
+		/*
 		this.viewSupport = new MagnifyImageLensSupport<Node,Edge>(vv);
 		this.modelSupport = new LayoutLensSupport<Node,Edge>(vv);
 
 		graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener());
 		graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener());		
+		*/
 
 		VertexLabelAsShapeRenderer vlasr = new VertexLabelAsShapeRenderer(vv.getRenderContext());
 
 		vv.getRenderContext().setVertexShapeTransformer(vlasr);
 
-		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+		vv.getRenderContext().setVertexLabelTransformer(new NodeLabeller());
 
 		vv.getRenderContext().setVertexLabelRenderer(new DefaultVertexLabelRenderer(Color.RED));
-		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<Edge>());
+		vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabeller());
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 
 		// Setup up a new vertex to paint transformer to change node color.
-		Transformer vertexPaint = new Transformer() {
-		public Object transform(Object input) {
-			// TODO Auto-generated method stub
-			return Color.WHITE;
-		}
-		};
-		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
-		
+		vv.getRenderContext().setVertexFillPaintTransformer(new Transformer<Node,Paint>() {
+			public Paint transform(Node input) {
+				return Color.WHITE;
+			}
+		});
 
 		final PredicatedParallelEdgeIndexFunction<Node,Edge> eif =
 			PredicatedParallelEdgeIndexFunction.getInstance();
 
-		
 		eif.setPredicate(new Predicate() {
 
 			public boolean evaluate(Object e) {
@@ -185,7 +192,7 @@ public class GraphManager {
 		vv.setBackground(Color.LIGHT_GRAY);
 
 		//***** add a listener for USE CLASS NodeLabeller*****
-		vv.setVertexToolTipTransformer(new NodeLabeller());
+		vv.setVertexToolTipTransformer(new ToolTipNodeLabeller());
 		//vv.setVertexToolTipTransformer(new ToStringLabeller());
 
 		vv.getRenderContext().setEdgeStrokeTransformer(new Transformer<Edge, Stroke>() {
@@ -200,10 +207,10 @@ public class GraphManager {
 			}
 		});
 
-		vv.setEdgeToolTipTransformer(new EdgeLabeller());
+		vv.setEdgeToolTipTransformer(new ToolTipEdgeLabeller());
 		
 		//Collapse nodes in subgraph.
-		collapseSubGraph();
+		//collapseSubGraph();
 
 	}
 
