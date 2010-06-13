@@ -7,7 +7,7 @@
  *
  */
 
-package org.wholebrainproject.mcb.graph;
+package org.wholebrainproject.mousemenu;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import java.awt.event.ActionEvent;
@@ -17,6 +17,9 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+
+import org.wholebrainproject.mcb.graph.Edge;
+import org.wholebrainproject.mcb.graph.Node;
 
 /**
  * A collection of classes used to assemble popup mouse menus for the custom
