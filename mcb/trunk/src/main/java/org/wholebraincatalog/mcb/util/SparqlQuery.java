@@ -20,7 +20,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -56,6 +58,11 @@ public class SparqlQuery
 	private List<String> variableList = null;
 	
 	/**
+	 * A map of RDF prefixes mapped to their URIs.
+	 */
+	private Map<String,String> prefixMap = null;
+	
+	/**
 	 * Constructor for SparqlQuery
 	 * @param sparqlEndPoint - the URL of the SPARQL
 	 * end point you wish to execute queries against.
@@ -64,6 +71,7 @@ public class SparqlQuery
 		this.sparqlEndPointURL = sparqlEndPoint;
 		this.queryTriplets = new ArrayList<String>();
 		this.variableList = new ArrayList<String>();
+		this.prefixMap = new HashMap<String,String>();
 	}
 
 	/**
@@ -98,6 +106,19 @@ public class SparqlQuery
 	}
 	
 	/**
+	 * Add prefix mapping to the SPARQL query.  The prefix can then be used
+	 * in {@link #addQueryTriplet(String)}.
+	 * @param prefix
+	 * @param uri - must begin and end with angle brackets
+	 */
+	public void addPrefixMapping(String prefix, String uri) {
+		if (uri.startsWith("<") == false || uri.endsWith(">") == false) {
+			throw new IllegalArgumentException();
+		}
+		prefixMap.put(prefix, uri);
+	}
+	
+	/**
 	 * Put the queryTriplet list together into a SPARQL query 
 	 * @return - a string containing a SPARQL query
 	 * @see #addQueryTriplet(String)
@@ -129,9 +150,17 @@ public class SparqlQuery
 			}
 		}
 		
+		//add prefixes into the query statement if they have been added.
+		if (prefixMap.keySet().isEmpty() == false ) {
+			for (String prefix : prefixMap.keySet()) {
+				queryString += "PREFIX " + prefix + ": " + 
+				prefixMap.get(prefix) + " ";
+			}
+		}
+		
 		// make sure we have some variables
 		if(variables != "")
-			queryString = "select DISTINCT" + variables + startBracket;
+			queryString += "select DISTINCT" + variables + startBracket;
 		
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {

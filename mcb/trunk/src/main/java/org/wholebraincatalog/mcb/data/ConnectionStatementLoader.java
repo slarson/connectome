@@ -41,49 +41,52 @@ public class ConnectionStatementLoader {
 		return data;
 	}
 	
-	public static void populate(SparqlQuery drb, String[] brainRegionNames) {
+	public static void populate(SparqlQuery query, String[] brainRegionNames) {
+
+		query.addPrefixMapping("nif_cnxn", "<http://connectivity.neuinfo.org#>");
+		
 		for (String brainRegionName : brainRegionNames){
-			drb.addQueryTriplet("$" + brainRegionName + 
-					" <http://connectivity.neuinfo.org#sending_structure>  \"" 
+			query.addQueryTriplet("$" + brainRegionName + 
+					" nif_cnxn:sending_structure  \"" 
 					+ brainRegionName.replace("_", " ")+"\"");
-			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#projection_strength> $"+ brainRegionName + "_strength");
-			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#receiving_structure> $" + brainRegionName +"_receiving");
-			drb.addQueryTriplet("$" + brainRegionName + " <http://connectivity.neuinfo.org#reference> $"+ brainRegionName +"_reference");
+			query.addQueryTriplet("$" + brainRegionName + " nif_cnxn:projection_strength $"+ brainRegionName + "_strength");
+			query.addQueryTriplet("$" + brainRegionName + " nif_cnxn:receiving_structure $" + brainRegionName +"_receiving");
+			query.addQueryTriplet("$" + brainRegionName + " nif_cnxn:reference $"+ brainRegionName +"_reference");
 			
-			drb.addSelectVariable("$"+ brainRegionName + "_strength");
-			drb.addSelectVariable("$"+ brainRegionName + "_receiving");
-			drb.addSelectVariable("$"+ brainRegionName + "_reference");
+			query.addSelectVariable("$"+ brainRegionName + "_strength");
+			query.addSelectVariable("$"+ brainRegionName + "_receiving");
+			query.addSelectVariable("$"+ brainRegionName + "_reference");
 			
 			//add union between all sets of variables except the last
 			if (brainRegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
-				drb.addQueryTriplet("} UNION {");
+				query.addQueryTriplet("} UNION {");
 			}
 		}
 	}
 
 	/**
 	 * Populate a data reader for BAMS data.
-	 * @param drb - the data reader to populate
+	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	private static void populateBamsDataReader(SparqlQuery drb, String[] brainRegionNames) {
+	private static void populateBamsDataReader(SparqlQuery query, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
-			drb.addQueryTriplet("$" + brainRegionName + 
+			query.addQueryTriplet("$" + brainRegionName + 
 					" <http://ncmir.ucsd.edu/BAMS#sending_Structure>  <http://ncmir.ucsd.edu/BAMS#" + brainRegionName+">");
-			drb.addQueryTriplet("$" + brainRegionName + 
+			query.addQueryTriplet("$" + brainRegionName + 
 					" <http://ncmir.ucsd.edu/BAMS#projection_Strength> $"+ brainRegionName + "_strength");
-			drb.addQueryTriplet("$" + brainRegionName + 
+			query.addQueryTriplet("$" + brainRegionName + 
 					" <http://ncmir.ucsd.edu/BAMS#receiving_Structure> $" + brainRegionName +"_receiving");
-			drb.addQueryTriplet("$" + brainRegionName + 
+			query.addQueryTriplet("$" + brainRegionName + 
 					" <http://ncmir.ucsd.edu/BAMS#reference> $"+ brainRegionName +"_reference");
 			
-			drb.addSelectVariable("$"+ brainRegionName + "_strength");
-			drb.addSelectVariable("$"+ brainRegionName + "_receiving");
-			drb.addSelectVariable("$"+ brainRegionName + "_reference");
+			query.addSelectVariable("$"+ brainRegionName + "_strength");
+			query.addSelectVariable("$"+ brainRegionName + "_receiving");
+			query.addSelectVariable("$"+ brainRegionName + "_reference");
 			
 			//add union between all sets of variables except the last
 			if (brainRegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
-				drb.addQueryTriplet("} UNION {");
+				query.addQueryTriplet("} UNION {");
 			}
 		}
 	}

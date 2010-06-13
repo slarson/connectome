@@ -20,37 +20,40 @@ public class BrainRegionDataLoader {
 	/**
 	 * This class takes care of getting the cell data for each node 
 	 * and takes care of incorporating the data into the nodes.
-	 * @param drb - the data reader to populate
+	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	public static void populate(SparqlQuery drb, String[] brainRegionNames) {
+	public static void populate(SparqlQuery query, String[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String part_suffix = "_p";
 		String brainRegionSufixName = null;
+		
+		query.addPrefixMapping("swivt", "<http://semantic-mediawiki.org/swivt/1.0#>");
+		query.addPrefixMapping("nlx_prop", "<http://neurolex.org/wiki/Special:URIResolver/Property-3A>");
 
 		for(String RegionName : brainRegionNames){
 
 			if(brainRegionSufixName == null)
 				brainRegionSufixName =  reduceBrainRegionName(RegionName);
 
-			drb.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
-					" <http://semantic-mediawiki.org/swivt/1.0#page> " + 
+			query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
+					" swivt:page " + 
 					" <http://neurolex.org/wiki/Category:"+
 					RegionName+">");
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+part_suffix +
-					" <http://neurolex.org/wiki/Special:URIResolver/Property-3AIs_part_of> $"+
+			query.addQueryTriplet("$"+brainRegionSufixName+part_suffix +
+					" nlx_prop:Is_part_of $"+
 					brainRegionSufixName+region_suffix);
 
-			drb.addQueryTriplet("$"+brainRegionSufixName+part_suffix+" <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $"+
+			query.addQueryTriplet("$"+brainRegionSufixName+part_suffix+" nlx_prop:Label $"+
 					brainRegionSufixName+"_ipo");
 
-			drb.addSelectVariable("$"+ brainRegionSufixName + "_ipo");
+			query.addSelectVariable("$"+ brainRegionSufixName + "_ipo");
 
 			//add union between all sets of variables except the last
 			if (RegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
-				drb.addQueryTriplet("} UNION {");
+				query.addQueryTriplet("} UNION {");
 			}
 			brainRegionSufixName = null;
 		}
