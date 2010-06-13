@@ -31,6 +31,8 @@ import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 import org.wholebrainproject.mcb.data.BuildConnections;
 import org.wholebrainproject.mcb.util.HyperLinkToolTip;
+import org.wholebrainproject.mousemenu.MouseMenus;
+import org.wholebrainproject.mousemenu.PopupVertexEdgeMenuMousePlugin;
 
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
