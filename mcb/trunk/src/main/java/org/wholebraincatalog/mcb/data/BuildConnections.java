@@ -72,14 +72,10 @@ public class BuildConnections {
 					brainRegionsCellData);
 			BrainRegionDataLoader.populate(brainRegionReader,
 					brainRegionsCellData);
-			
-			InputStream connectivityQueryResult = bamsReader.runSelectQuery();
-			InputStream cellQueryResult = cellReader.runSelectQuery();
-			InputStream brainRegionQueryResult = brainRegionReader.runSelectQuery();
 
-			MultiHashMap<String, String> results = bamsReader.parseSPARQLResult(connectivityQueryResult);
-			MultiHashMap<String, String> cellResults = cellReader.parseSPARQLResult(cellQueryResult);
-			MultiHashMap<String, String> brainRegionResults = brainRegionReader.parseSPARQLResult(brainRegionQueryResult);
+			MultiHashMap<String, String> results = bamsReader.runSelectQuery();
+			MultiHashMap<String, String> cellResults = cellReader.runSelectQuery();
+			MultiHashMap<String, String> brainRegionResults = brainRegionReader.runSelectQuery();
 			
 			Node[] data = ConnectionStatementLoader.createNodesFromResults(
 					brainRegions, results);

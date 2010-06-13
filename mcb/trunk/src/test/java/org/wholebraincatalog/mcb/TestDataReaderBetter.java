@@ -57,38 +57,6 @@ public class TestDataReaderBetter extends TestCase {
 		assertEquals(2, d.getTripletCount());
 	}
 
-	public void testRunSelectQuery() {
-		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		SparqlQuery d = 
-			new SparqlQuery(sparql);
-
-		/**
-		 * select $s $y $z $r { $s $x <http://neurolex.org/wiki/Category:Globus_pallidus>.
-$y <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> $s.
-$y <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role>  <http://neurolex.org/wiki/Special:URIResolver/Category-3APrincipal_neuron_role>.
-$y <http://neurolex.org/wiki/Special:URIResolver/Property-3ANeurotransmitter> $z.
-$z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
-}
-		 */
-
-		d.addQueryTriplet("$s $x <http://neurolex.org/wiki/Category:Globus_pallidus>");
-		d.addQueryTriplet("$y <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> $s");
-
-		d.addSelectVariable("$s");
-		d.addSelectVariable("$x");
-
-		InputStream queryResult = d.runSelectQuery();
-
-		try {
-			d.parseSPARQLResult(queryResult);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		assertNotNull(queryResult);
-	}
-
 	public void testParseSPARQLResult2() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
 		SparqlQuery bamsReader = new SparqlQuery(sparql);
@@ -103,12 +71,10 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		bamsReader.addSelectVariable("$gp_receiving");
 		bamsReader.addSelectVariable("$gp_reference");
 
-		InputStream queryResult = bamsReader.runSelectQuery();
-
 		MultiHashMap<String, String> results = null;
 
 		try {
-			results = bamsReader.parseSPARQLResult(queryResult);
+			results =  bamsReader.runSelectQuery();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -182,12 +148,10 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 		populateBamsDataReader(bamsReader, brainRegions);
 
-		InputStream queryResult = bamsReader.runSelectQuery();
-
 		MultiHashMap<String, String> results = null;
 
 		try {
-			results = bamsReader.parseSPARQLResult(queryResult);
+			results = bamsReader.runSelectQuery();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -212,12 +176,10 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 
 		populateNIFDataReader(bamsReader, brainRegions);
 
-		InputStream queryResult = bamsReader.runSelectQuery();
-
 		MultiHashMap<String, String> results = null;
 
 		try {
-			results = bamsReader.parseSPARQLResult(queryResult);
+			results = bamsReader.runSelectQuery();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -256,12 +218,10 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		bamsReader.addSelectVariable("$cp_receiving");
 		bamsReader.addSelectVariable("$cp_reference");
 
-		InputStream queryResult = bamsReader.runSelectQuery();
-
 		MultiHashMap<String, String> results = null;
 
 		try {
-			results = bamsReader.parseSPARQLResult(queryResult);
+			results = bamsReader.runSelectQuery();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -282,12 +242,10 @@ $z <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> $r.
 		d.addSelectVariable("$s");
 		d.addSelectVariable("$x");
 
-		InputStream queryResult = d.runSelectQuery();
-
 		MultiHashMap<String, String> results = null;
 
 		try {
-			results = d.parseSPARQLResult(queryResult);
+			results = d.runSelectQuery();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

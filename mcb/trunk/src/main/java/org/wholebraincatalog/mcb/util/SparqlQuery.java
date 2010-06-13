@@ -33,7 +33,8 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 
 
 /**
- * Executes a SPARQL query against a specified end point.
+ * Executes a SPARQL query against a specified end point.  Can't be reused, so
+ * throw it away after you get your query results out of it.
  * 
  * Provides abstractions to automate query construction.
  * 
@@ -186,9 +187,11 @@ public class SparqlQuery
 	/**
 	 * Execute a SPARQL query built up from a set of query triplets.
 	 * @see #addQueryTriplet(String)
-	 * @return the query result as an XML document in an InputStream
+	 * @return a Map with one key per $variable and a list of results as the value
+	 * @see MultiHashMap
+	 * MultiHashMap<String, String>
 	 */
-	public InputStream runSelectQuery() {
+	public MultiHashMap<String, String> runSelectQuery() {
 		String queryString = getComposedQuery();
 		
 		try {
@@ -206,7 +209,7 @@ public class SparqlQuery
 			httpConnection.setRequestProperty("accept", "application/sparql-results+xml");
 			InputStream queryResult = httpConnection.getInputStream();
 			
-			return queryResult;
+			return parseSPARQLResult(queryResult);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,7 +225,7 @@ public class SparqlQuery
 	 * @see MultiHashMap
 	 * @throws Exception
 	 */
-	public MultiHashMap<String, String> parseSPARQLResult(InputStream queryResult) 
+	private MultiHashMap<String, String> parseSPARQLResult(InputStream queryResult) 
 					throws Exception {
 
 		MultiHashMap<String, String> resultMap = 
