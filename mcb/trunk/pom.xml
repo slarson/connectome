@@ -144,7 +144,7 @@
 									class.
 								-->
 								<!-- this is perhaps going to change -->
-								<mainClass>org.wholebraincatalog.mcb.MultiScaleConnectomeBrowser</mainClass>
+								<mainClass>org.wholebrainproject.mcb.MultiScaleConnectomeBrowser</mainClass>
 							</jnlp>
 
 							<!-- SIGNING -->
