@@ -25,13 +25,11 @@ public class ConnectionStatementLoader {
 				"Lateral_preoptic_area"};
 		
 		populate(bamsReader, brainRegions);
-				
-		InputStream queryResult = bamsReader.runSelectQuery();
 		
 		MultiHashMap<String, String> results = null;
 		
 		try {
-			results = bamsReader.parseSPARQLResult(queryResult);
+			results = bamsReader.runSelectQuery();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
