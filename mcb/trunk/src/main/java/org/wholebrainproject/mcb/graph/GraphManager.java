@@ -338,8 +338,9 @@ public class GraphManager {
 	}
 
 	public void hideBrainParts(Node node) {
-		// TODO Auto-generated method stub
-		
+		if (node.isCollapsed() == false) {
+			collapser.collapse(node);
+		}
 	}
 
 	public void expand() {
