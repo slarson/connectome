@@ -7,7 +7,7 @@
  *
  */
 
-package org.wholebrainproject.mousemenu;
+package org.wholebrainproject.mcb.mousemenu;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.picking.PickedState;

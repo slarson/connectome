@@ -7,7 +7,7 @@
  *
  */
 
-package org.wholebrainproject.mousemenu;
+package org.wholebrainproject.mcb.mousemenu;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.visualization.VisualizationViewer;

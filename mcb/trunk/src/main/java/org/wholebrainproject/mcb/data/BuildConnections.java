@@ -106,11 +106,11 @@ public class BuildConnections {
 
 		for (int i = 0; i < node.length ; i++) {
 			for (int j = 0; j < node.length; j++) {
-				if (node[i].getRegionToStrengthMap().get(node[j].getVertexName().replace('_', ' ')) != null) {
+				if (node[i].getRegionToStrengthMap().get(node[j].getName().replace('_', ' ')) != null) {
 					String strength = node[i].getRegionToStrengthMap().get(
-							node[j].getVertexName().replace('_', ' '));
+							node[j].getName().replace('_', ' '));
 					String reference = node[i].getReferenceSet().get(
-							node[j].getVertexName().replace('_', ' '));
+							node[j].getName().replace('_', ' '));
 					ConnectionEdge e = new ConnectionEdge(strength, reference);
 					graph.addEdge(e, node[i], 
 							node[j],

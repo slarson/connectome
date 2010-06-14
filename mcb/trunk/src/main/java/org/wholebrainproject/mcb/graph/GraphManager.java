@@ -30,9 +30,9 @@ import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
 import org.wholebrainproject.mcb.data.BuildConnections;
+import org.wholebrainproject.mcb.mousemenu.MouseMenus;
+import org.wholebrainproject.mcb.mousemenu.PopupVertexEdgeMenuMousePlugin;
 import org.wholebrainproject.mcb.util.HyperLinkToolTip;
-import org.wholebrainproject.mousemenu.MouseMenus;
-import org.wholebrainproject.mousemenu.PopupVertexEdgeMenuMousePlugin;
 
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
@@ -95,7 +95,7 @@ public class GraphManager {
 	/**
 	 * graph collapser.
 	 */
-	GraphCollapser collapser;
+	CustomGraphCollapser collapser;
 
 	/**
 	 * Scales the graph.
@@ -129,7 +129,7 @@ public class GraphManager {
 
 		BuildConnections.getDataAndCreateGraph(graph);
 
-		collapser = new GraphCollapser(graph);
+		collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
 
 		layout = 
 			new AggregateLayout<Node,Edge>(
@@ -249,72 +249,6 @@ public class GraphManager {
 		return vv;
 	}
 
-
-	public void collapse() {
-		Collection picked = new HashSet(vv.getPickedVertexState().getPicked());
-		if(picked.size() > 1) {
-			Graph<Node,Edge> inGraph = layout.getGraph();
-			Graph<Node,Edge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
-
-			Graph<Node,Edge> g = collapser.collapse(layout.getGraph(), clusterGraph);
-			double sumx = 0;
-			double sumy = 0;
-			for(Object v : picked) {
-				Point2D p = (Point2D)layout.transform((Node) v);
-				sumx += p.getX();
-				sumy += p.getY();
-			}
-			Point2D cp = new Point2D.Double(sumx/picked.size(), sumy/picked.size());
-			vv.getRenderContext().getParallelEdgeIndexFunction().reset();
-			layout.setGraph(g);
-			layout.setLocation((Node) clusterGraph, cp);
-			vv.getPickedVertexState().clear();
-			vv.repaint();
-		}
-	}
-
-	public void expand() {
-		Collection<Node> picked = 
-			new HashSet<Node>(vv.getPickedVertexState().getPicked());
-		for(Object v : picked) {
-			if(v instanceof Graph<?,?>) {
-
-				Graph g = collapser.expand(layout.getGraph(), (Graph)v);
-				vv.getRenderContext().getParallelEdgeIndexFunction().reset();
-				//applyTreeLayout((DirectedGraph)v);
-				
-				layout.setGraph(g);
-				
-			}
-			vv.getPickedVertexState().clear();
-			vv.repaint();
-		}
-	}
-
-	public void compressEdges() {
-		Collection<Node> picked = vv.getPickedVertexState().getPicked();
-		if(picked.size() == 2) {
-			Pair<Node> pair = new Pair<Node>(picked);
-			Graph<Node,Edge> graph = layout.getGraph();
-			Collection<Edge> edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
-			edges.retainAll(graph.getIncidentEdges(pair.getSecond()));
-			exclusions.addAll(edges);
-			vv.repaint();
-		}
-	}
-
-	public void expandEdges() {
-		Collection picked = vv.getPickedVertexState().getPicked();
-		if(picked.size() == 2) {
-			Pair pair = new Pair(picked);
-			Graph graph = layout.getGraph();
-			Collection edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
-			edges.retainAll(graph.getIncidentEdges(pair.getSecond()));
-			exclusions.removeAll(edges);
-			vv.repaint();
-		}
-	}
-
 	public void lensNone() {
 		if(viewSupport != null) {
 			viewSupport.deactivate();
@@ -342,13 +276,6 @@ public class GraphManager {
 
 	public void zoomOut() {
 		scaler.scale(vv, 1/1.1f, vv.getCenter());
-	}
-
-	public void reset() {
-		layout.setGraph(graph);
-		exclusions.clear();
-		collapseSubGraph();
-		vv.repaint();
 	}
 
 	public void saveImage() {
@@ -401,140 +328,8 @@ public class GraphManager {
 			e2.printStackTrace();
 		}catch(Exception e1){e1.printStackTrace();}
 	}
-
-	/**
-	 * Method collapses the nodes that are part of a particular brain region.
-	 */
-	private void collapseSubGraph(){
-
-		Collection<Node> picked = null;
-
-		for(Node node: graph.getVertices()){
-
-			if(node.getPartOf()!= null && !node.getPartOf().isEmpty())
-				picked = getPickedNodes(node);
-			else if(node.getPartOf() ==  null)
-				continue;
-
-			if(picked != null && picked.size() > 1) {
-				Graph<Node,Edge> inGraph = layout.getGraph();
-				Graph<Node,Edge> clusterGraph = collapser.getClusterGraph(inGraph, picked);
-				Graph<Node,Edge> g = collapser.collapse(layout.getGraph(), clusterGraph);
-				
-				double sumx = 0;
-				double sumy = 0;
-				for(Node v : picked) {
-					Point2D p = (Point2D)layout.transform(v);
-					sumx += p.getX();
-					sumy += p.getY();
-				}
-				Point2D cp = new Point2D.Double(sumx/picked.size(), sumy/picked.size());
-				vv.getRenderContext().getParallelEdgeIndexFunction().reset();
-				//vv.getRenderContext().setVertexLabelTransformer(new NodeLabeller());
-				layout.setGraph(g);
-				//layout.setLocation(clusterGraph, cp);
-				vv.getPickedVertexState().clear();
-				vv.repaint();
-			}
-			picked = null;
-		}
-	}
-
-
-	public void applyTreeLayout(DirectedGraph<Node,Edge> tree) {
-		if (tree == null) throw new IllegalArgumentException();
-		Tree<Node, Edge> subGraph;
-		try {
-			subGraph = new DelegateTree<Node,Edge>(tree);
-			Collection<Node> picked = subGraph.getVertices();
-			Point2D center = new Point2D.Double();
-			double x = 0;
-			double y = 0;
-			for (Node vertex : picked) {
-				Point2D p = layout.transform(vertex);
-				x += p.getX();
-				y += p.getY();
-			}
-			x /= picked.size();
-			y /= picked.size();
-			center.setLocation(x, y);
-
-			Layout<Node, Edge> subLayout =
-				new TreeLayout<Node, Edge>(subGraph);
-			subLayout.setInitializer(vv.getGraphLayout());
-			subLayout.setSize(new Dimension(100, 100));
-			layout.put(subLayout, center);
-			vv.setGraphLayout(layout);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
 	
 
-	public void test() {
-		///temporary hack for demo purposes
-		for (Node n : graph.getVertices()) {
-			//if (n.getVertexName().startsWith("Glo")) {
-				applyTreeLayoutNode(n);
-			//}
-		}
-	}
-	
-	public void applyTreeLayoutNode(Node n) {
-
-		Tree<Node, Edge> subGraph;
-		try {
-			subGraph = n.getChildTree(); //get the tree graph from the Node
-			Collection<Node> picked = subGraph.getVertices();
-			Point2D center = new Point2D.Double();
-			double x = 0;
-			double y = 0;
-			for (Node vertex : picked) {
-				graph.addVertex(vertex);
-				Point2D p = layout.transform(vertex);
-				x += p.getX();
-				y += p.getY();
-			}
-			layout.setGraph(graph);
-			x /= picked.size();
-			y /= picked.size();
-			center.setLocation(x, y);
-
-			Layout<Node, Edge> subLayout =
-				new TreeLayout<Node, Edge>(subGraph);
-			subLayout.setInitializer(vv.getGraphLayout());
-			
-			layout.put(subLayout, center);
-			vv.setGraphLayout(layout);
-			vv.repaint();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-	
-	
-	/**
-	 * Given a node this method returns the children of the node.
-	 * @param node - the node used to check for its children.
-	 * @return pickedNodes - collection containing the children of the node and
-	 * 						 the node itself.
-	 */
-	private Collection<Node> getPickedNodes(Node node){
-		Collection<Node> pickedNodes = new Vector<Node>();
-		for(String subNode : node.getPartOf()){
-			for(Node currentNode: graph.getVertices()){
-				if(subNode.equals(currentNode.getVertexName().replace('_', ' '))){
-					pickedNodes.add(currentNode);
-				}
-			}
-			pickedNodes.add(node);
-		}
-		return pickedNodes;
-	}
 	/**
 	 * A demo class that will create a vertex shape that is either a
 	 * polygon or star. The number of sides corresponds to the number
@@ -585,6 +380,30 @@ public class GraphManager {
 			}
 			return size;
 		}
+	}
+
+	public void expand() {
+		collapser.expand();
+	}
+
+	public void collapse() {
+		collapser.collapse();
+	}
+
+	public void compressEdges() {
+		collapser.compressEdges();
+	}
+
+	public void expandEdges() {
+		collapser.expandEdges();
+	}
+
+	public void reset() {
+		collapser.reset();
+	}
+
+	public void test() {
+		collapser.test();
 	}
 
 	

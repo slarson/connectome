@@ -7,7 +7,7 @@
  *
  */
 
-package org.wholebrainproject.mousemenu;
+package org.wholebrainproject.mcb.mousemenu;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import java.awt.event.ActionEvent;
@@ -88,10 +88,10 @@ public class MouseMenus {
     public static class VertexMenu extends JPopupMenu {
         public VertexMenu() {
             super("Vertex Menu");
-            this.add(new DeleteVertexMenuItem<Node>());
             this.addSeparator();
-            this.add(new pscCheckBox());
-            this.add(new tdmCheckBox());
+            this.add(new ShowHideNodePartsMenuItem());            
+            //this.add(new pscCheckBox());
+            //this.add(new tdmCheckBox());
         }
     }
     

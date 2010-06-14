@@ -6,7 +6,7 @@
  * Copyright 2007 Grotto Networking
  */
 
-package org.wholebrainproject.mousemenu;
+package org.wholebrainproject.mcb.mousemenu;
 
 import java.awt.geom.Point2D;
 

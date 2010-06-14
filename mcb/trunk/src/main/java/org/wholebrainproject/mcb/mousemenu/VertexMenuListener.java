@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package org.wholebrainproject.mousemenu;
+package org.wholebrainproject.mcb.mousemenu;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 
