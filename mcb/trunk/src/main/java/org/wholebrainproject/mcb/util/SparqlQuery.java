@@ -15,6 +15,7 @@ package org.wholebrainproject.mcb.util;
  * limitations under the License
  */
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -233,7 +234,8 @@ public class SparqlQuery
 		
 		//create a parser for the XML that we will be getting
 		XMLInputFactory factory = XMLInputFactory.newInstance();
-		XMLStreamReader parser = factory.createXMLStreamReader(queryResult);
+		XMLStreamReader parser = 
+			factory.createXMLStreamReader(new BufferedInputStream(queryResult));
 		
 		while (true) {
 
