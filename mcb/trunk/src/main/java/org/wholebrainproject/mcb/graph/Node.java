@@ -3,6 +3,7 @@ package org.wholebrainproject.mcb.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -99,6 +100,11 @@ public class Node implements Factory{
 		this.partOf = new ArrayList<String>();
 		if(partOf2 != null) this.partOf.addAll(partOf2);
 	}
+	
+	public int getUniqueCellCount() {
+		return new HashSet<String>(this.cells).size();
+	}
+
 	
 	public int getCellCount() {
 		if (this.cells != null) {
@@ -354,6 +360,7 @@ public class Node implements Factory{
 		if (excitatory) return "+";
 		return "";
 	}
+
 
 
 }
