@@ -271,8 +271,8 @@ public class CustomGraphCollapser extends GraphCollapser{
 					layout.transform(n).getY());
 
 			//create a new sublayout that is a TreeLayout based on the treeGraph
-			Layout<Node, Edge> subLayout =
-				new TreeLayout<Node, Edge>(treeGraph);
+			TreeLayout<Node, Edge> subLayout =
+				new TreeLayout<Node, Edge>(treeGraph, 50);
 			subLayout.setInitializer(vv.getGraphLayout());
 			
 			//place the sublayout at the computed location.

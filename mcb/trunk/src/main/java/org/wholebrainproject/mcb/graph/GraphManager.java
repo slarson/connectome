@@ -3,29 +3,29 @@ package org.wholebrainproject.mcb.graph;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ItemEvent;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoundedRangeModel;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolTip;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
-import org.apache.commons.collections15.functors.ChainedTransformer;
 import org.apache.poi.hslf.model.Picture;
 import org.apache.poi.hslf.model.Slide;
 import org.apache.poi.hslf.usermodel.SlideShow;
@@ -36,34 +36,24 @@ import org.wholebrainproject.mcb.util.HyperLinkToolTip;
 
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.algorithms.layout.TreeLayout;
-import edu.uci.ics.jung.graph.DelegateTree;
-import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.Tree;
-import edu.uci.ics.jung.graph.util.Pair;
+import edu.uci.ics.jung.graph.util.Context;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
-import edu.uci.ics.jung.visualization.decorators.EllipseVertexShapeTransformer;
-import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
-import edu.uci.ics.jung.visualization.jai.TransformingImageVertexIconRenderer;
-import edu.uci.ics.jung.visualization.subLayout.GraphCollapser;
-import edu.uci.ics.jung.visualization.transform.LayoutLensSupport;
-import edu.uci.ics.jung.visualization.transform.LensSupport;
-import edu.uci.ics.jung.visualization.transform.shape.MagnifyImageLensSupport;
-import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
+import edu.uci.ics.jung.visualization.decorators.ConstantDirectionalEdgeValueTransformer;
+import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
+import edu.uci.ics.jung.visualization.transform.LensSupport;
+import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
 
 /**
  * The GraphManager holds the graph model, handles layout, and handles modifications
@@ -80,7 +70,7 @@ public class GraphManager {
 	/**
 	 * the graph
 	 */
-	Graph<Node,Edge> graph;
+	DirectedSparseMultigraph<Node,Edge> graph;
 
 	/**
 	 * the visual component and renderer for the graph
@@ -156,8 +146,29 @@ public class GraphManager {
 		vv.getRenderContext().setVertexLabelTransformer(new NodeLabeller());
 
 		vv.getRenderContext().setVertexLabelRenderer(new DefaultVertexLabelRenderer(Color.RED));
-		vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabeller());
+
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+		vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabeller());
+		vv.getRenderContext().setEdgeLabelRenderer(new DefaultEdgeLabelRenderer(Color.RED));
+		vv.getRenderContext().setEdgeFontTransformer(new Transformer<Edge, Font>() {
+			public Font transform(Edge input) {
+				return input.getFont();
+			}
+		});
+		
+		vv.getRenderContext().setEdgeLabelClosenessTransformer(
+				new Transformer<Context<Graph<Node, Edge>, Edge>, Number>() {
+					/**
+					 * @see Transformer#transform(Object)
+					 */
+					public Number transform(
+							Context<Graph<Node, Edge>, Edge> context) {
+						Graph<Node, Edge> graph = context.graph;
+						Edge e = context.element;
+						return e.getCloseness();
+					}
+				});
+	        
 
 		// Setup up a new vertex to paint transformer to change node color.
 		vv.getRenderContext().setVertexFillPaintTransformer(new Transformer<Node,Paint>() {
@@ -246,6 +257,10 @@ public class GraphManager {
 
 	public VisualizationViewer<Node,Edge> getVisualizationViewer() {
 		return vv;
+	}
+	
+	public DirectedSparseMultigraph<Node,Edge> getGraph() {
+		return graph;
 	}
 
 	public void lensNone() {
@@ -366,8 +381,5 @@ public class GraphManager {
 	public void test() {
 		collapser.test();
 	}
-
-
-	
 	
 }

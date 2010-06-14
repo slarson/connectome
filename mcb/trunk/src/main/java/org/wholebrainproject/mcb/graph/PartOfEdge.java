@@ -17,4 +17,8 @@ public class PartOfEdge extends Edge {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public Number getCloseness() {
+		return 0.5f;
+	}
 }
