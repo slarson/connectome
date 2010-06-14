@@ -1,10 +1,6 @@
 package org.wholebrainproject.mcb;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JToolTip;
-
-import org.wholebrainproject.mcb.util.HyperLinkToolTip;
 
 /**
  * Main entrance point to the application.

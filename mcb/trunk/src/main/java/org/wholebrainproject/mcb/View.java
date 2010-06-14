@@ -19,18 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JToolTip;
 
-import org.wholebrainproject.mcb.graph.ConnectionEdge;
-import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.graph.GraphManager;
-import org.wholebrainproject.mcb.graph.Node;
-import org.wholebrainproject.mcb.util.HyperLinkToolTip;
 
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
 
