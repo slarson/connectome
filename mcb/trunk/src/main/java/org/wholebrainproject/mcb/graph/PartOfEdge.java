@@ -44,4 +44,9 @@ public class PartOfEdge implements Edge {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String getInferenceChain() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

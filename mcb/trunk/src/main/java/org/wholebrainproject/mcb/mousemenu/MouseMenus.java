@@ -10,12 +10,18 @@
 package org.wholebrainproject.mcb.mousemenu;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+
+import java.awt.Container;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import org.wholebrainproject.mcb.graph.Edge;
@@ -39,10 +45,22 @@ public class MouseMenus {
             //this.add(new WeightDisplay());
             //this.add(new CapacityDisplay());
             this.addSeparator();
-            //this.add(new EdgePropItem(frame));           
+            this.add(new EdgePropItem(findParentFrame()));           
         }
         
+        private Frame findParentFrame(){ 
+    	    Container c = this; 
+    	    while(c != null){ 
+    	      if (c instanceof Frame) 
+    	        return (Frame)c; 
+
+    	      c = c.getParent(); 
+    	    } 
+    	    return (Frame)null; 
+    	  } 
     }
+    
+  
     
     public static class EdgePropItem extends JMenuItem implements EdgeMenuListener<Edge>,
             MenuPointListener {
@@ -59,15 +77,15 @@ public class MouseMenus {
             this.point = point;
         }
         
-        public  EdgePropItem(final JFrame frame) {            
-            super("Edit Edge Properties...");
+        public  EdgePropItem(final Frame frame) {            
+            super("Show inference chain...");
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                	/*
-                    EdgePropertyDialog dialog = new EdgePropertyDialog(frame, edge);
-                    dialog.setLocation((int)point.getX()+ frame.getX(), (int)point.getY()+ frame.getY());
-                    dialog.setVisible(true);
-                    */
+                	JOptionPane.showMessageDialog(frame,
+            			    edge.getInferenceChain(),
+            			    "Inference chain",
+            			    JOptionPane.PLAIN_MESSAGE);
+                    
                 }
                 
             });

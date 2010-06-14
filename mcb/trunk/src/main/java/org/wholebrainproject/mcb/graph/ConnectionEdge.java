@@ -150,4 +150,26 @@ public class ConnectionEdge implements Edge{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public String getInferenceChain() {
+		String out = "<html><h1>Why is this an " + 
+		getProjectingNode().getProjectingCellsRoleString() + 
+		" projection?<h1>" +
+		"<ul><li>This projection comes from " + getProjectingNode().getName() + 
+		"</li><li>" + getProjectingNode().getName() + " has " + 
+		getProjectingNode().getCellCount() + " projection cell(s)" + 
+		"<ul>";
+		for (int i = 0; i < getProjectingNode().getCellCount(); i++) {
+			out += "<li>" + getProjectingNode().getCellName(i);
+			out += "<ul><li>This cell has " + 
+			getProjectingNode().getNeurotransmitter(i) + " as its neurotransmitter.";
+			out += "<li>" + getProjectingNode().getNeurotransmitter(i) +" is an " +
+			getProjectingNode().getRole(i);
+			out += "</ul>";
+		}
+		out += "</ul>";
+		
+		out += "</ul></html>";
+		
+		return out;
+	}
 }

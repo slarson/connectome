@@ -17,23 +17,16 @@ import javax.swing.JMenuItem;
 import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.util.BareBonesBrowserLaunch;
 
-/**
- * A class to implement the deletion of an edge from within a 
- * PopupVertexEdgeMenuMousePlugin.
- * @author Dr. Greg M. Bernstein
- */
+
 public class EdgeOpenReferenceMenuItem extends JMenuItem implements EdgeMenuListener<Edge> {
     private Edge edge;
     private VisualizationViewer visComp;
     
-    /** Creates a new instance of DeleteEdgeMenuItem */
     public EdgeOpenReferenceMenuItem() {
-        super("More details...");
+        super("Open reference...");
         this.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
             	BareBonesBrowserLaunch.openURL(edge.getReferenceURL());
-                //visComp.getPickedEdgeState().pick(edge, false);
-                //visComp.getGraphLayout().getGraph().removeEdge(edge);
                 visComp.repaint();
             }
         });
@@ -48,7 +41,6 @@ public class EdgeOpenReferenceMenuItem extends JMenuItem implements EdgeMenuList
     public void setEdgeAndView(Edge edge, VisualizationViewer visComp) {
         this.edge = edge;
         this.visComp = visComp;
-        //this.setText("Delete Edge " + edge.toString());
     }
     
 }
