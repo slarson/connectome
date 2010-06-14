@@ -8,7 +8,7 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 public class EdgeLabeller implements Transformer<Edge, String>{
 
 	public String transform(Edge input) {
-		return input.getLabel();
+		return "<html><b>" + input.getLabel() + "</b></html>";
 	}
 
 }

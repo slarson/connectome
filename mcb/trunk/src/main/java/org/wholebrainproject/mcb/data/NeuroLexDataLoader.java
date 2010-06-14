@@ -111,6 +111,10 @@ public class NeuroLexDataLoader {
 					" nlx_prop:Label $"+
 					brainRegionSufixName+"_trl");
 			
+			//filter to avoid getting two entries per cell
+			query.addQueryTriplet("FILTER regex(str($"+ brainRegionSufixName+
+					cells_suffix +"), \"Category\")");
+			
 			query.addSelectVariable("$"+ brainRegionSufixName + "_cl");
 			query.addSelectVariable("$"+ brainRegionSufixName + "_cu");
 			query.addSelectVariable("$"+ brainRegionSufixName + "_nl");

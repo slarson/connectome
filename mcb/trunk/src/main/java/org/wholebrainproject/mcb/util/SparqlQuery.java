@@ -166,7 +166,8 @@ public class SparqlQuery
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {
 			queryString += queryTriplet;	
-			if (queryTriplet.contains("UNION") == false)
+			if (queryTriplet.contains("UNION") == false && 
+					queryTriplet.contains("FILTER") == false)
 				queryString += " . ";
 			
 		}
@@ -260,6 +261,7 @@ public class SparqlQuery
 						
 						String elementText = 
 							parser.getElementText();
+						elementText = elementText.replaceAll("[ \t]+", " ");
 						resultMap.put(selectedVariable, elementText);
 					}					
 				} 

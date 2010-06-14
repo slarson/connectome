@@ -1,9 +1,12 @@
 package org.wholebrainproject.mcb.graph;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
 import java.util.EnumSet;
 
 import org.apache.commons.collections15.Factory;
+
+import edu.uci.ics.jung.graph.util.Pair;
 
 /*Copyright (C) 2010 contact@wholebraincatalog.org
  *
@@ -87,8 +90,14 @@ public class ConnectionEdge extends Edge{
 		return this.reference;
 	}
 	
+	private Node getProjectingNode() {
+		Pair<Node> endpoints = 
+			GraphManager.getInstance().getGraph().getEndpoints(this);
+		return endpoints.getFirst();
+	}
+	
 	public String getLabel() {
-		return getStrength().toString();
+		return getProjectingNode().getProjectingCellsRoleAbbrevString();
 	}
 	
 	public String getMoreDetailsURL() {
@@ -98,14 +107,32 @@ public class ConnectionEdge extends Edge{
 	public String getToolTipLabel() {
 		String out = "";
 		String reference = getReference();
-		out += "<html><a href=\"http://" + reference + "\">" + reference + "</a></html>";
+		out += "<html>Projection strength: " + getStrength() + "<br>";
+		if ("".equals(getProjectingNode().getProjectingCellsRoleString()) == false) {
+			out += "This projection is inferred to be "
+					+ getProjectingNode().getProjectingCellsRoleString()
+					+ "<br>";
+		}
+		out += "This projection is described in "
+				+ reference.subSequence(0, 20) + "...<br>"
+				+ "(right-click for more)</html>";
 		return out;
 	}
 	
+	public Font getFont() {
+		int style = Font.BOLD | Font.ITALIC;
+
+		Font font = new Font ("Arial", style , 15);
+		
+		return font;
+	}
+	
 	public BasicStroke getStroke() {
+		float dash[] = {10.0f};
 		switch (getStrength()) {
 		case EXISTS:
-			return new BasicStroke(0.5f);
+			return new BasicStroke(0.5f, BasicStroke.CAP_BUTT, 
+					BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
 		case VERY_LIGHT:
 			return new BasicStroke(1f);
 		case LIGHT:
@@ -114,5 +141,9 @@ public class ConnectionEdge extends Edge{
 			return new BasicStroke(3f);
 		}
 		return super.getStroke();
+	}
+	
+	public Number getCloseness() {
+		return 0.9f;
 	}
 }

@@ -1,6 +1,7 @@
 package org.wholebrainproject.mcb.graph;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
 
 /**
  * Parent class for all edges.  Abstract because we must be working with a 
@@ -22,6 +23,16 @@ public abstract class Edge {
 	}
 
 	public String getMoreDetailsURL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Font getFont() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Number getCloseness() {
 		// TODO Auto-generated method stub
 		return null;
 	}

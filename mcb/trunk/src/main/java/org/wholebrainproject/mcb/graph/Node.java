@@ -328,6 +328,32 @@ public class Node implements Factory{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String getProjectingCellsRoleString() {
+		boolean inhibitory = false;
+		boolean excitatory = false;
+		for (String role : this.roles) {
+			if (role.contains("Inhibitory")) inhibitory = true;
+			if (role.contains("Excitatory")) excitatory = true;
+		}
+		if (inhibitory && excitatory) return "excitatory and inhibitory";
+		if (inhibitory) return "inhibitory";
+		if (excitatory) return "excitatory";
+		return "";
+	}
+
+	public String getProjectingCellsRoleAbbrevString() {
+		boolean inhibitory = false;
+		boolean excitatory = false;
+		for (String role : this.roles) {
+			if (role.contains("Inhibitory")) inhibitory = true;
+			if (role.contains("Excitatory")) excitatory = true;
+		}
+		if (inhibitory && excitatory) return "+/-";
+		if (inhibitory) return "-";
+		if (excitatory) return "+";
+		return "";
+	}
 
 
 }
