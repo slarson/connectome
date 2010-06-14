@@ -34,7 +34,7 @@ public class MouseMenus {
             super("Edge Menu");
             // this.frame = frame;
             //this.add(new DeleteEdgeMenuItem<Edge>());
-            this.add(new EdgeMoreDetailMenuItem());
+            this.add(new EdgeOpenReferenceMenuItem());
             this.addSeparator();
             //this.add(new WeightDisplay());
             //this.add(new CapacityDisplay());

@@ -28,7 +28,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
-public class ConnectionEdge extends Edge{
+public class ConnectionEdge implements Edge{
 	
 	public enum STRENGTH {
 		NOT_PRESENT("not present"),
@@ -140,10 +140,14 @@ public class ConnectionEdge extends Edge{
 		case MODERATE:
 			return new BasicStroke(3f);
 		}
-		return super.getStroke();
+		return new BasicStroke(2.5f);
 	}
 	
 	public Number getCloseness() {
 		return 0.9f;
+	}
+	public String getReferenceURL() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

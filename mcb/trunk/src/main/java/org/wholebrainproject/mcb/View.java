@@ -3,6 +3,7 @@ package org.wholebrainproject.mcb;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +14,11 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
@@ -35,17 +39,11 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 public class View extends JPanel{
 
 	/**
-	 * split that contains graph and instructions.
-	 */
-	static JSplitPane split_graph_help;
-	
-
-	/**
 	 * split that contains split_graph_help and option buttons.
 	 */
 	static JSplitPane split;
 
-	String instructions ="Use the mouse to select multiple vertices either by dragging a region, or by shift-clicking "+
+	static String instructionString ="Use the mouse to select multiple vertices either by dragging a region, or by shift-clicking "+
 	"on multiple vertices. After you select vertices, use the Collapse button to combine them \n"+
 	"into a single vertex.  Select a 'collapsed' vertex and use the Expand button to restore the "+
 	"collapsed vertices.  The Restore button will restore the original graph.  If you select 2 \n" +
@@ -55,7 +53,8 @@ public class View extends JPanel{
 	"expanded.  You can drag the vertices with the mouse. Use the 'Picking'/'Transforming' \n"+
 	"combo-box to switch between picking and transforming mode.  Rest mouse on an edge and a reference "+
 	"message will appear.  The edges legent state the connectivite strength \n"+ "" +
-	"between brain regions.  Press the 'Save' button under 'Save Image' and give the graph a name.  The graph will be saved as a power point. \n";		
+	"between brain regions.  Press the 'Save' button under 'Save Image' and give the graph a name.  The graph will be saved as a power point. \n" +
+	"\n\nYou can recall these instructions from the help menu at any time.";		
 	
 
 	public View() {
@@ -89,19 +88,6 @@ public class View extends JPanel{
 		
 		content.add(controls, BorderLayout.SOUTH);
 
-		JTextArea label = new JTextArea(instructions);
-		label.setEnabled(false);
-
-		// Splitting the window in two parts.
-		split_graph_help = 
-			new JSplitPane(JSplitPane.VERTICAL_SPLIT,label,
-					GraphManager.getInstance().getVisualizationViewer());
-		split_graph_help.setOneTouchExpandable(false);
-		split_graph_help.setDividerLocation(100);
-		// Splitting the window in two parts.
-		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,split_graph_help,controls);
-		split.setOneTouchExpandable(false);
-		split.setDividerLocation(500);
 	}
 	
 	protected Component getLensPanel() {
@@ -242,7 +228,40 @@ public class View extends JPanel{
 		return this;
 	}
 	
-	public JSplitPane getSplitPanel() {
-		return split;
+	
+	private Frame findParentFrame(){ 
+	    Container c = this; 
+	    while(c != null){ 
+	      if (c instanceof Frame) 
+	        return (Frame)c; 
+
+	      c = c.getParent(); 
+	    } 
+	    return (Frame)null; 
+	  } 
+	
+	public void launchInstructionPopup() {
+		JOptionPane.showMessageDialog(findParentFrame(),
+			    instructionString,
+			    "Instructions",
+			    JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public JMenuBar getMainMenuBar() {
+		JMenuBar menu =  new JMenuBar();
+		JMenu file = new JMenu("File");
+		JMenu help = new JMenu("Help");
+		JMenuItem x = new JMenuItem("x");
+		file.add(x);
+		final JMenuItem instructions = new JMenuItem("Instructions");
+		instructions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				launchInstructionPopup();
+			}
+		});
+		help.add(instructions);
+		menu.add(file);
+		menu.add(help);
+		return menu;
 	}
 }
