@@ -156,7 +156,7 @@ public class ConnectionEdge implements Edge{
 		" projection?<h1>" +
 		"<ul><li>This projection comes from " + getProjectingNode().getName() + 
 		"</li><li>" + getProjectingNode().getName() + " has " + 
-		getProjectingNode().getCellCount() + " projection cell(s)" + 
+		getProjectingNode().getUniqueCellCount() + " projection cell(s)" + 
 		"<ul>";
 		for (int i = 0; i < getProjectingNode().getCellCount(); i++) {
 			out += "<li>" + getProjectingNode().getCellName(i);
