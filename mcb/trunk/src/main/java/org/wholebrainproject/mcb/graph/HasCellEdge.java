@@ -46,4 +46,9 @@ public class HasCellEdge implements Edge {
 		return null;
 	}
 
+	public String getInferenceChain() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

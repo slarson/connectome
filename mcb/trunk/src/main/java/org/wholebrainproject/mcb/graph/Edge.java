@@ -22,4 +22,6 @@ public interface Edge {
 
 	public String getReferenceURL();
 
+	public String getInferenceChain();
+
 }
