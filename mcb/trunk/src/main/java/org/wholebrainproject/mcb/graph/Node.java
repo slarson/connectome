@@ -61,6 +61,8 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 	
 	private String reference = null;
 	
+	private boolean collapsed = true;
+	
 	/**
 	 * Constructor.
 	 * @param vertexName - name of node.
@@ -226,8 +228,16 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 	 * This method gives the name of node.
 	 * @return vertexName -  name of current node.
 	 */
-	public String getVertexName() {
+	public String getName() {
 		return this.name;
+	}
+	
+	public boolean isCollapsed() {
+		return this.collapsed;
+	}
+	
+	public void setCollapsed(boolean collapsed) {
+		this.collapsed = collapsed;
 	}
 	
 	/**

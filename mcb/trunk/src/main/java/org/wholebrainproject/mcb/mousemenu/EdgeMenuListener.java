@@ -5,7 +5,7 @@
  * Copyright March 21, 2007 Grotto Networking
  */
 
-package org.wholebrainproject.mousemenu;
+package org.wholebrainproject.mcb.mousemenu;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 
