@@ -129,14 +129,11 @@ public class GraphManager {
 
 		BuildConnections.getDataAndCreateGraph(graph);
 
-		collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
-
 		layout = 
 			new AggregateLayout<Node,Edge>(
 					new CircleLayout<Node,Edge>(graph));
 
 		scaler = new CrossoverScalingControl();
-
 		
 		Dimension preferredSize = new Dimension(800,400);
 		final VisualizationModel<Node,Edge> visualizationModel = 
@@ -202,9 +199,11 @@ public class GraphManager {
 
 		vv.setEdgeToolTipTransformer(new ToolTipEdgeLabeller());
 		
-		//Collapse nodes in subgraph.
-		//collapseSubGraph();
 
+		collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
+				
+		//by default, collapse all the edges
+		collapser.collapse();
 	}
 
 	private void setGraphMouse() {
@@ -329,57 +328,18 @@ public class GraphManager {
 		}catch(Exception e1){e1.printStackTrace();}
 	}
 	
-
-	/**
-	 * A demo class that will create a vertex shape that is either a
-	 * polygon or star. The number of sides corresponds to the number
-	 * of vertices that were collapsed into the vertex represented by
-	 * this shape.
-	 * 
-	 * @author Tom Nelson
-	 *
-	 * @param <V>
-	 */
-	class ClusterVertexShapeFunction<V> extends EllipseVertexShapeTransformer<V> {
-
-		ClusterVertexShapeFunction() {
-			setSizeTransformer(new ClusterVertexSizeFunction<V>(20));
-		}
-		@Override
-		public Shape transform(V v) {
-			if(v instanceof Graph) {
-				int size = ((Graph)v).getVertexCount();
-				if (size < 8) {   
-					int sides = Math.max(size, 3);
-					return factory.getRegularPolygon(v, sides);
-				}
-				else {
-					return factory.getRegularStar(v, size);
-				}
+	public void showBrainParts(Node node) {
+		if (node.getPartOf().isEmpty() == false) {
+			if (node.isCollapsed()) {
+				collapser.expand(node);
 			}
-			return super.transform(v);
 		}
+		//TODO pop up message saying there are no parts for this region.
 	}
 
-	/**
-	 * A demo class that will make vertices larger if they represent
-	 * a collapsed collection of original vertices
-	 * @author Tom Nelson
-	 *
-	 * @param <V>
-	 */
-	class ClusterVertexSizeFunction<V> implements Transformer<V,Integer> {
-		int size;
-		public ClusterVertexSizeFunction(Integer size) {
-			this.size = size;
-		}
-
-		public Integer transform(V v) {
-			if(v instanceof Graph) {
-				return 30;
-			}
-			return size;
-		}
+	public void hideBrainParts(Node node) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void expand() {
@@ -405,6 +365,7 @@ public class GraphManager {
 	public void test() {
 		collapser.test();
 	}
+
 
 	
 	

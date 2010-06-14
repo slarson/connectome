@@ -32,9 +32,9 @@ public class ShowHideNodePartsMenuItem extends JMenuItem implements VertexMenuLi
             @SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent e) {
                 if (node.isCollapsed()) {
-                	GraphManager.getInstance().expand();
+                	GraphManager.getInstance().showBrainParts(node);
                 } else {
-                	GraphManager.getInstance().collapse();
+                	GraphManager.getInstance().hideBrainParts(node);
                 }
                 visComp.getPickedVertexState().pick(node, false);
                 visComp.repaint();
