@@ -33,10 +33,11 @@ public class MouseMenus {
         public EdgeMenu() {
             super("Edge Menu");
             // this.frame = frame;
-            this.add(new DeleteEdgeMenuItem<Edge>());
+            //this.add(new DeleteEdgeMenuItem<Edge>());
+            this.add(new EdgeMoreDetailMenuItem());
             this.addSeparator();
-            this.add(new WeightDisplay());
-            this.add(new CapacityDisplay());
+            //this.add(new WeightDisplay());
+            //this.add(new CapacityDisplay());
             this.addSeparator();
             //this.add(new EdgePropItem(frame));           
         }
@@ -92,47 +93,7 @@ public class MouseMenus {
             this.addSeparator();
             this.add(new ShowHideNodePartsMenuItem()); 
             this.add(new NodeMoreDetailsMenuItem());
-            //this.add(new pscCheckBox());
-            //this.add(new tdmCheckBox());
         }
-    }
-    
-    public static class pscCheckBox extends JCheckBoxMenuItem implements VertexMenuListener<Node> {
-        Node v;
-        
-        public pscCheckBox() {
-            super("PSC Capable");
-            this.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //v.setPacketSwitchCapable(isSelected());
-                }
-                
-            });
-        }
-        public void setVertexAndView(Node v, VisualizationViewer visComp) {
-            this.v = v;
-            //this.setSelected(v.isPacketSwitchCapable());
-        }
-        
-    }
-    
-        public static class tdmCheckBox extends JCheckBoxMenuItem implements VertexMenuListener<Node> {
-        Node v;
-        
-        public tdmCheckBox() {
-            super("TDM Capable");
-            this.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //v.setTdmSwitchCapable(isSelected());
-                }
-                
-            });
-        }
-        public void setVertexAndView(Node v, VisualizationViewer visComp) {
-            this.v = v;
-            //this.setSelected(v.isTdmSwitchCapable());
-        }
-        
     }
     
 }

@@ -121,6 +121,7 @@ public class Node implements Factory{
 	 * @return
 	 */
 	public String getMoreDetailURL() {
+		//TODO: This does not return an actual neurolex page for all nodes
 		return "http://neurolex.org/wiki/Category:" + this.name;
 	}
 	
