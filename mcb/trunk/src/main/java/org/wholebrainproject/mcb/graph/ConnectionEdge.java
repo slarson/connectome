@@ -155,11 +155,13 @@ public class ConnectionEdge implements Edge{
 		getProjectingNode().getProjectingCellsRoleString() + 
 		" projection?<h1>" +
 		"<ul><li>This projection comes from " + getProjectingNode().getName() + 
-		"</li><li>" + getProjectingNode().getName() + " has " + 
-		getProjectingNode().getUniqueCellCount() + " projection cell(s)" + 
+		"</li><li>" + getProjectingNode().getName() + " has <a href=\""+ 
+		getProjectingNode().getMoreDetailURL() + "\">" + 
+		getProjectingNode().getUniqueCellCount() + " projection cell(s)</a>" + 
 		"<ul>";
 		for (int i = 0; i < getProjectingNode().getCellCount(); i++) {
-			out += "<li>" + getProjectingNode().getCellName(i);
+			out += "<li><a href=\"" + getProjectingNode().getCellUrl(i) + "\">" 
+			+ getProjectingNode().getCellName(i) + "</a>";
 			out += "<ul><li>This cell has " + 
 			getProjectingNode().getNeurotransmitter(i) + " as its neurotransmitter.";
 			out += "<li>" + getProjectingNode().getNeurotransmitter(i) +" is an " +
