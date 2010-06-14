@@ -22,16 +22,16 @@ import org.wholebrainproject.mcb.util.BareBonesBrowserLaunch;
  * PopupVertexEdgeMenuMousePlugin.
  * @author Dr. Greg M. Bernstein
  */
-public class EdgeMoreDetailMenuItem extends JMenuItem implements EdgeMenuListener<Edge> {
+public class EdgeOpenReferenceMenuItem extends JMenuItem implements EdgeMenuListener<Edge> {
     private Edge edge;
     private VisualizationViewer visComp;
     
     /** Creates a new instance of DeleteEdgeMenuItem */
-    public EdgeMoreDetailMenuItem() {
+    public EdgeOpenReferenceMenuItem() {
         super("More details...");
         this.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-            	BareBonesBrowserLaunch.openURL(edge.getMoreDetailsURL());
+            	BareBonesBrowserLaunch.openURL(edge.getReferenceURL());
                 //visComp.getPickedEdgeState().pick(edge, false);
                 //visComp.getGraphLayout().getGraph().removeEdge(edge);
                 visComp.repaint();

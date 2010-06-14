@@ -4,37 +4,22 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 
 /**
- * Parent class for all edges.  Abstract because we must be working with a 
- * subtype.
+ * Common interface for all edges. 
  */
-public abstract class Edge {
+public interface Edge {
 	
-	public BasicStroke getStroke() {
-		return new BasicStroke(2.5f);
-	}
+	public BasicStroke getStroke();
 
-	public String getLabel() {
-		return this.toString();
-	}
+	public String getLabel();
 
-	public String getToolTipLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public String getToolTipLabel();
 
-	public String getMoreDetailsURL() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public String getMoreDetailsURL();
 
-	public Font getFont() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Font getFont() ;
 
-	public Number getCloseness() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Number getCloseness();
+
+	public String getReferenceURL();
 
 }
