@@ -68,7 +68,7 @@ public class BuildConnections {
 
 			ConnectionStatementLoader.populate(bamsReader,
 					brainRegions);
-			CellDataLoader.populate(cellReader,
+			NeuroLexDataLoader.populate(cellReader,
 					brainRegionsCellData);
 			BrainRegionDataLoader.populate(brainRegionReader,
 					brainRegionsCellData);
@@ -79,7 +79,7 @@ public class BuildConnections {
 			
 			Node[] data = ConnectionStatementLoader.createNodesFromResults(
 					brainRegions, results);
-			CellDataLoader.storeData(data, cellResults);
+			NeuroLexDataLoader.storeData(data, cellResults);
 			BrainRegionDataLoader.storeData(data, brainRegionResults);
 
 			makeConnections(graph, data);

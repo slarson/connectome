@@ -61,7 +61,15 @@ public class Node implements Factory{
 	
 	private String reference = null;
 	
+	/**
+	 * Indicates if this node has been collapsed
+	 */
 	private boolean collapsed = true;
+	
+	/**
+	 * Indicates if this has had its part of nodes added to the graph.
+	 */
+	private boolean partOfsAdded = false;
 	
 	/**
 	 * Constructor.
@@ -105,6 +113,15 @@ public class Node implements Factory{
 	
 	public String getCellUrl(int index) {
 		return this.cellUrls.get(index);
+	}
+	
+	/**
+	 * Returns an http:// dereferencable URL that can be used to get more
+	 * information about this node.
+	 * @return
+	 */
+	public String getMoreDetailURL() {
+		return "http://neurolex.org/wiki/Category:" + this.name;
 	}
 	
 	public String getNeurotransmitter(int index) {
@@ -158,10 +175,14 @@ public class Node implements Factory{
 		return treeGraph;
 	}
 	
-	public void addPartOfNodes(Graph<Node,Edge> graph) {
-		for (String partOf : getPartOf()) {
-			Node subNode = new Node(partOf);
-			graph.addEdge(new PartOfEdge(), subNode, this, EdgeType.DIRECTED);
+	public void addPartOfNodes(Graph<Node, Edge> graph) {
+		if (partOfsAdded == false) {
+			for (String partOf : getPartOf()) {
+				Node subNode = new Node(partOf);
+				graph.addEdge(new PartOfEdge(), subNode, this,
+						EdgeType.DIRECTED);
+			}
+			partOfsAdded = true;
 		}
 	}
 

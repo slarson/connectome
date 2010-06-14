@@ -88,8 +88,10 @@ public class MouseMenus {
     public static class VertexMenu extends JPopupMenu {
         public VertexMenu() {
             super("Vertex Menu");
+            //TODO: add name of vertex here
             this.addSeparator();
-            this.add(new ShowHideNodePartsMenuItem());            
+            this.add(new ShowHideNodePartsMenuItem()); 
+            this.add(new NodeMoreDetailsMenuItem());
             //this.add(new pscCheckBox());
             //this.add(new tdmCheckBox());
         }

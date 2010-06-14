@@ -6,7 +6,7 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.SparqlQuery;
 
-public class CellDataLoader {
+public class NeuroLexDataLoader {
 
 	/**
 	 * TARGET QUERY FOR A SINGLE BRAIN REGION (e.g. Globus Pallidus):
@@ -147,6 +147,7 @@ public class CellDataLoader {
 		
 		return reducedName.toLowerCase();
 	}
+	
 	/**
 	 * Method searches for the cell data that corresponds to a given node and 
 	 * stores it in the correct node field.
@@ -160,7 +161,7 @@ public class CellDataLoader {
 		for(Node node :  existingNodes){
 
 			if(brainRegionName == null)
-				brainRegionName=  reduceBrainRegionName(node.toString());
+				brainRegionName =  reduceBrainRegionName(node.toString());
 			
 			Collection<String> cells = 
 				cellResults.get("$" + brainRegionName + "_cl");

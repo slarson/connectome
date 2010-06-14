@@ -254,6 +254,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 			//the positions of its constituents
 			Collection<Node> picked = treeGraph.getVertices();
 			Point2D center = new Point2D.Double();
+			/*
 			double x = 0;
 			double y = 0;
 			for (Node vertex : picked) {
@@ -265,6 +266,9 @@ public class CustomGraphCollapser extends GraphCollapser{
 			x /= picked.size();
 			y /= picked.size();
 			center.setLocation(x, y);
+			*/
+			center.setLocation(layout.transform(n).getX(), 
+					layout.transform(n).getY());
 
 			//create a new sublayout that is a TreeLayout based on the treeGraph
 			Layout<Node, Edge> subLayout =
