@@ -1,6 +1,5 @@
 package org.wholebrainproject.mcb.data;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +18,8 @@ public class ConnectionStatementLoader {
 		String sparql = "http://rdf-stage.neuinfo.org/sparql";
 		SparqlQuery bamsReader = new SparqlQuery(sparql);
 		
-		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
-				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
-				"Ventral_tegmental_area", "Prelimbic_area", 
-				"Lateral_preoptic_area"};
+		String[] brainRegions = {"Cerebral_cortex", "Thalamus", 
+				"Brainstem","Basal_ganglia"};
 		
 		populate(bamsReader, brainRegions);
 		
