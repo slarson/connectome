@@ -154,6 +154,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 		layout.setGraph(g);
 
 		node.setCollapsed(false);
+		applyTreeLayoutNode(node);
 		//vv.getPickedVertexState().clear();
 		vv.repaint();
 	}
@@ -239,64 +240,41 @@ public class CustomGraphCollapser extends GraphCollapser{
 		}
 	}
 
-	public void applyTreeLayout(DirectedGraph<Node,Edge> tree) {
-		if (tree == null) throw new IllegalArgumentException();
-		Tree<Node, Edge> subGraph;
-		try {
-			subGraph = new DelegateTree<Node,Edge>(tree);
-			Collection<Node> picked = subGraph.getVertices();
-			Point2D center = new Point2D.Double();
-			double x = 0;
-			double y = 0;
-			for (Node vertex : picked) {
-				Point2D p = layout.transform(vertex);
-				x += p.getX();
-				y += p.getY();
-			}
-			x /= picked.size();
-			y /= picked.size();
-			center.setLocation(x, y);
-
-			Layout<Node, Edge> subLayout =
-				new TreeLayout<Node, Edge>(subGraph);
-			subLayout.setInitializer(vv.getGraphLayout());
-			subLayout.setSize(new Dimension(100, 100));
-			layout.put(subLayout, center);
-			vv.setGraphLayout(layout);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-	
+	/**
+	 * Make the children of this node arrange themselves into a tree.
+	 * @param n
+	 */
 	public void applyTreeLayoutNode(Node n) {
 
-		Tree<Node, Edge> subGraph;
 		try {
-			subGraph = n.getChildTree(); //get the tree graph from the Node
-			Collection<Node> picked = subGraph.getVertices();
+			//get the tree graph from the Node
+			Tree<Node, Edge> treeGraph = n.getPartOfTree(originalGraph); 
+			
+			//calculate the position of the center of the tree by averaging
+			//the positions of its constituents
+			Collection<Node> picked = treeGraph.getVertices();
 			Point2D center = new Point2D.Double();
 			double x = 0;
 			double y = 0;
 			for (Node vertex : picked) {
-				originalGraph.addVertex(vertex);
 				Point2D p = layout.transform(vertex);
 				x += p.getX();
 				y += p.getY();
 			}
-			layout.setGraph(originalGraph);
+			//layout.setGraph(originalGraph);
 			x /= picked.size();
 			y /= picked.size();
 			center.setLocation(x, y);
 
+			//create a new sublayout that is a TreeLayout based on the treeGraph
 			Layout<Node, Edge> subLayout =
-				new TreeLayout<Node, Edge>(subGraph);
+				new TreeLayout<Node, Edge>(treeGraph);
 			subLayout.setInitializer(vv.getGraphLayout());
 			
+			//place the sublayout at the computed location.
 			layout.put(subLayout, center);
 			vv.setGraphLayout(layout);
-			vv.repaint();
+			//vv.repaint();
 
 		} catch (Exception e) {
 			e.printStackTrace();
