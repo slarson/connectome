@@ -18,14 +18,18 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.graph.Node;
+import org.wholebrainproject.mcb.util.BareBonesBrowserLaunch;
 
 /**
  * A collection of classes used to assemble popup mouse menus for the custom
@@ -81,11 +85,23 @@ public class MouseMenus {
             super("Show inference chain...");
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                	JOptionPane.showMessageDialog(frame,
-            			    edge.getInferenceChain(),
-            			    "Inference chain",
-            			    JOptionPane.PLAIN_MESSAGE);
-                    
+                	JDialog dialog = new JDialog(frame, "Inference chain", true);
+                	dialog.setSize(500, 600);
+                	JEditorPane theEditorPane = new JEditorPane();
+            		theEditorPane.setContentType("text/html");
+            		theEditorPane.setEditable(false);
+            		theEditorPane.addHyperlinkListener(new HyperlinkListener() {
+            			public void hyperlinkUpdate(HyperlinkEvent e) {
+            				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            					// do whatever you want with the url
+            					BareBonesBrowserLaunch.openURL(e.getURL().toString());
+            					System.out.println("clicked on link : " + e.getURL());
+            				}
+            			}
+            		});
+            		dialog.add(theEditorPane);
+            		theEditorPane.setText(edge.getInferenceChain());
+                    dialog.setVisible(true);
                 }
                 
             });
