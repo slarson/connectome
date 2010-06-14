@@ -136,6 +136,28 @@ public class Node implements Factory{
 		return out;
 	}
 	
+	/**
+	 * For this node, return a tree graph that hangs under
+	 * this node that can be used to display part-of relations
+	 * and cells that are associated with this node.  Makes
+	 * this node the root of the tree.
+	 * @return
+	 */
+	public Tree<Node, Edge> getPartOfTree(Graph<Node,Edge> graph) {
+		Tree<Node,Edge> treeGraph = 
+			new DelegateTree<Node,Edge>();
+		
+		treeGraph.addVertex(this);
+		for (Node n : getPartOfNodes(graph)) {
+			Collection<Edge> edges = graph.getOutEdges(n);
+			//assuming only one edge
+			Edge e = edges.iterator().next();
+			treeGraph.addEdge(e, this, n);
+		}
+		
+		return treeGraph;
+	}
+	
 	public void addPartOfNodes(Graph<Node,Edge> graph) {
 		for (String partOf : getPartOf()) {
 			Node subNode = new Node(partOf);
@@ -191,24 +213,7 @@ public class Node implements Factory{
 		}
 	}
 	
-	/**
-	 * For this node, return a tree graph that hangs under
-	 * this node that can be used to display part-of relations
-	 * and cells that are associated with this node.  Makes
-	 * this node the root of the tree.
-	 * @return
-	 */
-	public Tree<Node, Edge> getChildTree() {
-		Tree<Node,Edge> treeGraph = 
-			new DelegateTree<Node,Edge>();
-		
-		treeGraph.addVertex(this);
-		for (String partof : getPartOf()) {
-			treeGraph.addEdge(new ConnectionEdge("exists", "xyz"), this, new Node(partof));
-		}
-		
-		return treeGraph;
-	}
+	
 	
 	/**
 	 * This method returns the number of connections in a node.
