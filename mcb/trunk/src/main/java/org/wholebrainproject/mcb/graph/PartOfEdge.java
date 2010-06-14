@@ -12,4 +12,9 @@ public class PartOfEdge extends Edge {
 	public String getLabel() {
 		return "part of";
 	}
+	
+	public String getMoreDetailsURL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

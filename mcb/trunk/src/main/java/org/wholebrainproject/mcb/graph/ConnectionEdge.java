@@ -91,6 +91,10 @@ public class ConnectionEdge extends Edge{
 		return getStrength().toString();
 	}
 	
+	public String getMoreDetailsURL() {
+		return "http://" + reference;
+	}
+	
 	public String getToolTipLabel() {
 		String out = "";
 		String reference = getReference();

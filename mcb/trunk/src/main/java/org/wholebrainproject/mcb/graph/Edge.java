@@ -21,4 +21,9 @@ public abstract class Edge {
 		return null;
 	}
 
+	public String getMoreDetailsURL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
