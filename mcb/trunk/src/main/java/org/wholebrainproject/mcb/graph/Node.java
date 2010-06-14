@@ -37,7 +37,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
-public class Node extends DirectedSparseMultigraph implements Factory{
+public class Node implements Factory{
 
 	/**
 	 * Name of vertex.
@@ -118,6 +118,31 @@ public class Node extends DirectedSparseMultigraph implements Factory{
 	public List<String> getPartOf(){
 		return this.partOf;
 	}
+	
+	/**
+	 * Get the Nodes that point into this Node via a PartOfEdge from the graph.
+	 * @param graph - the graph where this node has been added
+	 * @return - all the nodes that point into this node
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<Node> getPartOfNodes(Graph<Node,Edge> graph) {
+		List<Node> out = new ArrayList<Node>();
+		for (Edge e : graph.getInEdges(this)) {
+			if (e instanceof PartOfEdge) {
+				Pair<Node> p = graph.getEndpoints(e);
+				out.add(p.getFirst());
+			}
+		}
+		return out;
+	}
+	
+	public void addPartOfNodes(Graph<Node,Edge> graph) {
+		for (String partOf : getPartOf()) {
+			Node subNode = new Node(partOf);
+			graph.addEdge(new PartOfEdge(), subNode, this, EdgeType.DIRECTED);
+		}
+	}
+
 	/**
 	 * This method instantiates the tree to store URIs.
 	 */

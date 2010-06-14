@@ -128,9 +128,7 @@ public class BuildConnections {
 			if(!node[i].getPartOf().isEmpty()){
 				for(String partOf: node[i].getPartOf()){
 					if(!repeats.contains(partOf)){
-						Node subNode = new Node(partOf);
-						graph.addEdge(new PartOfEdge(),
-								subNode,node[i], EdgeType.DIRECTED);
+						node[i].addPartOfNodes(graph);
 						repeats.add(partOf);
 					}	
 				}
