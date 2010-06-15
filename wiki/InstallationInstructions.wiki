@@ -30,7 +30,7 @@ Under eclipse, right click on the folder containing your hello world application
 We use Maven to build our code.  The first thing to know about Maven is that it provides the "single command" ability to build an entire code base.  With [http://subversion.tigris.org/ SVN] and [http://maven.apache.org/ Maven] installed you can issue the following commands to download and build the entire source:
 
 <pre>
-svn co http://wholebrain.googlecode.com/svn/mcb/trunk mcb
+svn co http://connectome.googlecode.com/svn/mcb/trunk mcb
 cd mcb
 mvn clean install
 </pre>
