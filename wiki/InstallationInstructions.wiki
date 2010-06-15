@@ -34,7 +34,7 @@ cd mcb
 mvn clean install
 </pre>
 
-*IMPORTANT* The one caveat to this is that you need to place a single configuration file called settings.xml in your Maven directory.  Your Maven directory is located at ~/.m2 on linux/mac, C:\Users\[username]\.m2 on Vista, and C:\Documents and settings\[username]\.m2 in Windows XP.  You can download our copy of the settings.xml file [[http://wiki.wholebraincatalog.org/wiki/Maven2_settings.xml here]].
+*IMPORTANT* The one caveat to this is that you need to place a single configuration file called settings.xml in your Maven directory.  Your Maven directory is located at ~/.m2 on linux/mac, C:\Users\[username]\.m2 on Vista, and C:\Documents and settings\[username]\.m2 in Windows XP.  You can download our copy of the settings.xml file [http://wiki.wholebraincatalog.org/wiki/Maven2_settings.xml here].
 
 After this is finished (will say BUILD SUCCESSFUL), you'll find within mcb/target a file called MultiScaleConnectomeBrowser-X.X.X-SNAPSHOT-release.zip (X.X.X is in place of version numbers).  Unzip this and you should find a run.bat file and a run.sh file.  Use the run.sh file to run in Linux/Unix and the run.bat file to run in Windows.
 
