@@ -1,0 +1,21 @@
+#summary Release Notes.
+
+===Version 0.1.7 alpha ===
+
+  * Optimized data retrieval.
+  * Edge thickness indicating connectivity strength.
+  * Vertex mouse tool tip show cell data related to the brain region. 
+
+===Version 0.1.5 alpha ===
+
+  * Edge labels indicate connectivity strength.
+  * Mouse tool tip indicates reference for connection between brain regions.
+
+===Version 0.1.2 alpha===
+
+  * Powerpoint export of current graph
+
+===Version 0.1.1 alpha===
+
+  * Initial client-server communication with the [http://n2.talis.com/wiki/Main_Page Talis n2 store] using [http://www.w3.org/TR/rdf-sparql-query/ SPARQL]
+  * Initial version of expand / collapse nodes
