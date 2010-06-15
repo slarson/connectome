@@ -6,12 +6,6 @@ This document will describe the development of the Multi-Scale Connectome Browse
 
 == Running Java Network Launching Protocol ==
 
-You can [http://ccdb-dev-db2.crbs.ucsd.edu/multi-scale-connectome-browser-0.1.7-stable/BuildConnections.jnlp run the latest version] from your browser.  This server contains the JNLP for the mcb application. 
+You can [http://connectomebrowser.org run the latest version] from your browser.  
 
-You will be prompted to open the JNLP file with Java's Web Start Launcher.  If this is not the case choose Java's Web Start Launcher by selecting "Open with" and choosing the application from the scroll bar.  Once the above step is completed click "OK" and "Run".
-
-== Useful links ==
-* [http://jung.sourceforge.net/ JUNG] - the graphing library this is built on.
-* [http://jung.sourceforge.net/doc/api/index.html JUNG java docs]
-* [http://jung.cvs.sourceforge.net/viewvc/jung/jung2/jung-samples/src/main/java/edu/uci/ics/jung/samples/ Examples in JUNG 2]
-* [http://www.grotto-networking.com/JUNG/JUNG2-Tutorial.pdf JUNG 2 tutorial]
+You will be prompted to grant permissions to run the applet.  Say yes to all prompts.
