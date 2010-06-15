@@ -2,7 +2,7 @@
   <information>
     <title>mcb $project.Version</title>
     <vendor>Whole Brain Project</vendor>
-    <homepage href="http://wiki.wholebraincatalog.org/wiki/mcb"/>
+    <homepage href="http://connectomebrowser.org"/>
     <description>$project.Description</description>
     #if($offlineAllowed)
     <offline-allowed/>
@@ -20,5 +20,12 @@
 	href="http://java.sun.com/products/autodl/j2se" />
      $dependencies
   </resources>
-  <application-desc main-class="$mainClass"/>
+  <!--<application-desc main-class="$mainClass"/>-->
+  <applet-desc
+         name="Multi-Scale Connectome Browser"
+         main-class="$mainClass"
+         width="700"
+         height="600">
+     </applet-desc>
+  
 </jnlp>
