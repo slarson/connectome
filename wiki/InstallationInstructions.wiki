@@ -3,11 +3,11 @@
 ===From Eclipse===
 
 I. First, install and download eclipse and the Maven Plugin [http://openccdb.org/wiki/index.php/Brain_Catalog_Eclipse_Installation Instructions Here].
-  # Checkout a new project from SVN; http://wholebrain.googlecode.com/svn/mcb/trunk.
+  # Checkout a new project from SVN; http://connectome.googlecode.com/svn/mcb/trunk.
     # Window->Show View->Other...
     # Choose SVN->SVN Repository.
     # Right click within the SVN Repository View that comes up and click New->Repository Location...
-    # put: https://wholebrain.googlecode.com/svn/ If asked about a digital certificate, Accept Permanently.
+    # put: https://connectome.googlecode.com/svn/ If asked about a digital certificate, Accept Permanently.
     # Navigate down to, and right click on the mcb/ folder and choose Checkout...
       # You will be prompted to check out the project. Choose "Check out as a project configured using the New Project Wizard".
       # In the "New Project" window that pops up, select Java->Java Project and hit Next.
@@ -37,3 +37,10 @@ mvn clean install
 *IMPORTANT* The one caveat to this is that you need to place a single configuration file called settings.xml in your Maven directory.  Your Maven directory is located at ~/.m2 on linux/mac, C:\Users\[username]\.m2 on Vista, and C:\Documents and settings\[username]\.m2 in Windows XP.  You can download our copy of the settings.xml file [[http://wiki.wholebraincatalog.org/wiki/Maven2_settings.xml here]].
 
 After this is finished (will say BUILD SUCCESSFUL), you'll find within mcb/target a file called MultiScaleConnectomeBrowser-X.X.X-SNAPSHOT-release.zip (X.X.X is in place of version numbers).  Unzip this and you should find a run.bat file and a run.sh file.  Use the run.sh file to run in Linux/Unix and the run.bat file to run in Windows.
+
+
+== Useful links ==
+  * [http://jung.sourceforge.net/ JUNG] - the graphing library this is built on.
+  * [http://jung.sourceforge.net/doc/api/index.html JUNG java docs]
+  * [http://jung.cvs.sourceforge.net/viewvc/jung/jung2/jung-samples/src/main/java/edu/uci/ics/jung/samples/ Examples in JUNG 2]
+  * [http://www.grotto-networking.com/JUNG/JUNG2-Tutorial.pdf JUNG 2 tutorial]
