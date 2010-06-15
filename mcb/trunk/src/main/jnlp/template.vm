@@ -1,6 +1,6 @@
-<jnlp spec="$jnlpspec" codebase="http://ccdb-dev-db2.crbs.ucsd.edu/multi-scale-connectome-browser-$project.Version-stable" href="$outputFile">
+<jnlp spec="$jnlpspec" codebase="http://connectomebrowser.org/${project.Version}-stable" href="$outputFile">
   <information>
-    <title>mcb $project.Version</title>
+    <title>$project.name $project.Version</title>
     <vendor>Whole Brain Project</vendor>
     <homepage href="http://connectomebrowser.org"/>
     <description>$project.Description</description>
@@ -27,5 +27,4 @@
          width="700"
          height="600">
      </applet-desc>
-  
 </jnlp>
