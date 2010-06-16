@@ -41,7 +41,8 @@ public class View extends JPanel{
 	static JSplitPane split;
 
 	static String instructionString ="<html>" +
-			"<b>Welcome to the Multi-Scale Connectome Browser!</b>" +
+			"<b>Welcome to the Multi-Scale Connectome Browser " + 
+			MultiScaleConnectomeBrowser.getProperties().getProperty("application.version")+"!</b>" +
 			"<ul><li>Right-click on vertices or edges for more information." +
 			"<li>Zoom in and out with your mouse wheel or using the menu options under 'View'" +
 			"<li>Pan the graph around by clicking the right mouse button and dragging" +

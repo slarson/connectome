@@ -1,5 +1,8 @@
 package org.wholebrainproject.mcb;
 
+import java.net.URL;
+import java.util.Properties;
+
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
@@ -30,6 +33,19 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 		}
 	}
 	
+	public static Properties getProperties() {
+		try {
+			Properties mcbProps = new Properties();
+			URL url = MultiScaleConnectomeBrowser.class
+					.getResource("/mcb.properties");
+			mcbProps.load(url.openStream());
+			return mcbProps;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/*
 	 * Driver for application
 	 * @throws Exception 
@@ -37,9 +53,10 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	public static void main(String[] args) {
 
 		try {
-		
+			Properties p = getProperties();
 			f = new JFrame(
-					"Multi-Scale Connectome Browser version-0.2.0-alpha");
+					 p.getProperty("application.name") + " version " + 
+					 p.getProperty("application.version"));
 			//f.setSize(500, 600);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			View v = new View();
