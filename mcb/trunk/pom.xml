@@ -1,17 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wholebrainproject</groupId>
 	<artifactId>mcb</artifactId>
 	<name>Multi-Scale Connectome Browser</name>
-	<version>0.1.12-SNAPSHOT</version>
+	<version>0.1.12</version>
 	<description>The goal of the Multi-Scale Connectome Browser or MCB(mcb) is to construct a software system that generates interactive diagrams of brain networks at multiple levels of analysis</description>
 	<url>http://connectomebrowser.org</url>
 	<scm>
-		<connection>scm:svn:http://connectome.googlecode.com/svn/mcb/trunk</connection>
-		<developerConnection>scm:svn:https://connectome.googlecode.com/svn/mcb/trunk</developerConnection>
-		<url>http://code.google.com/p/connectome/source/checkout</url>
+		<connection>scm:svn:http://connectome.googlecode.com/svn/mcb/tags/mcb-0.1.12</connection>
+		<developerConnection>scm:svn:https://connectome.googlecode.com/svn/mcb/tags/mcb-0.1.12</developerConnection>
+		<url>scm:svn:https://connectome.googlecode.com/svn/mcb/tags/mcb-0.1.12</url>
 	</scm>
 	<build>
 		<resources>
@@ -145,8 +144,7 @@
 							<jnlp>
 								<!-- default values -->
 								<!--
-									inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath
-								-->
+									inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath -->
 								<outputFile>MultiScaleConnectomeBrowser.jnlp</outputFile> <!-- defaults to launch.jnlp -->
 
 								<!--
