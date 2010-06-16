@@ -40,18 +40,15 @@ public class View extends JPanel{
 	 */
 	static JSplitPane split;
 
-	static String instructionString ="Use the mouse to select multiple vertices either by dragging a region, or by shift-clicking "+
-	"on multiple vertices. After you select vertices, use the Collapse button to combine them \n"+
-	"into a single vertex.  Select a 'collapsed' vertex and use the Expand button to restore the "+
-	"collapsed vertices.  The Restore button will restore the original graph.  If you select 2 \n" +
-	"(and only 2) vertices, then press the Compress Edges button, parallel edges between "+ 
-	"those two vertices will no longer be expanded.  If you select 2 (and only 2) vertices, then \n"+
-	"press the Expand Edges button, parallel edges between those two vertices will be "+
-	"expanded.  You can drag the vertices with the mouse. Use the 'Picking'/'Transforming' \n"+
-	"combo-box to switch between picking and transforming mode.  Rest mouse on an edge and a reference "+
-	"message will appear.  The edges legent state the connectivite strength \n"+ "" +
-	"between brain regions.  Press the 'Save' button under 'Save Image' and give the graph a name.  The graph will be saved as a power point. \n" +
-	"\n\nYou can recall these instructions from the help menu at any time.";		
+	static String instructionString ="<html>" +
+			"<b>Welcome to the Multi-Scale Connectome Browser!</b>" +
+			"<ul><li>Right-click on vertices or edges for more information." +
+			"<li>Zoom in and out with your mouse wheel or using the menu options under 'View'" +
+			"<li>Rest mouse on an edge and a reference "+
+	"message will appear." +
+	"<li>Use the 'Save Image' feature under the file menu and give" +
+	" the graph a name.  The graph will be saved as a power point.</ul>" +
+	"You can recall these instructions from the help menu at any time.</html>";		
 	
 
 	public View() {
@@ -66,9 +63,9 @@ public class View extends JPanel{
 		
 		JPanel controls = new JPanel();
 		
-		controls.add(getLensPanel());
+		//controls.add(getLensPanel());
 		
-		content.add(controls, BorderLayout.SOUTH);
+		//content.add(controls, BorderLayout.SOUTH);
 
 	}
 	
