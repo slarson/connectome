@@ -238,7 +238,7 @@ public class GraphManager {
 		
 		gm.add(new TranslatingGraphMousePlugin(MouseEvent.BUTTON3_MASK));
 		gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1.1f, 0.9f));
-		gm.add(new PickingGraphMousePlugin());
+		gm.add(new CustomPickingGraphMousePlugin());
 		gm.add(new AnimatedPickingGraphMousePlugin());
 		
 		// Trying out our new popup menu mouse plugin...
