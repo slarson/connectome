@@ -1,0 +1,30 @@
+<jnlp spec="$jnlpspec" codebase="http://connectomebrowser.org/${project.Version}-stable" href="$outputFile">
+  <information>
+    <title>$project.name $project.Version</title>
+    <vendor>Whole Brain Project</vendor>
+    <homepage href="http://connectomebrowser.org"/>
+    <description>$project.Description</description>
+    #if($offlineAllowed)
+    <offline-allowed/>
+    #end
+  </information>
+  #if($allPermissions)
+  <security>
+    <all-permissions/>
+  </security>
+  #end
+  <resources>
+    <j2se version="$j2seVersion"
+      initial-heap-size="768m"
+	max-heap-size="768m"
+	href="http://java.sun.com/products/autodl/j2se" />
+     $dependencies
+  </resources>
+  <!--<application-desc main-class="$mainClass"/>-->
+  <applet-desc
+         name="Multi-Scale Connectome Browser"
+         main-class="$mainClass"
+         width="700"
+         height="600">
+     </applet-desc>
+</jnlp>
