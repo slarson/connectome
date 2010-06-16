@@ -4,6 +4,9 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.util.EnumSet;
 
+import org.apache.commons.collections15.multimap.MultiHashMap;
+import org.wholebrainproject.mcb.util.SparqlQuery;
+
 import edu.uci.ics.jung.graph.util.Pair;
 
 /*Copyright (C) 2010 contact@wholebraincatalog.org
@@ -144,9 +147,36 @@ public class ConnectionEdge implements Edge{
 	public Number getCloseness() {
 		return 0.9f;
 	}
+	
+	private String getTitleFromReference() {
+		String reference = getReference();
+		int startIndex = reference.indexOf(": ");
+		int endIndex = reference.indexOf("..");
+		int endIndex2 = reference.indexOf("(");
+		if ((endIndex2 > 0) && (endIndex > endIndex2)) endIndex = endIndex2; 
+		return reference.substring(startIndex+2, endIndex);
+	}
+	
 	public String getReferenceURL() {
-		// TODO Auto-generated method stub
-		return null;
+		SparqlQuery test = new SparqlQuery("http://api.talis.com/stores/neurolex/services/sparql");
+		/*
+		 * select ?d where {?a <http://brancusi1.usc.edu/RDF/title> ?c . 
+		 * ?a <http://brancusi1.usc.edu/RDF/url> ?d 
+		 * FILTER regex(?c, "The neocortical projection to the inferior colliculus in the albino rat")}
+		 */
+		test.addQueryTriplet("?a <http://brancusi1.usc.edu/RDF/title> ?c");
+		test.addQueryTriplet("?a <http://brancusi1.usc.edu/RDF/url> ?d");
+		test.addQueryTriplet("FILTER regex(?c, \"" + getTitleFromReference() + 
+				"\")");
+		test.addSelectVariable("?d");
+		MultiHashMap<String, String> results = test.runSelectQuery();
+		if (results.get("?d") != null) {
+			String initialResults = results.get("?d").iterator().next();
+			initialResults = initialResults.replace("http://www.ncbi.nmm.nih.gov", 
+					"http://www.ncbi.nlm.nih.gov");
+			return initialResults;
+		}
+		return "http://brancusi1.usc.edu/";
 	}
 	
 	public boolean hasInferenceChain() {
