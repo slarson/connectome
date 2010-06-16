@@ -9,10 +9,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.collections15.Factory;
 
-import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.graph.DelegateTree;
-import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
-import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.Tree;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -287,7 +284,7 @@ public class Node implements Factory{
 	 * @return vertexName -  name of current node.
 	 */
 	public String getName() {
-		return this.name;
+		return this.name.replace('_', ' ');
 	}
 	
 	public boolean isCollapsed() {

@@ -9,13 +9,15 @@
 
 package org.wholebrainproject.mcb.mousemenu;
 
-import edu.uci.ics.jung.visualization.VisualizationViewer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JMenuItem;
 
 import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.util.BareBonesBrowserLaunch;
+
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 
 public class EdgeOpenReferenceMenuItem extends JMenuItem implements EdgeMenuListener<Edge> {

@@ -16,7 +16,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 
 	public MultiScaleConnectomeBrowser() {
 		try {
-			setSize(500,600);
+			//setSize(500,600);
 			View v = new View();
 			getContentPane().add(v.getMainPanel());
 			//getContentPane().setPreferredSize(new Dimension(500,900));
@@ -40,7 +40,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 		
 			f = new JFrame(
 					"Multi-Scale Connectome Browser version-0.2.0-alpha");
-			f.setSize(500, 600);
+			//f.setSize(500, 600);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			View v = new View();
 			f.getContentPane().add(v.getMainPanel());

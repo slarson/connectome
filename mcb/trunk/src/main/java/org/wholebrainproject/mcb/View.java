@@ -12,9 +12,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -22,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 
 import org.wholebrainproject.mcb.graph.GraphManager;
 
@@ -80,10 +77,7 @@ public class View extends JPanel{
 
 		JPanel controls = new JPanel();
 		
-		controls.add(getZoomControls());
-		controls.add(getCollapseControls());
 		controls.add(modeBox);
-		controls.add(getSaveFile());
 		controls.add(getLensPanel());
 		
 		content.add(controls, BorderLayout.SOUTH);
@@ -129,100 +123,6 @@ public class View extends JPanel{
 		return lensPanel;
 	}
 
-	protected JPanel getZoomControls() {
-
-		JButton plus = new JButton("+");
-		plus.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().zoomIn();
-			}
-		});
-		JButton minus = new JButton("-");
-		minus.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().zoomOut();
-			}
-		});
-		
-		JPanel zoomControls = new JPanel(new GridLayout(2,1));
-		zoomControls.setBorder(BorderFactory.createTitledBorder("Zoom"));
-		zoomControls.add(plus);
-		zoomControls.add(minus);
-		return zoomControls;
-	}
-	
-	protected JPanel getCollapseControls() {
-		JButton collapse = new JButton("Collapse");
-		collapse.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().collapse();
-			}});
-
-		JButton compressEdges = new JButton("Compress Edges");
-		compressEdges.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().compressEdges();
-
-			}});
-
-		JButton expandEdges = new JButton("Expand Edges");
-		expandEdges.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().expandEdges();
-
-			}});
-
-		JButton expand = new JButton("Expand");
-		expand.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().expand();
-			}});
-
-		JButton reset = new JButton("Reset");
-		reset.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().reset();
-			}});
-		JButton test = new JButton("test");
-		test.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().test();
-			}
-		});
-		
-		JPanel collapseControls = new JPanel(new GridLayout(3,1));
-		collapseControls.setBorder(BorderFactory.createTitledBorder("Picked"));
-		collapseControls.add(collapse);
-		collapseControls.add(expand);
-		collapseControls.add(compressEdges);
-		collapseControls.add(expandEdges);
-		collapseControls.add(reset);
-		collapseControls.add(test);
-		
-		return collapseControls;
-	}
-	
-	protected JPanel getSaveFile() {
-
-		JButton graph_save = new JButton("Save Image");
-		graph_save.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e){
-				GraphManager.getInstance().saveImage();
-
-			}});
-		
-		JPanel saveFile = new JPanel(new GridLayout(1,3));
-		saveFile.setBorder(BorderFactory.createTitledBorder("Save"));
-		saveFile.add(graph_save);
-		return saveFile;
-	}
 	
 	public JPanel getMainPanel() {
 		return this;
@@ -250,9 +150,47 @@ public class View extends JPanel{
 	public JMenuBar getMainMenuBar() {
 		JMenuBar menu =  new JMenuBar();
 		JMenu file = new JMenu("File");
+		JMenu edit = new JMenu("Edit");
+		JMenu view = new JMenu("View");
 		JMenu help = new JMenu("Help");
-		JMenuItem x = new JMenuItem("x");
-		file.add(x);
+		
+		final JMenuItem saveImage = new JMenuItem("Save image...");
+		saveImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GraphManager.getInstance().saveImage();
+			}
+		});
+		file.add(saveImage);
+		
+		
+		final JMenuItem reset = new JMenuItem("Reset");
+		reset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GraphManager.getInstance().reset();
+			}
+		});
+		edit.add(reset);
+		
+		
+		final JMenuItem zoomIn = new JMenuItem("Zoom in");
+		zoomIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GraphManager.getInstance().zoomIn();
+			}
+		});
+		zoomIn.setToolTipText("You can also zoom in using the mouse wheel");
+		
+		final JMenuItem zoomOut = new JMenuItem("Zoom out");
+		zoomOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GraphManager.getInstance().zoomOut();
+			}
+		});
+		zoomOut.setToolTipText("You can also zoom out using the mouse wheel");
+		
+		view.add(zoomIn);
+		view.add(zoomOut);
+		
 		final JMenuItem instructions = new JMenuItem("Instructions");
 		instructions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -261,6 +199,8 @@ public class View extends JPanel{
 		});
 		help.add(instructions);
 		menu.add(file);
+		menu.add(edit);
+		menu.add(view);
 		menu.add(help);
 		return menu;
 	}

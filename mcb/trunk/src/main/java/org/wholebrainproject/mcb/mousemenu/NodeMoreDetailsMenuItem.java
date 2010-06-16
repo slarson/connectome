@@ -9,15 +9,15 @@
 
 package org.wholebrainproject.mcb.mousemenu;
 
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.picking.PickedState;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JMenuItem;
 
-import org.wholebrainproject.mcb.graph.GraphManager;
 import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.BareBonesBrowserLaunch;
+
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 /**
  * A menu item to show or hide the parts of a node.

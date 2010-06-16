@@ -1,6 +1,5 @@
 package org.wholebrainproject.mcb.graph;
 
-import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,10 +8,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
-import edu.uci.ics.jung.graph.DelegateTree;
-import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.Tree;
 import edu.uci.ics.jung.graph.util.Pair;
@@ -303,7 +299,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 		Collection<Node> pickedNodes = new Vector<Node>();
 		for(String subNode : node.getPartOf()){
 			for(Node currentNode: originalGraph.getVertices()){
-				if(subNode.equals(currentNode.getName().replace('_', ' '))){
+				if(subNode.equals(currentNode.getName())){
 					pickedNodes.add(currentNode);
 				}
 			}

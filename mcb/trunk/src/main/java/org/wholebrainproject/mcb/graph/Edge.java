@@ -24,4 +24,6 @@ public interface Edge {
 
 	public String getInferenceChain();
 
+	public boolean hasInferenceChain();
+
 }
