@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,9 +40,14 @@ import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.AnimatedPickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
+import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
@@ -228,8 +234,12 @@ public class GraphManager {
 		 * ());
 		 */
 
-		EditingModalGraphMouse gm = new EditingModalGraphMouse(vv
-				.getRenderContext(), null, null);
+		PluggableGraphMouse gm = new PluggableGraphMouse();
+		
+		gm.add(new TranslatingGraphMousePlugin(MouseEvent.BUTTON3_MASK));
+		gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1.1f, 0.9f));
+		gm.add(new PickingGraphMousePlugin());
+		gm.add(new AnimatedPickingGraphMousePlugin());
 		
 		// Trying out our new popup menu mouse plugin...
 		PopupVertexEdgeMenuMousePlugin myPlugin = new PopupVertexEdgeMenuMousePlugin();
@@ -238,8 +248,6 @@ public class GraphManager {
 		JPopupMenu vertexMenu = new MouseMenus.VertexMenu();
 		myPlugin.setEdgePopup(edgeMenu);
 		myPlugin.setVertexPopup(vertexMenu);
-		gm.remove(gm.getPopupEditingPlugin()); // Removes the existing popup
-												// editing plugin
 		gm.add(myPlugin); // Add our new plugin to the mouse
 
 		vv.setGraphMouse(gm);
