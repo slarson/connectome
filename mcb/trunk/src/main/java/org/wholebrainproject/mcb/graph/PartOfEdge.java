@@ -49,4 +49,8 @@ public class PartOfEdge implements Edge {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public boolean hasInferenceChain() {
+		return false;
+	}
 }

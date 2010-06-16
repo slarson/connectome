@@ -51,4 +51,9 @@ public class HasCellEdge implements Edge {
 		return null;
 	}
 
+	public boolean hasInferenceChain() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

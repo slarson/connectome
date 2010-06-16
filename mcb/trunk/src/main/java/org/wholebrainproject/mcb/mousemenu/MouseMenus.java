@@ -9,27 +9,23 @@
 
 package org.wholebrainproject.mcb.mousemenu;
 
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-
 import java.awt.Container;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
-import javax.swing.JCheckBoxMenuItem;
+
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.wholebrainproject.mcb.graph.Edge;
-import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.BareBonesBrowserLaunch;
+
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 /**
  * A collection of classes used to assemble popup mouse menus for the custom
@@ -45,10 +41,6 @@ public class MouseMenus {
             // this.frame = frame;
             //this.add(new DeleteEdgeMenuItem<Edge>());
             this.add(new EdgeOpenReferenceMenuItem());
-            this.addSeparator();
-            //this.add(new WeightDisplay());
-            //this.add(new CapacityDisplay());
-            this.addSeparator();
             this.add(new EdgePropItem(findParentFrame()));           
         }
         
@@ -75,6 +67,12 @@ public class MouseMenus {
         public void setEdgeAndView(Edge edge, VisualizationViewer visComp) {
             this.edge = edge;
             this.visComp = visComp;
+            
+            if (edge.hasInferenceChain()) {
+            	this.setVisible(true);
+            } else {
+            	this.setVisible(false);
+            }
         }
 
         public void setPoint(Point2D point) {
@@ -95,7 +93,6 @@ public class MouseMenus {
             				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
             					// do whatever you want with the url
             					BareBonesBrowserLaunch.openURL(e.getURL().toString());
-            					System.out.println("clicked on link : " + e.getURL());
             				}
             			}
             		});
@@ -108,23 +105,10 @@ public class MouseMenus {
         }
         
     }
-    public static class WeightDisplay extends JMenuItem implements EdgeMenuListener<Edge> {
-        public void setEdgeAndView(Edge e, VisualizationViewer visComp) {
-            //this.setText("Weight " + e + " = " + e.getWeight());
-        }
-    }
-    
-    public static class CapacityDisplay extends JMenuItem implements EdgeMenuListener<Edge> {
-        public void setEdgeAndView(Edge e, VisualizationViewer visComp) {
-            //this.setText("Capacity " + e + " = " + e.getCapacity());
-        }
-    }
     
     public static class VertexMenu extends JPopupMenu {
         public VertexMenu() {
             super("Vertex Menu");
-            //TODO: add name of vertex here
-            this.addSeparator();
             this.add(new ShowHideNodePartsMenuItem()); 
             this.add(new NodeMoreDetailsMenuItem());
         }

@@ -21,15 +21,11 @@ package org.wholebrainproject.mcb.data;
  */
 
 
-import java.awt.List;
-import java.io.InputStream;
 import java.util.Vector;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
-import org.wholebrainproject.mcb.graph.GraphManager;
 import org.wholebrainproject.mcb.graph.Node;
-import org.wholebrainproject.mcb.graph.PartOfEdge;
 import org.wholebrainproject.mcb.util.SparqlQuery;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -106,11 +102,11 @@ public class BuildConnections {
 
 		for (int i = 0; i < node.length ; i++) {
 			for (int j = 0; j < node.length; j++) {
-				if (node[i].getRegionToStrengthMap().get(node[j].getName().replace('_', ' ')) != null) {
+				if (node[i].getRegionToStrengthMap().get(node[j].getName()) != null) {
 					String strength = node[i].getRegionToStrengthMap().get(
-							node[j].getName().replace('_', ' '));
+							node[j].getName());
 					String reference = node[i].getReferenceSet().get(
-							node[j].getName().replace('_', ' '));
+							node[j].getName());
 					ConnectionEdge e = new ConnectionEdge(strength, reference);
 					graph.addEdge(e, node[i], 
 							node[j],

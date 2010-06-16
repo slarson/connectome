@@ -4,8 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.util.EnumSet;
 
-import org.apache.commons.collections15.Factory;
-
 import edu.uci.ics.jung.graph.util.Pair;
 
 /*Copyright (C) 2010 contact@wholebraincatalog.org
@@ -150,6 +148,11 @@ public class ConnectionEdge implements Edge{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public boolean hasInferenceChain() {
+		return getProjectingNode().getCellCount() > 0;
+	}
+	
 	public String getInferenceChain() {
 		String out = "<html><h1>Why is this an " + 
 		getProjectingNode().getProjectingCellsRoleString() + 

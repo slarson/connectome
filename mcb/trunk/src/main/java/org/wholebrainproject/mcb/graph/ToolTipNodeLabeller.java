@@ -23,7 +23,7 @@ public class ToolTipNodeLabeller extends ToStringLabeller<Node> {
 		//HTML can be used to format the tooltip.
 		//http://sourceforge.net/projects/jung/forums/forum/252062/topic/2294542
 		String data_str = "<html>";
-		data_str += n.getName().replace("_", " ");
+		data_str += n.getName();
 		data_str += "<br>";
 		
 		for (int i = 0; i < n.getCellCount(); i++) {
