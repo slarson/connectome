@@ -59,25 +59,13 @@ public class View extends JPanel{
 	}
 
 	private void buildGUI() {
-		JMenuBar menubar = new JMenuBar();
-
-		VisualizationViewer.GraphMouse graphMouse = GraphManager
-				.getInstance().getGraphMouse();
-		JMenu modeMenu = ((AbstractModalGraphMouse) graphMouse).getModeMenu();
-		menubar.add(modeMenu);
-
 		Container content = this;
 		GraphZoomScrollPane gzsp = GraphManager.getInstance()
 				.getGraphZoomScrollPane();
 		content.add(gzsp);
 		
-		JComboBox modeBox = ((AbstractModalGraphMouse) graphMouse).getModeComboBox();
-		modeBox.addItemListener(((AbstractModalGraphMouse) graphMouse).getModeListener());
-		((AbstractModalGraphMouse) graphMouse).setMode(ModalGraphMouse.Mode.PICKING);
-
 		JPanel controls = new JPanel();
 		
-		controls.add(modeBox);
 		controls.add(getLensPanel());
 		
 		content.add(controls, BorderLayout.SOUTH);
