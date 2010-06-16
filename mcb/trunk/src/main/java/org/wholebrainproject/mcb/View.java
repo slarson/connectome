@@ -44,9 +44,10 @@ public class View extends JPanel{
 			"<b>Welcome to the Multi-Scale Connectome Browser!</b>" +
 			"<ul><li>Right-click on vertices or edges for more information." +
 			"<li>Zoom in and out with your mouse wheel or using the menu options under 'View'" +
-			"<li>Rest mouse on an edge and a reference "+
-	"message will appear." +
-	"<li>Use the 'Save Image' feature under the file menu and give" +
+			"<li>Pan the graph around by clicking the right mouse button and dragging" +
+			"<li>Left-click and drag a node to move it around" +
+			"<li>Rest mouse on an edge and a reference message will appear." +
+			"<li>Use the 'Save Image' feature under the file menu and give" +
 	" the graph a name.  The graph will be saved as a power point.</ul>" +
 	"You can recall these instructions from the help menu at any time.</html>";		
 	
@@ -61,11 +62,11 @@ public class View extends JPanel{
 				.getGraphZoomScrollPane();
 		content.add(gzsp);
 		
+		/*
 		JPanel controls = new JPanel();
-		
-		//controls.add(getLensPanel());
-		
-		//content.add(controls, BorderLayout.SOUTH);
+		controls.add(getLensPanel());
+		content.add(controls, BorderLayout.SOUTH);
+		 */
 
 	}
 	
@@ -184,7 +185,8 @@ public class View extends JPanel{
 		});
 		help.add(instructions);
 		menu.add(file);
-		menu.add(edit);
+		//TODO: Fix reset functionality and re-enable
+		//menu.add(edit);
 		menu.add(view);
 		menu.add(help);
 		return menu;
