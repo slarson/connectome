@@ -15,6 +15,11 @@ import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.subLayout.GraphCollapser;
 
+/**
+ * Extends the default graph collapser for our purposes.
+ * @author slarson
+ *
+ */
 public class CustomGraphCollapser extends GraphCollapser{
 
 	Graph<Node,Edge> originalGraph; 
@@ -136,16 +141,20 @@ public class CustomGraphCollapser extends GraphCollapser{
         return graph;
     }
 
+    /**
+     * Take the current graph node and expand it into its children.  Remove the
+     * higher level node from the graph completely and replace it with its
+     * children nodes.
+     * @param node
+     */
 	public void expand(Node node) {
 		// get part of nodes for this node, adding itself
 		ArrayList<Node> picked = new ArrayList<Node>(node.getPartOfNodes(originalGraph));
-		picked.add(node);
 		
 		Graph<Node, Edge> clusterGraph = getClusterGraph(originalGraph, picked);
 
-		Graph g = expand(layout.getGraph(), clusterGraph);
+		Graph<Node,Edge> g = expand(layout.getGraph(), clusterGraph);
 		vv.getRenderContext().getParallelEdgeIndexFunction().reset();
-		// applyTreeLayout((DirectedGraph)v);
 
 		layout.setGraph(g);
 
