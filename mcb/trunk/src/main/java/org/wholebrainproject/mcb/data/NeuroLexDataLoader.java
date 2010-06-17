@@ -59,7 +59,7 @@ public class NeuroLexDataLoader {
 	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	public static void populate(SparqlQuery query, Node[] brainRegionNames) {
+	public static void populate(SparqlQuery query, String[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String cells_suffix = "_c";
@@ -71,10 +71,10 @@ public class NeuroLexDataLoader {
 		query.addPrefixMapping("nlx_prop", "<http://neurolex.org/wiki/Special:URIResolver/Property-3A>");
 		query.addPrefixMapping("nlx_cat", "<http://neurolex.org/wiki/Special:URIResolver/Category-3A>");
 
-		for(Node RegionName : brainRegionNames){
+		for(String RegionName : brainRegionNames){
 
 			if(brainRegionSufixName == null)
-				brainRegionSufixName = reduceBrainRegionName(RegionName.toString());
+				brainRegionSufixName =  reduceBrainRegionName(RegionName);
 
 			query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
 					" swivt:page " + 
@@ -121,7 +121,7 @@ public class NeuroLexDataLoader {
 			query.addSelectVariable("$"+ brainRegionSufixName + "_trl");
 
 			//add union between all sets of variables except the last
-			if (RegionName.toString().equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
+			if (RegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
 				query.addQueryTriplet("} UNION {");
 			}
 			brainRegionSufixName = null;

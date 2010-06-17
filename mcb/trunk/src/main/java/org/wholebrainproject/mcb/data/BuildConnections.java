@@ -21,10 +21,14 @@ package org.wholebrainproject.mcb.data;
  */
 
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
+import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.SparqlQuery;
 
@@ -102,19 +106,43 @@ public class BuildConnections {
 
 		for (int i = 0; i < node.length ; i++) {
 			for (int j = 0; j < node.length; j++) {
-				if (node[i].getRegionToStrengthMap().get(node[j].getName()) != null) {
-					String strength = node[i].getRegionToStrengthMap().get(
-							node[j].getName());
-					String reference = node[i].getReferenceSet().get(
-							node[j].getName());
+				Node x = node[i];
+				Node y = node[j];
+				if (x.getRegionToStrengthMap().get(y.getName()) != null) {
+					String strength = x.getRegionToStrengthMap().get(y.getName());
+					String reference = x.getReferenceSet().get(y.getName());
 					ConnectionEdge e = new ConnectionEdge(strength, reference);
-					graph.addEdge(e, node[i], 
-							node[j],
-							EdgeType.DIRECTED);
+
+					graph.addEdge(e, x, y, EdgeType.DIRECTED);
 				}
 			}
 		}	
 		subNodesConnection(graph,node);
+	}
+	
+	public static void connectNodesIfEdgeIsAppropriate(Graph<Node,Edge> graph, Node x, Node y) {
+		if (x == null || y == null) {
+			throw new IllegalArgumentException();
+		}
+		//test to see if there is already an existing edge between these two nodes
+		Set<Edge> a = new HashSet<Edge>();
+		Collection<Edge> e = graph.getIncidentEdges(x);
+		if (e != null) 
+			a.addAll(e);
+		Collection<Edge> f = graph.getIncidentEdges(y);
+		//leaves a with the intersection of the edges that are incident to x & y
+		if (f != null)
+			a.retainAll(f);
+		
+		if (a.isEmpty()) {
+			if (x.getRegionToStrengthMap().get(y.getName()) != null) {
+				String strength = x.getRegionToStrengthMap().get(y.getName());
+				String reference = x.getReferenceSet().get(y.getName());
+				ConnectionEdge j = new ConnectionEdge(strength, reference);
+
+				graph.addEdge(j, x, y, EdgeType.DIRECTED);
+			}
+		}
 	}
 
 	private static void subNodesConnection(Graph graph, Node[] node){

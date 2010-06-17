@@ -69,6 +69,8 @@ public class Node implements Factory{
 	 */
 	private boolean partOfsAdded = false;
 	
+	private Node parent = null;
+	
 	/**
 	 * Constructor.
 	 * @param vertexName - name of node.
@@ -179,10 +181,16 @@ public class Node implements Factory{
 		return treeGraph;
 	}
 	
+	/**
+	 * Create and add the nodes that are listed as part of this Node.
+	 * Also perform {@link #setParent(Node)} on these nodes.
+	 * @param graph - the graph to use to add the nodes to.
+	 */
 	public void addPartOfNodes(Graph<Node, Edge> graph) {
 		if (partOfsAdded == false) {
 			for (String partOf : getPartOf()) {
 				Node subNode = new Node(partOf);
+				subNode.setParent(this);
 				graph.addEdge(new PartOfEdge(), subNode, this,
 						EdgeType.DIRECTED);
 			}
@@ -356,6 +364,22 @@ public class Node implements Factory{
 		if (inhibitory) return "-";
 		if (excitatory) return "+";
 		return "";
+	}
+	
+	public void setParent(Node n) {
+		this.parent = n;
+	}
+	
+	public Node getParent() {
+		return this.parent;
+	}
+
+	public boolean hasPartOfParent() {
+		return (getParent() != null);
+	}
+
+	public boolean hasParts() {
+		return (getPartOf() != null && getPartOf().isEmpty() == false);
 	}
 
 

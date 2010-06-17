@@ -94,11 +94,19 @@ public class ConnectionEdge implements Edge{
 	private Node getProjectingNode() {
 		Pair<Node> endpoints = 
 			GraphManager.getInstance().getGraph().getEndpoints(this);
+		if (endpoints == null) {
+			GraphManager.getInstance().getGraph().removeEdge(this);
+			return null;
+		}
 		return endpoints.getFirst();
 	}
 	
 	public String getLabel() {
-		return getProjectingNode().getProjectingCellsRoleAbbrevString();
+		String s = "";
+		if (getProjectingNode() != null) {
+			s = getProjectingNode().getProjectingCellsRoleAbbrevString();
+		}
+		return s;
 	}
 	
 	public String getMoreDetailsURL() {
@@ -207,4 +215,5 @@ public class ConnectionEdge implements Edge{
 		
 		return out;
 	}
+	
 }

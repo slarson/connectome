@@ -52,7 +52,7 @@ public class ShowHideNodePartsMenuItem extends JMenuItem implements VertexMenuLi
         this.node = v;
         this.visComp = visComp;
         
-        if (this.node.getPartOf().isEmpty()) {
+        if (this.node.hasParts() == false) {
         	this.setVisible(false);
         } else {
         	this.setVisible(true);
