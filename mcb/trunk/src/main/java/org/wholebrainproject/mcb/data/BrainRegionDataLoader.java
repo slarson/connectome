@@ -23,7 +23,7 @@ public class BrainRegionDataLoader {
 	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	public static void populate(SparqlQuery query, String[] brainRegionNames) {
+	public static void populate(SparqlQuery query, Node[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String part_suffix = "_p";
@@ -32,10 +32,10 @@ public class BrainRegionDataLoader {
 		query.addPrefixMapping("swivt", "<http://semantic-mediawiki.org/swivt/1.0#>");
 		query.addPrefixMapping("nlx_prop", "<http://neurolex.org/wiki/Special:URIResolver/Property-3A>");
 
-		for(String RegionName : brainRegionNames){
+		for(Node RegionName : brainRegionNames){
 
 			if(brainRegionSufixName == null)
-				brainRegionSufixName =  reduceBrainRegionName(RegionName);
+				brainRegionSufixName =  reduceBrainRegionName(RegionName.toString());
 
 			query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
 					" swivt:page " + 

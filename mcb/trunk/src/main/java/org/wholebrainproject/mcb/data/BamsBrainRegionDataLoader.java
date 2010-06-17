@@ -23,40 +23,41 @@ public class BamsBrainRegionDataLoader {
 	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	public static void populate(SparqlQuery query, String[] brainRegionNames) {
+	public static void populate(SparqlQuery query, Node[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String part_suffix = "_p";
-		String[] brainRegionsCellData = { "Thalamus",
-				"Cerebral_cortex", "Brainstem","Basal_ganglia" };
+		String[] brainRegionsCellData = {"Cerebral_cortex"};
 		
 		String brainRegionSufixName = null;
-
+		int index = 0;
 		//query.addPrefixMapping("swivt", "<http://semantic-mediawiki.org/swivt/1.0#>");
 		//query.addPrefixMapping("nlx_prop", "<http://neurolex.org/wiki/Special:URIResolver/Property-3A>");
 
-		for(String RegionName : brainRegionNames){
-
+		for(Node RegionName : brainRegionNames){
+			
 			if(brainRegionSufixName == null)
-				brainRegionSufixName =  reduceBrainRegionName(RegionName);
-
+				brainRegionSufixName =  reduceBrainRegionName(RegionName.toString());
+			//System.out.println("brainRegionsCellData: "+brainRegionsCellData[index]);
+			//System.out.println("RegionName: "+RegionName);
 			query.addQueryTriplet("$a"+" <http://brancusi1.usc.edu/RDF/class1> "+
-					RegionName);
+					"<"+RegionName+">");
 
 			query.addQueryTriplet("$a"+" <http://brancusi1.usc.edu/RDF/class2> "+
 					"$childStructure");
 
 			query.addQueryTriplet("$childStructure"+
 					" <http://brancusi1.usc.edu/RDF/name> " +
-					"$childStructureName"+RegionName );
+					"$"+brainRegionsCellData[index]);
 
-			query.addSelectVariable("$childStructureName"+RegionName);
+			query.addSelectVariable("$"+brainRegionsCellData[index]);
 
 			//add union between all sets of variables except the last
-			if (RegionName.equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
+			if (brainRegionsCellData[index].equals(brainRegionNames[brainRegionNames.length - 1]) == false) {
 				query.addQueryTriplet("} UNION {");
 			}
 			brainRegionSufixName = null;
+			index++;
 		}
 
 	}
