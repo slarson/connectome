@@ -156,7 +156,18 @@ public class View extends JPanel{
 				GraphManager.getInstance().reset();
 			}
 		});
-		edit.add(reset);
+		//edit.add(reset);
+		
+		final JMenuItem showProjectionStrength = new JMenuItem("Show Projection Strengths");
+		showProjectionStrength.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean enabled = GraphManager.getInstance().getShowProjectionStrengths();
+				GraphManager.getInstance().setShowProjectionStrength(!enabled);
+				showProjectionStrength.setText("Hide Projection Strengths");
+			}
+		});
+		showProjectionStrength.setToolTipText("<html>Render the graph with edges that indicate the strength <br>of the connection between brain regions was reported to be</html>");
+		edit.add(showProjectionStrength);
 		
 		
 		final JMenuItem zoomIn = new JMenuItem("Zoom in");
@@ -187,7 +198,7 @@ public class View extends JPanel{
 		help.add(instructions);
 		menu.add(file);
 		//TODO: Fix reset functionality and re-enable
-		//menu.add(edit);
+		menu.add(edit);
 		menu.add(view);
 		menu.add(help);
 		return menu;
