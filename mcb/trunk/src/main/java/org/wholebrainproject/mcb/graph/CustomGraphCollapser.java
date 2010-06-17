@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
+import org.wholebrainproject.mcb.data.BuildConnections;
+
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.Graph;
@@ -126,7 +128,7 @@ public class CustomGraphCollapser extends GraphCollapser{
             Pair<Node> endpoints = inGraph.getEndpoints(e);
             // don't add edges whose endpoints are both in the cluster
             if(cluster.containsAll(endpoints) == false) {
-
+            	
                 if(cluster.contains(endpoints.getFirst())) {
                 	graph.addEdge(e, repNode, endpoints.getSecond(), inGraph.getEdgeType(e));
 
@@ -138,6 +140,12 @@ public class CustomGraphCollapser extends GraphCollapser{
                 }
             }
         }
+      
+        for (Node n : inGraph.getVertices()) {
+        	BuildConnections.connectNodesIfEdgeIsAppropriate(graph, repNode, n);
+        	BuildConnections.connectNodesIfEdgeIsAppropriate(graph, n, repNode);
+        }
+        
         return graph;
     }
 
@@ -148,35 +156,78 @@ public class CustomGraphCollapser extends GraphCollapser{
      * @param node
      */
 	public void expand(Node node) {
-		// get part of nodes for this node, adding itself
+		// get part of nodes for this node
 		ArrayList<Node> picked = new ArrayList<Node>(node.getPartOfNodes(originalGraph));
 		
 		Graph<Node, Edge> clusterGraph = getClusterGraph(originalGraph, picked);
 
 		Graph<Node,Edge> g = expand(layout.getGraph(), clusterGraph);
+		//take out the node that is being expanded because we want to 
+		//break the node into its consitutents
+		g.removeVertex(node);
+		
+		Collection<Edge> edges = g.getIncidentEdges(node);
+		if (edges != null) {
+			for (Edge e : edges) {
+				g.removeEdge(e);
+			}
+		}
+		
 		vv.getRenderContext().getParallelEdgeIndexFunction().reset();
 
 		layout.setGraph(g);
 
 		node.setCollapsed(false);
-		applyTreeLayoutNode(node);
+		//applyTreeLayoutNode(node);
 		//vv.getPickedVertexState().clear();
 		vv.repaint();
 	}
 
+
+    public Graph getClusterGraph(Graph inGraph, Collection picked) {
+        Graph clusterGraph;
+        try {
+            clusterGraph = createGraph();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+        for(Object v : picked) {
+        	clusterGraph.addVertex(v);
+            Collection edges = inGraph.getIncidentEdges(v);
+            for(Object edge : edges) {
+                Pair endpoints = inGraph.getEndpoints(edge);
+                Object v1 = endpoints.getFirst();
+                Object v2 = endpoints.getSecond();
+                if(picked.containsAll(endpoints)) {
+                    clusterGraph.addEdge(edge, v1, v2, inGraph.getEdgeType(edge));
+                }
+            }
+        }
+        return clusterGraph;
+    }
+
+
 	public void expand() {
-		Collection<Node> picked = new HashSet<Node>(vv.getPickedVertexState().getPicked());
-		for(Node v : picked) {
+		Collection<Node> picked = new HashSet<Node>(vv.getPickedVertexState()
+				.getPicked());
+		for (Node v : picked) {
 			expand(v);
 		}
 	}
 
 	public void compressEdges() {
 		Collection<Node> picked = vv.getPickedVertexState().getPicked();
-		if(picked.size() == 2) {
+		if (picked.size() == 2) {
 			Pair<Node> pair = new Pair<Node>(picked);
-			Graph<Node,Edge> graph = layout.getGraph();
-			Collection<Edge> edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
+			Graph<Node, Edge> graph = layout.getGraph();
+			Collection<Edge> edges = new HashSet(graph.getIncidentEdges(pair
+					.getFirst()));
 			edges.retainAll(graph.getIncidentEdges(pair.getSecond()));
 			exclusions.addAll(edges);
 			vv.repaint();
@@ -185,16 +236,16 @@ public class CustomGraphCollapser extends GraphCollapser{
 
 	public void expandEdges() {
 		Collection picked = vv.getPickedVertexState().getPicked();
-		if(picked.size() == 2) {
+		if (picked.size() == 2) {
 			Pair pair = new Pair(picked);
 			Graph graph = layout.getGraph();
-			Collection edges = new HashSet(graph.getIncidentEdges(pair.getFirst()));
+			Collection edges = new HashSet(graph.getIncidentEdges(pair
+					.getFirst()));
 			edges.retainAll(graph.getIncidentEdges(pair.getSecond()));
 			exclusions.removeAll(edges);
 			vv.repaint();
 		}
 	}
-	
 
 	/**
 	 * Method collapses the nodes that are part of a particular brain region.

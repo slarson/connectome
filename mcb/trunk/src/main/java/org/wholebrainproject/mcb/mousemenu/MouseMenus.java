@@ -111,7 +111,7 @@ public class MouseMenus {
             super("Vertex Menu");
             this.add(new ShowHideNodePartsMenuItem()); 
             this.add(new NodeMoreDetailsMenuItem());
-            this.add(new MergeWIthSiblingsMenuItem());
+            this.add(new MergeWithSiblingsMenuItem());
         }
     }
     
