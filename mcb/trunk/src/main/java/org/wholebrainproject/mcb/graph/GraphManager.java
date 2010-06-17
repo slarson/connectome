@@ -91,6 +91,12 @@ public class GraphManager {
 	 * Scales the graph.
 	 */
 	final ScalingControl scaler;
+	
+	/**
+	 * Global flag to enable / disable rendering the connection edges with
+	 * different thicknesses based on their projection strength.
+	 */
+	boolean showProjectionStrength = false;
 
 	/**
 	 * Lens objects
@@ -204,7 +210,9 @@ public class GraphManager {
 			 * @return the stored constant
 			 */
 			public BasicStroke transform(Edge input) {
-				return input.getStroke();
+				if (showProjectionStrength)
+					return input.getStroke();
+				return new BasicStroke(2.5f);
 			}
 		});
 
@@ -215,6 +223,19 @@ public class GraphManager {
 				
 		//by default, collapse all the edges
 		collapser.collapse();
+	}
+	
+	/**
+	 * Render connection arcs differently based on their projection strengths
+	 * @param showProjectionStrengths
+	 */
+	public void setShowProjectionStrength(boolean showProjectionStrengths) {
+		this.showProjectionStrength = showProjectionStrengths;
+		vv.repaint();
+	}
+	
+	public boolean getShowProjectionStrengths() {
+		return this.showProjectionStrength;
 	}
 
 	private void setGraphMouse() {
@@ -294,6 +315,10 @@ public class GraphManager {
 		scaler.scale(vv, 1/1.1f, vv.getCenter());
 	}
 
+	/**
+	 * Saves an image of the current graph window
+	 * and a .ppt with that image embedded in it to the local disk.
+	 */
 	public void saveImage() {
 		File file;
 		int value;
