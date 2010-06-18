@@ -49,7 +49,7 @@ public class BuildConnections {
 
 	public static void getDataAndCreateGraph(Graph graph) {
 		try {
-			String sparqlNif = "http://rdf-stage.neuinfo.org/sparql";
+			String sparqlNif = "http://rdf.neuinfo.org/sparql";
 			SparqlQuery bamsReader = new SparqlQuery(sparqlNif);
 
 			String sparqlTalis = "http://api.talis.com/stores/neurolex/services/sparql";
