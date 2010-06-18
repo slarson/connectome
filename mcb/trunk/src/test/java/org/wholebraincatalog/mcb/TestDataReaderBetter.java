@@ -57,31 +57,6 @@ public class TestDataReaderBetter extends TestCase {
 		assertEquals(2, d.getTripletCount());
 	}
 
-	public void testParseSPARQLResult2() {
-		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		SparqlQuery bamsReader = new SparqlQuery(sparql);
-
-		bamsReader.addQueryTriplet("$gp <http://ncmir.ucsd.edu/BAMS#sending_Structure>  <http://ncmir.ucsd.edu/BAMS#Globus_pallidus>");
-		bamsReader.addQueryTriplet("$gp <http://ncmir.ucsd.edu/BAMS#projection_Strength> $gp_strength");
-		bamsReader.addQueryTriplet("$gp <http://ncmir.ucsd.edu/BAMS#receiving_Structure> $gp_receiving");
-		bamsReader.addQueryTriplet("$gp <http://ncmir.ucsd.edu/BAMS#reference> $gp_reference");
-
-
-		bamsReader.addSelectVariable("$gp_strength");
-		bamsReader.addSelectVariable("$gp_receiving");
-		bamsReader.addSelectVariable("$gp_reference");
-
-		MultiHashMap<String, String> results = null;
-
-		try {
-			results =  bamsReader.runSelectQuery();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		System.out.println(results);
-	}
 
 	private void populateBamsDataReader(SparqlQuery drb, String[] brainRegionNames) {
 		for (String brainRegionName : brainRegionNames){
@@ -137,36 +112,8 @@ public class TestDataReaderBetter extends TestCase {
 		return nodeList.toArray(nodes);
 	}
 
-	public void testParseSPARQLResult4() {
-		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
-		SparqlQuery bamsReader = new SparqlQuery(sparql);
-
-		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
-				"Central_nucleus_of_amygdala", "Substantia_nigra_compact_part",
-				"Ventral_tegmental_area", "Prelimbic_area", 
-		"Lateral_preoptic_area"};
-
-		populateBamsDataReader(bamsReader, brainRegions);
-
-		MultiHashMap<String, String> results = null;
-
-		try {
-			results = bamsReader.runSelectQuery();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		for (String key : results.keySet()) {
-			System.out.println("key: " + key + ", result: " + results.get(key));
-		}
-
-		Node[] data = createNodesFromResults(brainRegions, results);
-
-	}
-
 	public void testParseSPARQLResultFromNIF() {
-		String sparql = "http://rdf-stage.neuinfo.org/sparql";
+		String sparql = "http://rdf.neuinfo.org/sparql";
 		SparqlQuery bamsReader = new SparqlQuery(sparql);
 
 		String[] brainRegions = {"Globus_pallidus", "Caudoputamen", 
