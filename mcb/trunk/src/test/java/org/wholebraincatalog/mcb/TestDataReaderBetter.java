@@ -95,7 +95,7 @@ public class TestDataReaderBetter extends TestCase {
 			}
 		}
 	}
-
+	/**
 	private Node[] createNodesFromResults(String[] brainRegions, 
 			MultiHashMap<String, String> results) {
 		List<Node> nodeList = new ArrayList<Node>();
@@ -111,7 +111,7 @@ public class TestDataReaderBetter extends TestCase {
 		Node[] nodes = new Node[nodeList.size()];
 		return nodeList.toArray(nodes);
 	}
-
+	**/
 	public void testParseSPARQLResultFromNIF() {
 		String sparql = "http://rdf.neuinfo.org/sparql";
 		SparqlQuery bamsReader = new SparqlQuery(sparql);
@@ -136,7 +136,7 @@ public class TestDataReaderBetter extends TestCase {
 		//System.out.println("key: " + key + ", result: " + results.get(key));
 		//}
 
-		Node[] data = createNodesFromResults(brainRegions, results);
+		//Node[] data = createNodesFromResults(brainRegions, results);
 
 	}
 

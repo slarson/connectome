@@ -33,6 +33,7 @@ public class NodeMoreDetailsMenuItem extends JMenuItem implements VertexMenuList
         this.addActionListener(new ActionListener(){
             @SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent e) {
+            	System.out.println("node.getMoreDetailURL: "+node.getMoreDetailURL());
             	BareBonesBrowserLaunch.openURL(node.getMoreDetailURL());
                 visComp.repaint();
             }
