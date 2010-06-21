@@ -42,6 +42,8 @@ public class Node implements Factory{
 	 */
 	private String name;
 	
+	private String neurolexName;
+	
 	/**
 	 * String containing the pages URIs.
 	 */
@@ -75,11 +77,16 @@ public class Node implements Factory{
 	 * Constructor.
 	 * @param vertexName - name of node.
 	 **/
-	public Node(String vertexName){
+	public Node(String vertexName, String neurolexName){
 		this.name = vertexName;
+		this.neurolexName = neurolexName;
 		createURITreeSet();
 		createRegionToStrengthMap();
 		createReferenceMap();
+	}
+	
+	public String getNeuroLexName(){
+		return this.neurolexName;
 	}
 	
 	public void setCellInfo(Collection<String> cells, Collection<String> cellUrls, 
@@ -127,7 +134,7 @@ public class Node implements Factory{
 	 */
 	public String getMoreDetailURL() {
 		//TODO: This does not return an actual neurolex page for all nodes
-		return "http://neurolex.org/wiki/Category:" + this.name;
+		return "http://neurolex.org/wiki/Category:" + this.neurolexName;
 	}
 	
 	public String getNeurotransmitter(int index) {
@@ -189,7 +196,7 @@ public class Node implements Factory{
 	public void addPartOfNodes(Graph<Node, Edge> graph) {
 		if (partOfsAdded == false) {
 			for (String partOf : getPartOf()) {
-				Node subNode = new Node(partOf);
+				Node subNode = new Node(partOf,null);
 				subNode.setParent(this);
 				graph.addEdge(new PartOfEdge(), subNode, this,
 						EdgeType.DIRECTED);

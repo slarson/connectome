@@ -63,7 +63,7 @@ public class BuildConnections {
 					"Prelimbic_area", "Lateral_preoptic_area" };
 
 			String[] brainRegionsCellData = { "Globus_pallidus",
-					"Caudoputamen", "Central_nucleus_of_amygdala",
+					"Caudoputamen", "Central_nucleus_of_the_amygdala",
 					"Substantia_nigra_pars_compacta", "Ventral_tegmental_area" };
 
 			ConnectionStatementLoader.populate(bamsReader,
@@ -78,15 +78,15 @@ public class BuildConnections {
 			MultiHashMap<String, String> brainRegionResults = brainRegionReader.runSelectQuery();
 			
 			Node[] data = ConnectionStatementLoader.createNodesFromResults(
-					brainRegions, results);
+					brainRegions, results,brainRegionsCellData);
 			NeuroLexDataLoader.storeData(data, cellResults);
 			BrainRegionDataLoader.storeData(data, brainRegionResults);
 
 			makeConnections(graph, data);
 
-			for (String key : cellResults.keySet()) {
-				System.out.println("key: " + key + ", results: "
-						+ cellResults.get(key));
+			for (Node node : data) {
+				System.out.println("node: " + node.toString() + 
+						", node URL: "+ node.getMoreDetailURL());
 			}
 
 		} catch (Exception e) {
