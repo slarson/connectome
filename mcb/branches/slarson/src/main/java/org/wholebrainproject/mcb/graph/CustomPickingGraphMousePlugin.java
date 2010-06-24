@@ -50,11 +50,11 @@ public class CustomPickingGraphMousePlugin<V, E> extends
 					if (pickedVertexState.isPicked(vertex) == false) {
 						pickedVertexState.clear();
 						pickedVertexState.pick(vertex, true);
+						System.out.println("vertex picked: "+vertex.toString());
 						if (vertex instanceof Node) {
 							Collection<Node> nodes = ((Node) vertex)
 									.getPartOfNodes(GraphManager.getInstance()
-											.getGraph());
-
+											.getGraph());	
 							if (nodes.isEmpty() == false) {
 								for (Node n : nodes) {
 									pickedVertexState.pick((V) n, true);

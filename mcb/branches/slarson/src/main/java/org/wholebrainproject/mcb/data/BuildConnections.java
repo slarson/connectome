@@ -29,12 +29,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
-
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
 import org.wholebrainproject.mcb.graph.Edge;
-import org.wholebrainproject.mcb.graph.GraphManager;
 import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.BrainRegionNameShortener;
 import org.wholebrainproject.mcb.util.SparqlQuery;
@@ -563,7 +560,7 @@ public class BuildConnections {
 
 	private static void subNodesConnection(Graph graph, Node[] node){
 		ArrayList<Node> repeats = new ArrayList<Node>();
-		
+	
 		for(int i = 0; i < node.length; i++){
 			if(!node[i].getPartOfNodes().isEmpty()){
 				for(Node partOf: node[i].getPartOfNodes()){

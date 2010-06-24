@@ -155,9 +155,11 @@ public class Node implements Factory{
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<Node> getPartOfNodes(Graph<Node,Edge> graph) {
-		List<Node> out = new ArrayList<Node>();
-		for (Edge e : graph.getInEdges(this)) {
-			if (e instanceof PartOfEdge) {
+		List<Node> out = new ArrayList<Node>();	
+		if(graph.getInEdges(this)== null)
+			return out;
+		for (Edge e : graph.getInEdges(this)) {	
+			if (e instanceof PartOfEdge) {				
 				Pair<Node> p = graph.getEndpoints(e);
 				out.add(p.getFirst());
 			}
