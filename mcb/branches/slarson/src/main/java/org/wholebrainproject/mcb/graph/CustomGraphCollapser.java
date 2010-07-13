@@ -28,18 +28,51 @@ public class CustomGraphCollapser extends GraphCollapser{
 	AggregateLayout<Node, Edge> layout; 
 	VisualizationViewer<Node, Edge> vv;
 	Set exclusions;
-	
+
+	private static CustomGraphCollapser instance = null;
+
+	public CustomGraphCollapser(){
+		super(null);
+	}
+
 	public CustomGraphCollapser(Graph<Node,Edge> originalGraph, 
 			AggregateLayout<Node, Edge> layout, 
 			VisualizationViewer<Node, Edge> vv, Set exclusions) {
-		
+
 		super(originalGraph);
 		this.originalGraph = originalGraph;
 		this.layout = layout;
 		this.vv = vv;
 		this.exclusions = exclusions;
 	}
-	
+
+	public void setGraph(Graph<Node,Edge> originalGraph){
+		//this.setGraph(originalGraph);
+		this.originalGraph = originalGraph;
+
+	}
+
+	public void setLayout(AggregateLayout<Node, Edge> layout){
+		this.layout = layout;
+
+	}
+
+	public void setVisualizationViewer(VisualizationViewer<Node, Edge> vv){
+		this.vv = vv;
+
+	}
+
+	public void setExclusions(Set exclusions){
+		this.exclusions = exclusions;
+	}
+
+	public static CustomGraphCollapser getInstance(){
+		if (instance == null) {
+			instance = new CustomGraphCollapser();
+
+		}
+		return instance;
+	}
 
 	/**
 	 * Collapse all the part of nodes into their parent nodes.
@@ -52,6 +85,47 @@ public class CustomGraphCollapser extends GraphCollapser{
 		}
 	}
 
+	public void initialCollapse(Graph graph){
+
+		ArrayList<Node> picked = new ArrayList<Node>(graph.getVertexCount());
+		Collection<Node> nodes = graph.getVertices();
+
+		for(Node currentNode: nodes){
+			if(currentNode.getPartOfNodes() != null){
+				if(!(currentNode.getPartOfNodes().isEmpty())){
+					picked.add(currentNode);
+					
+					for(Node childNode: currentNode.getPartOfNodes()){
+						picked.add(childNode);					
+					}
+					Graph<Node, Edge> clusterGraph = getClusterGraph(graph, picked);
+					// collapses the original graph by creating a new graph
+					// without the nodes in clusterGraph. Makes Node n be the
+					// stand in node for the clusterGraph.
+					Graph<Node, Edge> g = collapse(layout.getGraph(), clusterGraph, currentNode);
+
+					// calculate a center point for the new node by averaging the
+					// positions of its constituents.
+					double sumx = 0;
+					double sumy = 0;
+					for (Object v : picked) {
+						Point2D p = (Point2D) layout.transform((Node)v);
+						sumx += p.getX();
+						sumy += p.getY();
+					}
+					Point2D cp = new Point2D.Double(sumx / picked.size(), sumy
+							/ picked.size());
+					vv.getRenderContext().getParallelEdgeIndexFunction().reset();
+					layout.setGraph(g);
+					layout.setLocation((Node)currentNode, cp);
+					currentNode.setCollapsed(true);
+					// vv.getPickedVertexState().clear();
+					vv.repaint();
+					picked.clear();
+				}
+			}
+		}
+	}
 	public void collapse(Node n) {
 
 		// get part of nodes for this node, adding itself
@@ -87,92 +161,92 @@ public class CustomGraphCollapser extends GraphCollapser{
 			vv.repaint();
 		}
 	}
-	
-    Graph<Node,Edge> createGraph() throws InstantiationException, IllegalAccessException {
-        return (Graph<Node,Edge>)originalGraph.getClass().newInstance();
-    }
-    
-    /**
-     * Does a collapse.  Rewrites the superclasses {@link #collapse(Graph, Graph)} method
-     * to prevent a Graph from being a vertex.
-     * @param inGraph - the original graph, containing all the nodes
-     * @param clusterGraph - the subgraph that will get collapsed to a single node
-     * @param repNode - the representative node to replace the subgraph with.
-     * @return
-     */
-    public Graph<Node,Edge> collapse(Graph<Node,Edge> inGraph, Graph<Node,Edge> clusterGraph, Node repNode) {
-        
-        if(clusterGraph.getVertexCount() < 2) return inGraph;
 
-        Graph<Node,Edge> graph = inGraph;
-        try {
-            graph = createGraph();
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-        Collection<Node> cluster = clusterGraph.getVertices();
-        
-        // add all vertices in the delegate, unless the vertex is in the
-        // cluster.
-        for(Node v : inGraph.getVertices()) {
-            if(cluster.contains(v) == false) {
-                graph.addVertex(v);
-            }
-        }
-        // add the clusterGraph as a single representative node
-        graph.addVertex(repNode);
-        
-        //add all edges from the inGraph, unless both endpoints of
-        // the edge are in the cluster
-        for(Edge e : (Collection<Edge>)inGraph.getEdges()) {
-            Pair<Node> endpoints = inGraph.getEndpoints(e);
-            // don't add edges whose endpoints are both in the cluster
-            if(cluster.containsAll(endpoints) == false) {
-            	
-                if(cluster.contains(endpoints.getFirst())) {
-                	graph.addEdge(e, repNode, endpoints.getSecond(), inGraph.getEdgeType(e));
+	Graph<Node,Edge> createGraph() throws InstantiationException, IllegalAccessException {
+		return (Graph<Node,Edge>)originalGraph.getClass().newInstance();
+	}
 
-                } else if(cluster.contains(endpoints.getSecond())) {
-                	graph.addEdge(e, endpoints.getFirst(), repNode, inGraph.getEdgeType(e));
+	/**
+	 * Does a collapse.  Rewrites the superclasses {@link #collapse(Graph, Graph)} method
+	 * to prevent a Graph from being a vertex.
+	 * @param inGraph - the original graph, containing all the nodes
+	 * @param clusterGraph - the subgraph that will get collapsed to a single node
+	 * @param repNode - the representative node to replace the subgraph with.
+	 * @return
+	 */
+	public Graph<Node,Edge> collapse(Graph<Node,Edge> inGraph, Graph<Node,Edge> clusterGraph, Node repNode) {
 
-                } else {
-                	graph.addEdge(e,endpoints.getFirst(), endpoints.getSecond(), inGraph.getEdgeType(e));
-                }
-            }
-        }
-      
-        for (Node n : inGraph.getVertices()) {
-        	BuildConnections.connectNodesIfEdgeIsAppropriate(graph, repNode, n);
-        	BuildConnections.connectNodesIfEdgeIsAppropriate(graph, n, repNode);
-        }
-        
-        return graph;
-    }
+		if(clusterGraph.getVertexCount() < 2) return inGraph;
 
-    /**
-     * Take the current graph node and expand it into its children.  Remove the
-     * higher level node from the graph completely and replace it with its
-     * children nodes.
-     * @param node
-     */
+		Graph<Node,Edge> graph = inGraph;
+		try {
+			graph = createGraph();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		Collection<Node> cluster = clusterGraph.getVertices();
+
+		// add all vertices in the delegate, unless the vertex is in the
+		// cluster.
+		for(Node v : inGraph.getVertices()) {
+			if(cluster.contains(v) == false) {
+				graph.addVertex(v);
+			}
+		}
+		// add the clusterGraph as a single representative node
+		graph.addVertex(repNode);
+
+		//add all edges from the inGraph, unless both endpoints of
+		// the edge are in the cluster
+		for(Edge e : (Collection<Edge>)inGraph.getEdges()) {
+			Pair<Node> endpoints = inGraph.getEndpoints(e);
+			// don't add edges whose endpoints are both in the cluster
+			if(cluster.containsAll(endpoints) == false) {
+
+				if(cluster.contains(endpoints.getFirst())) {
+					graph.addEdge(e, repNode, endpoints.getSecond(), inGraph.getEdgeType(e));
+
+				} else if(cluster.contains(endpoints.getSecond())) {
+					graph.addEdge(e, endpoints.getFirst(), repNode, inGraph.getEdgeType(e));
+
+				} else {
+					graph.addEdge(e,endpoints.getFirst(), endpoints.getSecond(), inGraph.getEdgeType(e));
+				}
+			}
+		}
+
+		for (Node n : inGraph.getVertices()) {
+			BuildConnections.connectNodesIfEdgeIsAppropriate(graph, repNode, n);
+			BuildConnections.connectNodesIfEdgeIsAppropriate(graph, n, repNode);
+		}
+
+		return graph;
+	}
+
+	/**
+	 * Take the current graph node and expand it into its children.  Remove the
+	 * higher level node from the graph completely and replace it with its
+	 * children nodes.
+	 * @param node
+	 */
 	public void expand(Node node) {
 		// get part of nodes for this node
 		ArrayList<Node> picked = new ArrayList<Node>(node.getPartOfNodes());
-		
+
 		Graph<Node, Edge> clusterGraph = getClusterGraph(originalGraph, picked);
 
 		Graph<Node,Edge> g = expand(layout.getGraph(), clusterGraph);
 		//take out the node that is being expanded because we want to 
 		//break the node into its consitutents
 		g.removeVertex(node);
-		
+
 		Collection<Edge> edges = g.getIncidentEdges(node);
 		if (edges != null) {
 			for (Edge e : edges) {
 				g.removeEdge(e);
 			}
 		}
-		
+
 		vv.getRenderContext().getParallelEdgeIndexFunction().reset();
 
 		layout.setGraph(g);
@@ -184,34 +258,34 @@ public class CustomGraphCollapser extends GraphCollapser{
 	}
 
 
-    public Graph getClusterGraph(Graph inGraph, Collection picked) {
-        Graph clusterGraph;
-        try {
-            clusterGraph = createGraph();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        }
-        for(Object v : picked) {
-        	clusterGraph.addVertex(v);
-            Collection edges = inGraph.getIncidentEdges(v);
-            if (edges == null) continue;
-            for(Object edge : edges) {
-                Pair endpoints = inGraph.getEndpoints(edge);
-                Object v1 = endpoints.getFirst();
-                Object v2 = endpoints.getSecond();
-                if(picked.containsAll(endpoints)) {
-                    clusterGraph.addEdge(edge, v1, v2, inGraph.getEdgeType(edge));
-                }
-            }
-        }
-        return clusterGraph;
-    }
+	public Graph getClusterGraph(Graph inGraph, Collection picked) {
+		Graph clusterGraph;
+		try {
+			clusterGraph = createGraph();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		for(Object v : picked) {
+			clusterGraph.addVertex(v);
+			Collection edges = inGraph.getIncidentEdges(v);
+			if (edges == null) continue;
+			for(Object edge : edges) {
+				Pair endpoints = inGraph.getEndpoints(edge);
+				Object v1 = endpoints.getFirst();
+				Object v2 = endpoints.getSecond();
+				if(picked.containsAll(endpoints)) {
+					clusterGraph.addEdge(edge, v1, v2, inGraph.getEdgeType(edge));
+				}
+			}
+		}
+		return clusterGraph;
+	}
 
 
 	public void expand() {
@@ -266,7 +340,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 				Graph<Node,Edge> inGraph = layout.getGraph();
 				Graph<Node,Edge> clusterGraph = getClusterGraph(inGraph, picked);
 				Graph<Node,Edge> g = collapse(layout.getGraph(), clusterGraph);
-				
+
 				double sumx = 0;
 				double sumy = 0;
 				for(Node v : picked) {
@@ -285,14 +359,14 @@ public class CustomGraphCollapser extends GraphCollapser{
 			picked = null;
 		}
 	}
-	
+
 
 
 	public void test() {
 		///temporary hack for demo purposes
 		for (Node n : originalGraph.getVertices()) {
 			//if (n.getVertexName().startsWith("Glo")) {
-				applyTreeLayoutNode(n);
+			applyTreeLayoutNode(n);
 			//}
 		}
 	}
@@ -306,7 +380,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 		try {
 			//get the tree graph from the Node
 			Tree<Node, Edge> treeGraph = n.getPartOfTree(originalGraph); 
-			
+
 			//calculate the position of the center of the tree by averaging
 			//the positions of its constituents
 			Collection<Node> picked = treeGraph.getVertices();
@@ -323,7 +397,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 			x /= picked.size();
 			y /= picked.size();
 			center.setLocation(x, y);
-			*/
+			 */
 			center.setLocation(layout.transform(n).getX(), 
 					layout.transform(n).getY());
 
@@ -331,7 +405,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 			TreeLayout<Node, Edge> subLayout =
 				new TreeLayout<Node, Edge>(treeGraph, 50);
 			subLayout.setInitializer(vv.getGraphLayout());
-			
+
 			//place the sublayout at the computed location.
 			layout.put(subLayout, center);
 			vv.setGraphLayout(layout);
@@ -349,7 +423,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 		collapseSubGraph();
 		vv.repaint();
 	}
-	
+
 	/**
 	 * Given a node this method returns the children of the node.
 	 * @param node - the node used to check for its children.

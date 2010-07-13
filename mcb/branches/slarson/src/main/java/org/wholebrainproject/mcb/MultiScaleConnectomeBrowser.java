@@ -1,10 +1,8 @@
 package org.wholebrainproject.mcb;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.net.URL;
 import java.util.Properties;
-
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
@@ -16,7 +14,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	
 	/**
 	 * the gui frame
-	 */
+	 **/
 	static JFrame f;
 
 	public MultiScaleConnectomeBrowser() {
@@ -48,10 +46,10 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 		return null;
 	}
 	
-	/*
+	/**
 	 * Driver for application
 	 * @throws Exception 
-	 */
+	 **/
 	public static void main(String[] args) {
 
 		try {
