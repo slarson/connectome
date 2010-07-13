@@ -124,7 +124,7 @@ public class GraphManager {
 		graph = new DirectedSparseMultigraph<Node,Edge>();
 
 		BuildConnections.getInstance().getDataAndCreateGraphBetter(graph);
-
+		
 		layout = 
 			new AggregateLayout<Node,Edge>(
 					new CircleLayout<Node,Edge>(graph));
@@ -219,7 +219,12 @@ public class GraphManager {
 		vv.setEdgeToolTipTransformer(new ToolTipEdgeLabeller());
 		
 
-		collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
+		//collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
+		collapser = CustomGraphCollapser.getInstance();
+		collapser.setGraph(graph);
+		collapser.setLayout(layout);
+		collapser.setVisualizationViewer(vv);
+		collapser.setExclusions(exclusions);
 		
 		for (Node n: graph.getVertices()) {
 			if (BuildConnections.initialBamsURIs.contains(n.getUri())) {
