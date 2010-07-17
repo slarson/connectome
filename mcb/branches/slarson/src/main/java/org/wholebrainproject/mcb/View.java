@@ -129,12 +129,20 @@ public class View extends JPanel{
 			    JOptionPane.PLAIN_MESSAGE);
 	}
 
+	public void launchLens(){
+		JPanel lensPanel = new JPanel(new GridLayout(2,0));
+		lensPanel.setBorder(BorderFactory.createTitledBorder("Lens"));
+		//lensPanel.add(none);
+		//lensPanel.add(hyperView);
+		//lensPanel.add(hyperModel);
+	}
 	public JMenuBar getMainMenuBar() {
 		JMenuBar menu =  new JMenuBar();
 		JMenu file = new JMenu("File");
 		JMenu edit = new JMenu("Edit");
 		JMenu view = new JMenu("View");
 		JMenu help = new JMenu("Help");
+		JMenu lens = new JMenu("Lens");
 		
 		final JMenuItem saveImage = new JMenuItem("Save image...");
 		saveImage.addActionListener(new ActionListener() {
@@ -190,11 +198,20 @@ public class View extends JPanel{
 				launchInstructionPopup();
 			}
 		});
+		
+		final JMenuItem activateLens = new JMenuItem("Activate Lens");
+		activateLens.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GraphManager.getInstance().lensNone();
+			}
+		});
 		help.add(instructions);
 		menu.add(file);
+		lens.add(getLensPanel());
 		//TODO: Fix reset functionality and re-enable
 		menu.add(edit);
 		menu.add(view);
+		menu.add(lens);
 		menu.add(help);
 		return menu;
 	}

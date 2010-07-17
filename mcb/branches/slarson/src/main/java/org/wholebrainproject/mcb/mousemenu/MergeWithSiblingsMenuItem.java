@@ -37,6 +37,7 @@ public class MergeWithSiblingsMenuItem extends JMenuItem implements VertexMenuLi
         this.addActionListener(new ActionListener(){
             @SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent e) {
+            	System.out.println("Calling Merge with siblings :"+node.getParent());
             	GraphManager.getInstance().hideBrainParts(node.getParent());
                 visComp.repaint();
             }
