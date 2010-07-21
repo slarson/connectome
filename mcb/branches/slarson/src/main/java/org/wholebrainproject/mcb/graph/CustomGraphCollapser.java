@@ -420,7 +420,6 @@ public class CustomGraphCollapser extends GraphCollapser{
 	public void reset() {
 		layout.setGraph(originalGraph);
 		exclusions.clear();
-		collapseSubGraph();
 		vv.repaint();
 	}
 

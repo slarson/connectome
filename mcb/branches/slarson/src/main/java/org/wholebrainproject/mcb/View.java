@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -69,24 +71,102 @@ public class View extends JPanel{
 	protected Component getLensPanel() {
 		JRadioButton none = new JRadioButton("None");
 
-		none.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				GraphManager.getInstance().lensNone();
+		none.addMouseListener(new MouseListener(){
+			public void itemStateChanged(MouseEvent e) {
+				GraphManager.getInstance().lensNone(e);
+			}
+
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("none mouseClicked()");
+				GraphManager.getInstance().lensNone(e);
+				
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
 		none.setSelected(true);
 		
 		JRadioButton hyperView = new JRadioButton("View");
-		hyperView.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
+		hyperView.addMouseListener(new MouseListener(){
+			public void itemStateChanged(MouseEvent e) {
 				GraphManager.getInstance().lensView(e);
+			}
+
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("hyperView mouseClicked()");
+				GraphManager.getInstance().lensView(e);
+				
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		JRadioButton hyperModel = new JRadioButton("Layout");
-		hyperModel.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
+		hyperModel.addMouseListener(new MouseListener(){
+			public void itemStateChanged(MouseEvent e) {
 				GraphManager.getInstance().lensLayout(e);
+			}
+
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("hyperMouse mouseClicked()");
+				GraphManager.getInstance().lensLayout(e);
+				
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		
@@ -105,7 +185,6 @@ public class View extends JPanel{
 		return lensPanel;
 	}
 
-	
 	public JPanel getMainPanel() {
 		return this;
 	}
@@ -129,13 +208,7 @@ public class View extends JPanel{
 			    JOptionPane.PLAIN_MESSAGE);
 	}
 
-	public void launchLens(){
-		JPanel lensPanel = new JPanel(new GridLayout(2,0));
-		lensPanel.setBorder(BorderFactory.createTitledBorder("Lens"));
-		//lensPanel.add(none);
-		//lensPanel.add(hyperView);
-		//lensPanel.add(hyperModel);
-	}
+	
 	public JMenuBar getMainMenuBar() {
 		JMenuBar menu =  new JMenuBar();
 		JMenu file = new JMenu("File");
@@ -150,6 +223,7 @@ public class View extends JPanel{
 				GraphManager.getInstance().saveImage();
 			}
 		});
+		
 		file.add(saveImage);
 		
 		
@@ -159,7 +233,7 @@ public class View extends JPanel{
 				GraphManager.getInstance().reset();
 			}
 		});
-		//edit.add(reset);
+		edit.add(reset);
 		
 		final JMenuItem showProjectionStrength = new JMenuItem("Show Projection Strengths");
 		showProjectionStrength.addActionListener(new ActionListener() {
@@ -199,19 +273,14 @@ public class View extends JPanel{
 			}
 		});
 		
-		final JMenuItem activateLens = new JMenuItem("Activate Lens");
-		activateLens.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				GraphManager.getInstance().lensNone();
-			}
-		});
+		
 		help.add(instructions);
 		menu.add(file);
 		lens.add(getLensPanel());
 		//TODO: Fix reset functionality and re-enable
 		menu.add(edit);
 		menu.add(view);
-		menu.add(lens);
+		//menu.add(lens);
 		menu.add(help);
 		return menu;
 	}

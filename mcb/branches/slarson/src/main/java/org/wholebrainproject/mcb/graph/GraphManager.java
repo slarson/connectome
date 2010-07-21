@@ -38,11 +38,14 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
+import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AnimatedPickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.LensMagnificationGraphMousePlugin;
+import edu.uci.ics.jung.visualization.control.ModalLensGraphMouse;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
@@ -52,7 +55,12 @@ import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
+import edu.uci.ics.jung.visualization.transform.LayoutLensSupport;
 import edu.uci.ics.jung.visualization.transform.LensSupport;
+import edu.uci.ics.jung.visualization.transform.MagnifyTransformer;
+import edu.uci.ics.jung.visualization.transform.shape.HyperbolicShapeTransformer;
+import edu.uci.ics.jung.visualization.transform.shape.MagnifyShapeTransformer;
+import edu.uci.ics.jung.visualization.transform.shape.ViewLensSupport;
 import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
 
 /**
@@ -97,7 +105,7 @@ public class GraphManager {
 	 * different thicknesses based on their projection strength.
 	 */
 	boolean showProjectionStrength = false;
-
+	PluggableGraphMouse gm;
 	/**
 	 * Lens objects
 	 */
@@ -219,12 +227,12 @@ public class GraphManager {
 		vv.setEdgeToolTipTransformer(new ToolTipEdgeLabeller());
 		
 
-		//collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
-		collapser = CustomGraphCollapser.getInstance();
-		collapser.setGraph(graph);
-		collapser.setLayout(layout);
-		collapser.setVisualizationViewer(vv);
-		collapser.setExclusions(exclusions);
+		collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
+		//collapser = CustomGraphCollapser.getInstance();
+		//collapser.setGraph(graph);
+		//collapser.setLayout(layout);
+		//collapser.setVisualizationViewer(vv);
+		//collapser.setExclusions(exclusions);
 		
 		for (Node n: graph.getVertices()) {
 			if (BuildConnections.initialBamsURIs.contains(n.getUri())) {
@@ -265,7 +273,7 @@ public class GraphManager {
 		 * ());
 		 */
 
-		PluggableGraphMouse gm = new PluggableGraphMouse();
+		gm = new PluggableGraphMouse();
 		
 		gm.add(new TranslatingGraphMousePlugin(MouseEvent.BUTTON3_MASK));
 		gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1.1f, 0.9f));
@@ -281,6 +289,12 @@ public class GraphManager {
 		myPlugin.setVertexPopup(vertexMenu);
 		gm.add(myPlugin); // Add our new plugin to the mouse
 
+		this.magnifyViewSupport = new ViewLensSupport<Node,Edge>(vv, new MagnifyShapeTransformer(vv,
+				vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW)),
+				new ModalLensGraphMouse(new LensMagnificationGraphMousePlugin(1.f, 6.f, .2f))); 
+		this.magnifyLayoutSupport = new LayoutLensSupport<Node,Edge>(vv, new MagnifyTransformer(vv,
+				vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT)),
+				new ModalLensGraphMouse(new LensMagnificationGraphMousePlugin(1.f, 6.f, .2f))); 
 		vv.setGraphMouse(gm);
 	}
 
@@ -296,21 +310,29 @@ public class GraphManager {
 		return graph;
 	}
 
-	public void lensNone() {
-		if(viewSupport != null) {
-			viewSupport.deactivate();
+	public void lensNone(MouseEvent e) {
+		System.out.println("Calling lensNone()");
+		if(magnifyViewSupport != null) {
+			System.out.println("deactivating magnifyViewSupport");
+			magnifyViewSupport.deactivate();
+			magnifyViewSupport = null;
+			this.magnifyViewSupport = new ViewLensSupport<Node,Edge>(vv, new MagnifyShapeTransformer(vv,
+					vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW)),
+					new ModalLensGraphMouse(new LensMagnificationGraphMousePlugin(1.f, 6.f, .2f))); 
+			gm.add(new CustomPickingGraphMousePlugin());
+			gm.add(new AnimatedPickingGraphMousePlugin());
 		}
-		if(modelSupport != null) {
-			modelSupport.deactivate();
+		if(magnifyLayoutSupport != null) {
+			magnifyLayoutSupport.deactivate();
 		}
 	}
 
-	public void lensView(ItemEvent e) {
-		viewSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+	public void lensView(MouseEvent e) {
+		magnifyViewSupport.activate(true);
 	}
 
-	public void lensLayout(ItemEvent e) {
-		modelSupport.activate(e.getStateChange() == ItemEvent.SELECTED);
+	public void lensLayout(MouseEvent e) {
+		magnifyLayoutSupport.activate(true);
 	}
 
 	public VisualizationViewer.GraphMouse getGraphMouse() {
