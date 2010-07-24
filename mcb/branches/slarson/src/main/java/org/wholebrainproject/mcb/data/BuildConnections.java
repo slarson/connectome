@@ -68,10 +68,10 @@ public class BuildConnections {
 
 	public void getDataAndCreateGraphBetter(Graph<Node,Edge> graph) {
 
-		String[] initialBamsNames = {"cerebral-cortex", "thalamus-4", "basal-ganglia", "midbrain-hindbrain-motor-extrapyramidal"};
+		String[] initialBamsNames = {"basal-ganglia","midbrain-hindbrain-motor-extrapyramidal"};//{"cerebral-cortex", "thalamus-4", "basal-ganglia", "midbrain-hindbrain-motor-extrapyramidal"};
 
-		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cerebral-cortex/");
-		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus-4/");
+		//initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cerebral-cortex/");
+		//initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus-4/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/basal-ganglia/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/midbrain-hindbrain-motor-extrapyramidal/");
 
