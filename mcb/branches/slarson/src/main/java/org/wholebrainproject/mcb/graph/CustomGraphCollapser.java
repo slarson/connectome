@@ -12,6 +12,7 @@ import org.wholebrainproject.mcb.data.BuildConnections;
 import edu.uci.ics.jung.algorithms.layout.AggregateLayout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.Tree;
 import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -94,7 +95,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 			if(currentNode.getPartOfNodes() != null){
 				if(!(currentNode.getPartOfNodes().isEmpty())){
 					picked.add(currentNode);
-					
+
 					for(Node childNode: currentNode.getPartOfNodes()){
 						picked.add(childNode);					
 					}
@@ -229,32 +230,46 @@ public class CustomGraphCollapser extends GraphCollapser{
 	 * children nodes.
 	 * @param node
 	 */
-	public void expand(Node node) {
+	public void expand(Node node) { 
+		Point2D p = (Point2D) layout.transform((Node) node);
+		Double x = p.getX();
+		Double y = p.getY();
+		
+		System.out.println("Colling Expand: "+node.toString());
 		// get part of nodes for this node
 		ArrayList<Node> picked = new ArrayList<Node>(node.getPartOfNodes());
 
 		Graph<Node, Edge> clusterGraph = getClusterGraph(originalGraph, picked);
 
 		Graph<Node,Edge> g = expand(layout.getGraph(), clusterGraph);
+		
 		//take out the node that is being expanded because we want to 
 		//break the node into its consitutents
 		g.removeVertex(node);
-
 		Collection<Edge> edges = g.getIncidentEdges(node);
+
 		if (edges != null) {
 			for (Edge e : edges) {
 				g.removeEdge(e);
 			}
 		}
-
-		vv.getRenderContext().getParallelEdgeIndexFunction().reset();
-
+		// calculate a center point for the new node by averaging the
+		// positions of its constituents.
+		double sumx = 0;
+		double sumy = 0;
+		int i = 2;
 		layout.setGraph(g);
-
+		for (Object v : picked) {
+			i+=2;
+			sumx += x+i+2;
+			sumy += y+i+2;
+			Point2D cp = new Point2D.Double(x, y);
+			layout.setLocation((Node) v, cp);
+		}
 		node.setCollapsed(false);
 		//applyTreeLayoutNode(node);
 		//vv.getPickedVertexState().clear();
-		vv.repaint();
+		//vv.repaint();
 	}
 
 
@@ -376,7 +391,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 	 * @param n
 	 */
 	public void applyTreeLayoutNode(Node n) {
-
+		System.out.println("calling applyTreeLayout");
 		try {
 			//get the tree graph from the Node
 			Tree<Node, Edge> treeGraph = n.getPartOfTree(originalGraph); 
@@ -385,7 +400,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 			//the positions of its constituents
 			Collection<Node> picked = treeGraph.getVertices();
 			Point2D center = new Point2D.Double();
-			/*
+			
 			double x = 0;
 			double y = 0;
 			for (Node vertex : picked) {
@@ -397,7 +412,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 			x /= picked.size();
 			y /= picked.size();
 			center.setLocation(x, y);
-			 */
+			
 			center.setLocation(layout.transform(n).getX(), 
 					layout.transform(n).getY());
 
@@ -409,7 +424,7 @@ public class CustomGraphCollapser extends GraphCollapser{
 			//place the sublayout at the computed location.
 			layout.put(subLayout, center);
 			vv.setGraphLayout(layout);
-			//vv.repaint();
+			vv.repaint();
 
 		} catch (Exception e) {
 			e.printStackTrace();
