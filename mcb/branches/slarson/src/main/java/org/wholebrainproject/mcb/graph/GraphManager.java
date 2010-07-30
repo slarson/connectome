@@ -10,6 +10,7 @@ import java.awt.Stroke;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.renderable.RenderContext;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,6 +40,7 @@ import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.Layer;
+import edu.uci.ics.jung.visualization.PluggableRenderContext;
 import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AnimatedPickingGraphMousePlugin;
@@ -51,6 +53,8 @@ import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.decorators.GradientEdgePaintTransformer;
+import edu.uci.ics.jung.visualization.decorators.PickableEdgePaintTransformer;
 import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
@@ -150,11 +154,16 @@ public class GraphManager {
 				return tip;
 			}
 		};
-
+		 // uses a gradient edge if unpicked, otherwise uses picked selection
+		GradientEdgePaintTransformer<Node, Edge> edgeDrawPaint =
+			new GradientEdgePaintTransformer<Node, Edge>(Color.BLUE,Color.GREEN,vv);
+		 	
 		setGraphMouse();
 
+	//	PluggableRenderContext<Node,Edge> edgeShape = new PluggableRenderContext<Node, Edge>();
+		
 		VertexLabelAsShapeRenderer vlasr = new VertexLabelAsShapeRenderer(vv.getRenderContext());
-
+		
 		vv.getRenderContext().setVertexShapeTransformer(vlasr);
 
 		vv.getRenderContext().setVertexLabelTransformer(new NodeLabeller());
@@ -164,6 +173,7 @@ public class GraphManager {
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 		vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabeller());
 		vv.getRenderContext().setEdgeLabelRenderer(new DefaultEdgeLabelRenderer(Color.RED));
+		vv.getRenderContext().setEdgeDrawPaintTransformer(edgeDrawPaint);
 		vv.getRenderContext().setEdgeFontTransformer(new Transformer<Edge, Font>() {
 			public Font transform(Edge input) {
 				return input.getFont();
