@@ -60,26 +60,38 @@ public class NeuroLexDataLoader {
 	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
-	public static void populate(SparqlQuery query, String[] brainRegionNames) {
+	public static MultiHashMap<String,String>  populate(Node[] brainRegionNames) {
 
 		String region_suffix = "_r";
 		String cells_suffix = "_c";
 		String neurotransmitter_suffix = "_n";
 		String transmitter_role_suffix = "_t_r";
 		String brainRegionSufixName = null;
+
+		String sparqlNif = "http://api.talis.com/stores/neurolex/services/sparql";
+		SparqlQuery query = new SparqlQuery(sparqlNif);
 		
 		query.addPrefixMapping("swivt", "<http://semantic-mediawiki.org/swivt/1.0#>");
 		query.addPrefixMapping("nlx_prop", "<http://neurolex.org/wiki/Special:URIResolver/Property-3A>");
 		query.addPrefixMapping("nlx_cat", "<http://neurolex.org/wiki/Special:URIResolver/Category-3A>");
 
-		for(String RegionName : brainRegionNames){
-
+		for(Node RegionName : brainRegionNames){
+			System.out.println("RegionName: "+RegionName.toString());
 			if(brainRegionSufixName == null)
-				brainRegionSufixName =  BrainRegionNameShortener.reduceName(RegionName);
+				brainRegionSufixName =  BrainRegionNameShortener.reduceName(RegionName.toString());
 
-			query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
+			if(RegionName.toString().equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal")){
+				query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
 					" swivt:page " + 
-					" <http://neurolex.org/wiki/Category:"+RegionName+">");
+					" <http://neurolex.org/wiki/Category:"+"basal_ganglia"+">");
+			}
+			else{
+				query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
+						" swivt:page " + 
+						" <http://neurolex.org/wiki/Category:"+RegionName.toString().toLowerCase()+">");
+			}
+
+			System.out.println("http://neurolex.org/wiki/Category:"+RegionName.getName());
 
 			query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix +
 					" nlx_prop:Located_in $" +
@@ -127,7 +139,7 @@ public class NeuroLexDataLoader {
 			}
 			brainRegionSufixName = null;
 		}
-
+		return query.runSelectQuery();
 	}
 	
 	
@@ -154,7 +166,7 @@ public class NeuroLexDataLoader {
 				cellResults.get("$" + brainRegionName + "_nl");
 			Collection<String> roles = 
 				cellResults.get("$" + brainRegionName + "_trl");
-
+			System.out.println("NeuroLexDataLoader roles: "+roles.toString());
 			node.setCellInfo(cells, cellUrls, transmitters, roles);
 			
 			brainRegionName = null;

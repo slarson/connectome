@@ -99,6 +99,7 @@ public class Node implements Factory{
 		if (neurotransmitters != null) this.neurotransmitters.addAll(neurotransmitters);
 		this.roles = new ArrayList<String>();
 		if (roles != null) this.roles.addAll(roles);
+		
 	}
 	
 
