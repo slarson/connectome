@@ -162,17 +162,22 @@ public class ConnectionEdge implements Edge{
 	}
 	
 	public String getToolTipLabel() {
+		System.out.println("Calling getToolTipLabel in "+this.getClass().toString());
 		String out = "";
 		String reference = getReference();
 		out += "<html>Projection strength: " + getStrength() + "<br>";
-		if ("".equals(getProjectingNode().getProjectingCellsRoleString()) == false) {
+		System.out.println("getProjectingNode(). "+getProjectingNode());
+		
+		/**if (" ".equals(getProjectingNode().getProjectingCellsRoleString()) == false) {
+			
 			out += "This projection is inferred to be "
 					+ getProjectingNode().getProjectingCellsRoleString()
 					+ "<br>";
-		}
+		}**/
 		out += "This projection is described in "
 				+ reference.subSequence(0, 20) + "...<br>"
 				+ "(right-click for more)</html>";
+		System.out.println("Edge's printed reference is "+out);
 		return out;
 	}
 	

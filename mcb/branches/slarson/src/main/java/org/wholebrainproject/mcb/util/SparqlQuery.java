@@ -205,7 +205,7 @@ public class SparqlQuery
 			URL sparqlConnection = new URL(this.sparqlEndPointURL + 
 					"?query=" + queryString);
 
-			System.out.println(sparqlConnection.toString());
+			//System.out.println(sparqlConnection.toString());
 			
 			
 			HttpURLConnection httpConnection = (HttpURLConnection)sparqlConnection.openConnection();

@@ -89,6 +89,11 @@ public class BuildConnections {
 		//Node[] deeperNodes = new Node[0];
 		//System.out.println("depperNodes: "+deeperNodes.length);
 		List<Node> nodeList = mergeNodes(deeperNodes, nodes);
+
+		//populate the nodes with the cell data.
+		//MultiHashMap<String,String> cellResults = NeuroLexDataLoader.populate(nodes);
+		//NeuroLexDataLoader.storeData(nodes, cellResults);
+		
 		//System.out.println("nodeList: "+nodeList.size());
 		List<ConnectionEdge> edges = new ArrayList<ConnectionEdge>();
 
@@ -202,7 +207,7 @@ public class BuildConnections {
 	public Node[] convertPartOfResultsIntoNodes(String[] initialBamsNames, 
 			MultiHashMap<String,String> results) {
 		List<Node> nodes = new ArrayList<Node>();
-
+		Node n;
 		for (String brainRegion: initialBamsNames) {
 
 			String uri = "http://brancusi1.usc.edu/brain_parts/" + brainRegion + "/";
@@ -213,8 +218,11 @@ public class BuildConnections {
 			String childNameVar = "$" + var + "_child_name";
 
 			String brainRegionPrettyName = results.get(nameVar).iterator().next();
-
-			Node n = new Node(uri, brainRegionPrettyName);
+			if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
+				n = new Node(uri, brainRegionPrettyName.toLowerCase());
+			else{
+			    n = new Node(uri, "basal_ganglia");
+			}
 			nodes.add(n);
 
 			Collection<String> childUris = results.get(childUriVar);
@@ -604,9 +612,4 @@ public class BuildConnections {
 		}
 
 	}
-
-
-
 }
-
-
