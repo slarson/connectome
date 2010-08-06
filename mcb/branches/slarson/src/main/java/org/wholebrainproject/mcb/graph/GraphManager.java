@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -59,7 +58,6 @@ import edu.uci.ics.jung.visualization.transform.LensSupport;
 import edu.uci.ics.jung.visualization.transform.MagnifyTransformer;
 import edu.uci.ics.jung.visualization.transform.shape.MagnifyShapeTransformer;
 import edu.uci.ics.jung.visualization.transform.shape.ViewLensSupport;
-import edu.uci.ics.jung.visualization.util.ArrowFactory;
 import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
 
 /**
@@ -169,7 +167,7 @@ public class GraphManager {
         vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabeller());
         vv.getRenderContext().setEdgeLabelRenderer(new DefaultEdgeLabelRenderer(Color.RED));
         vv.getRenderContext().setEdgeDrawPaintTransformer(edgeDrawPaint);
-       
+        vv.getRenderContext().setArrowDrawPaintTransformer(new ArrowColor()); 
        
        
         vv.getRenderContext().setEdgeFontTransformer(new Transformer<Edge, Font>() {
@@ -190,34 +188,13 @@ public class GraphManager {
                         return e.getCloseness();
                     }
         });
-           
-        vv.getRenderContext().setEdgeArrowTransformer(new Transformer<Context<Graph<Node, Edge>, Edge>, Shape>() {
-            public Shape transform(Context<Graph<Node, Edge>, Edge> context){
-                ArrowFactory arrow = new ArrowFactory();
-                return arrow.getNotchedArrow(20, 20, 20);
-                //return (Shape) arrow;
-               
-            }
-        });
-       
+        vv.getRenderContext().setEdgeArrowTransformer(new ArrowTransform());
+
         // Setup up a new vertex to paint transformer to change node color.
         vv.getRenderContext().setVertexFillPaintTransformer(new Transformer<Node,Paint>() {
             public Paint transform(Node input) {
                 return Color.WHITE;
             }
-        });
-       
-       
-        vv.getRenderContext().setArrowDrawPaintTransformer(new Transformer<Edge,Paint>() {
-        public Paint transform(Edge input){
-              BufferedImage img = new BufferedImage(40, 50, BufferedImage.TYPE_4BYTE_ABGR);
-              Graphics2D imageGraphics = img.createGraphics();
-              // Paint something here using the given graphics object
-              imageGraphics.setColor(Color.RED);
-              imageGraphics.create().fillOval(40, 50, 40, 50);
-             
-            return imageGraphics.getPaint();
-        }
         });
        
         final PredicatedParallelEdgeIndexFunction<Node,Edge> eif =
