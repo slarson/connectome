@@ -152,8 +152,6 @@ public class GraphManager {
             new GradientEdgePaintTransformer<Node, Edge>(Color.BLUE,Color.GREEN,vv);
             
         setGraphMouse();
-
-    //    PluggableRenderContext<Node,Edge> edgeShape = new PluggableRenderContext<Node, Edge>();
        
         VertexLabelAsShapeRenderer vlasr = new VertexLabelAsShapeRenderer(vv.getRenderContext());
        
@@ -167,7 +165,6 @@ public class GraphManager {
         vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabeller());
         vv.getRenderContext().setEdgeLabelRenderer(new DefaultEdgeLabelRenderer(Color.RED));
         vv.getRenderContext().setEdgeDrawPaintTransformer(edgeDrawPaint);
-        vv.getRenderContext().setArrowDrawPaintTransformer(new ArrowColor()); 
        
        
         vv.getRenderContext().setEdgeFontTransformer(new Transformer<Edge, Font>() {
@@ -189,7 +186,7 @@ public class GraphManager {
                     }
         });
         vv.getRenderContext().setEdgeArrowTransformer(new ArrowTransform());
-
+        
         // Setup up a new vertex to paint transformer to change node color.
         vv.getRenderContext().setVertexFillPaintTransformer(new Transformer<Node,Paint>() {
             public Paint transform(Node input) {
@@ -229,6 +226,29 @@ public class GraphManager {
                 return new BasicStroke(2.5f);
             }
         });
+        
+      //paint the inside of the arrow green
+        vv.getRenderContext().setArrowFillPaintTransformer(new Transformer<Edge,Paint>() {
+        public Paint transform(Edge input){
+              //BufferedImage img = new BufferedImage(40, 50, BufferedImage.TYPE_4BYTE_ABGR);
+              //Graphics2D imageGraphics = img.createGraphics();
+              // Paint something here using the given graphics object
+              //imageGraphics.setColor(Color.GREEN);
+             
+            return Color.GREEN;
+        }
+        });
+        //paint the perimeter of the 'arrow' green.
+        vv.getRenderContext().setArrowDrawPaintTransformer(new Transformer<Edge,Paint>() {
+            public Paint transform(Edge input){
+                  //BufferedImage img = new BufferedImage(40, 50, BufferedImage.TYPE_4BYTE_ABGR);
+                  //Graphics2D imageGraphics = img.createGraphics();
+                  // Paint something here using the given graphics object
+                  //imageGraphics.setColor(Color.GREEN);
+                 
+                return Color.GREEN;
+            }
+            });
 
         vv.setEdgeToolTipTransformer(new ToolTipEdgeLabeller());
        
