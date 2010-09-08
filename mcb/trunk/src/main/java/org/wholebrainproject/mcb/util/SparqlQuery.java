@@ -158,7 +158,7 @@ public class SparqlQuery
 		}	
 		
 		//cheesy mechanism to allow UNION statements to parse correctly
-		String startBracket = " {";
+		String startBracket = "{ ";
 		String endBracket = "} ";
 		for (String queryTriplet : queryTriplets) {
 			if (queryTriplet.contains("UNION")) {
@@ -186,7 +186,7 @@ public class SparqlQuery
 		}
 		
 		if(variables != "")
-			queryString += "select DISTINCT" + variables + frompart + startBracket;
+			queryString += "select DISTINCT" + variables + frompart + " WHERE " + startBracket;
 		
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {
