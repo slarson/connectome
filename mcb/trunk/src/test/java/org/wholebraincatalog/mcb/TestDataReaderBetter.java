@@ -244,6 +244,50 @@ public class TestDataReaderBetter extends TestCase {
 		
 	}
 	
+	public void testGraph()
+	{
+		
+		
+		String service = "";
+		SparqlQuery q = new SparqlQuery("http://sparql.bioontology.org/sparql");
+	
+		
+		q.addSelectVariable("?graphURI");
+		q.addSelectVariable("?label");
+		q.addSelectVariable("?versionId");
+		
+		
+		q.addQueryTriplet("GRAPH ?graphURI {" +
+				"  ?s <http://purl.bioontology.org/ontology/bioportal/displayLabel> ?label ." +
+				"			   ?s <http://purl.bioontology.org/ontology/bioportal/id> ?versionId .	" +
+				"		   ?s <http://purl.bioontology.org/ontology/bioportal/ontologyId> ?virtualId ." +
+				"	   ?s <http://purl.bioontology.org/ontology/bioportal/format> ?format		 }	");
+		String attempt = q.getComposedQuery();
+		
+		System.out.println("Attempting ...");
+		System.out.println(attempt);
+		MultiHashMap<String, String> map = q.runSelectQuery();
+		
+	
+		/**
+		 * RDFReader reader = new RDFReader("http://sparql.bioontology.org/sparql");
+		*/
+		String output = "";
+		for ( String k : map.keySet())
+		{
+			output += "\n" + k;
+		}
+		
+		assertNotNull(map.keySet());
+		
+		System.out.println("Done");
+		 
+		
+		/*
+		 * 	 */
+		
+	}
+	
 	/**
 	 * Populate a data reader for neurolex data.
 	 * @param drb - the data reader to populate
