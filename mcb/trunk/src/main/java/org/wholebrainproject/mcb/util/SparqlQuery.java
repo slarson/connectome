@@ -64,6 +64,12 @@ public class SparqlQuery
 	 */
 	private Map<String,String> prefixMap = null;
 	
+	
+	/**
+	 * The URI of the RDF to query against
+	 */
+	private String sparqlFromTarget = null;
+	
 	/**
 	 * Constructor for SparqlQuery
 	 * @param sparqlEndPoint - the URL of the SPARQL
@@ -89,6 +95,15 @@ public class SparqlQuery
 	public void addQueryTriplet(String queryTriplet) {
 		queryTriplets.add(queryTriplet);
 	} 
+	
+	/*
+	 * Add a FROM<> prefix
+	 */
+	public void setFrom(String uri)
+	{
+		
+		sparqlFromTarget = uri;
+	}
 	
 	/**
 	 * Get the string of the URL of the SPARQL endpoint
@@ -126,7 +141,7 @@ public class SparqlQuery
 	 * @see #addQueryTriplet(String)
 	 * @see #addSelectVariable(String)
 	 */
-	protected String getComposedQuery() {
+	public String getComposedQuery() {
 
 		if (this.variableList.isEmpty()) {
 			throw new IllegalArgumentException("Can't compose a query with no " +
@@ -161,8 +176,14 @@ public class SparqlQuery
 		}
 		
 		// make sure we have some variables
+		String frompart = "";
+		if ( sparqlFromTarget != null)
+		{
+			frompart = " FROM <" + sparqlFromTarget + "> ";
+		}
+		
 		if(variables != "")
-			queryString += "select DISTINCT" + variables + startBracket;
+			queryString += "select DISTINCT" + variables + frompart + startBracket;
 		
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {

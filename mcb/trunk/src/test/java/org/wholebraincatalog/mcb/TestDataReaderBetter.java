@@ -20,6 +20,7 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.SparqlQuery;
 
+
 import junit.framework.TestCase;
 
 
@@ -203,6 +204,44 @@ public class TestDataReaderBetter extends TestCase {
 		//assertEquals("http://neurolex.org/wiki/Special:URIResolver/Category-3AGlobus pallidus", results.get("$s"));
 		//assertEquals("http://semantic-mediawiki.org/swivt/1.0#page", results.get("$x"));
 
+	}
+	
+	
+	
+	public void testQueryBioPortal()
+	{
+		String service = "";
+		SparqlQuery q = new SparqlQuery("http://sparql.bioontology.org/sparql");
+	
+		
+		q.addSelectVariable("?s");
+		q.addSelectVariable("?p");
+		q.addSelectVariable("?o");
+		
+		q.setFrom("http://purl.bioontology.org/virtual/rdf/download/1321.rdf");
+	
+		q.addQueryTriplet("?s ?p ?o");
+		String attempt = q.getComposedQuery();
+		
+		System.out.println("Attempting ...");
+		System.out.println(attempt);
+		MultiHashMap<String, String> map = q.runSelectQuery();
+		
+	
+		/**
+		 * RDFReader reader = new RDFReader("http://sparql.bioontology.org/sparql");
+		*/
+		String output = "";
+		for ( String k : map.keySet())
+		{
+			output += "\n" + k;
+		}
+		
+		assertNotNull(map.keySet());
+		
+		System.out.println("Done");
+		 
+		
 	}
 	
 	/**
