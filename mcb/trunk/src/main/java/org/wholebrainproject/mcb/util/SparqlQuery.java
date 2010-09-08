@@ -68,7 +68,7 @@ public class SparqlQuery
 	/**
 	 * The URI of the RDF to query against
 	 */
-	private String sparqlFromTarget = null;
+	private List<String> sparqlFromTarget = null;
 	
 	/**
 	 * Constructor for SparqlQuery
@@ -80,6 +80,7 @@ public class SparqlQuery
 		this.queryTriplets = new ArrayList<String>();
 		this.variableList = new ArrayList<String>();
 		this.prefixMap = new HashMap<String,String>();
+		this.sparqlFromTarget = new ArrayList<String>();
 	}
 
 	/**
@@ -99,10 +100,9 @@ public class SparqlQuery
 	/*
 	 * Add a FROM<> prefix
 	 */
-	public void setFrom(String uri)
+	public void addFrom(String uri)
 	{
-		
-		sparqlFromTarget = uri;
+		sparqlFromTarget.add(uri);
 	}
 	
 	/**
@@ -177,9 +177,12 @@ public class SparqlQuery
 		
 		// make sure we have some variables
 		String frompart = "";
-		if ( sparqlFromTarget != null)
+		if ( sparqlFromTarget != null && sparqlFromTarget.size() > 0)
 		{
-			frompart = " FROM <" + sparqlFromTarget + "> ";
+			for ( String f : sparqlFromTarget)
+			{
+				frompart += " FROM <" + f + "> ";
+			}
 		}
 		
 		if(variables != "")

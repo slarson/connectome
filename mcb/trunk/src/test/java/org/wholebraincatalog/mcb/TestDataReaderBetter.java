@@ -218,7 +218,7 @@ public class TestDataReaderBetter extends TestCase {
 		q.addSelectVariable("?p");
 		q.addSelectVariable("?o");
 		
-		q.setFrom("http://purl.bioontology.org/virtual/rdf/download/1321.rdf");
+		q.addFrom("http://purl.bioontology.org/virtual/rdf/download/1321.rdf");
 	
 		q.addQueryTriplet("?s ?p ?o");
 		String attempt = q.getComposedQuery();
