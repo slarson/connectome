@@ -483,74 +483,74 @@ public class SparqlQuery
 		HashMap<Integer, brainRegionSynonyms> resultMap = 
 			new HashMap<Integer,brainRegionSynonyms>();
 
-		//create a parser for the XML that we will be getting
-		XMLInputFactory factory = XMLInputFactory.newInstance();
-		XMLStreamReader parser = 
-			factory.createXMLStreamReader(new BufferedInputStream(queryResult));
+			//create a parser for the XML that we will be getting
+			XMLInputFactory factory = XMLInputFactory.newInstance();
+			XMLStreamReader parser = 
+				factory.createXMLStreamReader(new BufferedInputStream(queryResult));
 
-		while (true) {
+			while (true) {
 
-			int event = parser.next();
+				int event = parser.next();
 
-			if (event == XMLStreamConstants.START_ELEMENT) {
-				if ("binding".equals(parser.getLocalName())) {
-					// look through variable list to see if we have a match
-					String selectedVariable = null;
-					for (String variable : this.variableList) {
-						// check for matching. search the first attribute and
-						// leave off the "$" of the variable.
-						// if there's a match, put it in the selectedVariable
-						if (parser.getAttributeValue(0).equals(
-								variable.substring(1))) {
-							selectedVariable = variable;
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					if ("binding".equals(parser.getLocalName())) {
+						// look through variable list to see if we have a match
+						String selectedVariable = null;
+						for (String variable : this.variableList) {
+							// check for matching. search the first attribute and
+							// leave off the "$" of the variable.
+							// if there's a match, put it in the selectedVariable
+							if (parser.getAttributeValue(0).equals(
+									variable.substring(1))) {
+								selectedVariable = variable;
+							}
 						}
-					}
-					if (selectedVariable != null) {
+						if (selectedVariable != null) {
 
-						// skip to the URI start element
-						event = parser.next();
-						while (event != XMLStreamConstants.START_ELEMENT) {
+							// skip to the URI start element
 							event = parser.next();
+							while (event != XMLStreamConstants.START_ELEMENT) {
+								event = parser.next();
+							}
+
+							String elementText = parser.getElementText();
+							elementText = elementText.replaceAll("[ \t]+", " ");
+
+							if(selectedVariable.equals("$name")){
+								elementKey = elementText;
+							}	
+							else if(selectedVariable.equals("$synonym")){
+								elementValue = elementText;
+							}	
+
+							if(elementKey != null && elementValue != null){
+								if(!resultMap.containsKey(elementKey)){
+									brainRegionSynonyms synonym = new brainRegionSynonyms(elementKey);
+									synonym.addSynonym(elementValue.toLowerCase());
+									resultMap.put(elementKey.replace(" ", "").toLowerCase().hashCode(), 
+											synonym);
+								}
+								else if(resultMap.containsKey(elementKey)){
+									brainRegionSynonyms synonym = resultMap.get(elementKey);
+									synonym.addSynonym(elementValue.toLowerCase());							
+									resultMap.put(elementValue.replace(" ", "").toLowerCase().hashCode(), 
+											synonym);
+								}
+								elementKey = null;
+								elementValue = null;
+							} 
 						}
-
-						String elementText = parser.getElementText();
-						elementText = elementText.replaceAll("[ \t]+", " ");
-
-						if(selectedVariable.equals("$name")){
-							elementKey = elementText;
-						}	
-						else if(selectedVariable.equals("$synonym")){
-							elementValue = elementText;
-						}	
-
-						if(elementKey != null && elementValue != null){
-							if(!resultMap.containsKey(elementKey)){
-								brainRegionSynonyms synonym = new brainRegionSynonyms(elementKey);
-								synonym.addSynonym(elementValue.toLowerCase());
-								resultMap.put(elementKey.replace(" ", "").toLowerCase().hashCode(), 
-										synonym);
-							}
-							else if(resultMap.containsKey(elementKey)){
-								brainRegionSynonyms synonym = resultMap.get(elementKey);
-								synonym.addSynonym(elementValue.toLowerCase());							
-								resultMap.put(elementValue.replace(" ", "").toLowerCase().hashCode(), 
-										synonym);
-							}
-							elementKey = null;
-							elementValue = null;
-						} 
 					}
 				}
+				if (event == XMLStreamConstants.END_DOCUMENT) {
+					parser.close();
+					break;
+				}
 			}
-			if (event == XMLStreamConstants.END_DOCUMENT) {
-				parser.close();
-				break;
-			}
-		}
-		System.out.println("Data processing finalized.");	
-		queryResult.close();
+			System.out.println("Data processing finalized.");	
+			queryResult.close();
 
-		return resultMap;
+			return resultMap;
 	}
 	private HashMap<Integer,NeurolexPageId> parseSPARQLResultNeurolexHashCodeNoSynonyms(InputStream queryResult)
 	throws Exception {
@@ -603,7 +603,7 @@ public class SparqlQuery
 						else if(selectedVariable.equals("$id")){
 							elementId = elementText;
 						}
-						
+
 						if(elementName != null && elementPage != null && elementId != null){
 							NeurolexPageId neurolex = 
 								new NeurolexPageId(elementName.replace(" ", "").toLowerCase().hashCode(),
@@ -617,7 +617,7 @@ public class SparqlQuery
 							elementId = null;
 							neurolex = null;
 						}
-						
+
 
 					}
 				}

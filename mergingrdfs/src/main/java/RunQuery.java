@@ -23,10 +23,7 @@ public class RunQuery {
 	public static HashMap<Integer,NeurolexPageId> RunBAMSQuery(){
 		String sparqlNif = "http://api.talis.com/stores/neurolex/services/sparql";
 		SparqlQuery q = new SparqlQuery(sparqlNif);
-		//create query
-		// create prefixes
-		//q.addPrefixMapping("bams_rdf", "<http://brancusi1.usc.edu/RDF/>");
-
+		
 		String nameVar = "$name";
 		String descriptionVar = "$description";
 		String speciesVar = "$species";
@@ -78,7 +75,6 @@ public class RunQuery {
 			offset=offset+10000;
 		}
 		q.setFlagNeurolexData(false);
-		//System.out.println("Final size of hashMap: "+hashMap.size());
 		return mapNeurolexHashCode;
 	}
 
@@ -86,13 +82,6 @@ public class RunQuery {
 		String sparqlNif = "http://api.talis.com/stores/neurolex/services/sparql";
 		SparqlQuery q = new SparqlQuery(sparqlNif);
 		HashMap<Integer,NeurolexPageId> dumHashMap;
-		//create query
-		// create prefixes
-		//q.addPrefixMapping("rdfs", "<http://www.w3.org/2000/01/rdf-schema#>");
-		//q.addPrefixMapping("sao", "<http://ontology.neuinfo.org/NIF/BiomaterialEntities/NIF-Cell.owl#>");
-		//q.addPrefixMapping("br", "<http://ontology.neuinfo.org/NIF/BiomaterialEntities/NIF-GrossAnatomy.owl#>");
-
-
 		
 		String nameVar;
 		String pageVar;
@@ -104,7 +93,7 @@ public class RunQuery {
 		q.setFlagNeurolexData(false);
 		//while(offset <= 50000){
 
-		
+
 		nameVar = "$name";
 		pageVar = "$page";
 		idVar = "$id";
@@ -200,44 +189,27 @@ public class RunQuery {
 		//String synonymVar = "$synonym";
 		String pageVar = "$page";
 		String idVar = "$id";
-		
+
 		int limit =10000;
 		int offset = 0;
 
 		q.setFlagNeurolexData(true);
 		while(offset <= 50000){
-			/**q.addPrefixMapping("name_rdf", "<http://www.w3.org/2000/01/rdf-schema#>");
-			q.addPrefixMapping("page_rdf", "<http://semantic-mediawiki.org/swivt/1.0#page>");
-			q.addPrefixMapping("id_rdf", "<http://neurolex.org/wiki/Special:URIResolver/Property-3AId>");
-			q.addPrefixMapping("source_rdf", "<http://neurolex.org/wiki/Special:URIResolver/Property-3AAbbrevSource>");
-			q.addPrefixMapping("species_rdf", "<http://neurolex.org/wiki/Special:URIResolver/Property-3ASpecies>");
-			q.addPrefixMapping("label_rdf", "<http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel>");
-
-			q.addQueryTriplet("$x name_rdf:label $name ");
-			q.addQueryTriplet("$x page_rdf:page $page ");
-			q.addQueryTriplet("$x id_rdf:Id $id");
-			q.addQueryTriplet("$x source_rdf:AbbrevSource $source ");
-			q.addQueryTriplet("$x <http://neurolex.org/wiki/Special:URIResolver/Property-3ASpecies> $y ");
-			q.addQueryTriplet("$y <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> $species ");
-			 **/
 
 			q.addQueryTriplet("$x <http://www.w3.org/2000/01/rdf-schema#label> $name");
-			//q.addQueryTriplet("$x <http://neurolex.org/wiki/Special:URIResolver/Property-3ASynonym> $synonym");
 			q.addQueryTriplet("$x <http://semantic-mediawiki.org/swivt/1.0#page> $page");
 			q.addQueryTriplet("$x <http://neurolex.org/wiki/Special:URIResolver/Property-3AId> $id");
-			
+
 
 			q.addSelectVariable(nameVar);
-			//q.addSelectVariable(synonymVar);
 			q.addSelectVariable(pageVar);
 			q.addSelectVariable(idVar);
-			
+
 
 			q.setCurrentLimitAndOffset(limit,offset);
 
 			//add union between all sets of variables except the last
 			addToCompleteDataHashMap(q.runSelectQueryNeurolexNamePageId());
-			//q.resetVariables();
 			offset=offset+10000;
 			q.resetVariables();
 		}

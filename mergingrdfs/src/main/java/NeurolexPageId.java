@@ -17,14 +17,14 @@ public class NeurolexPageId {
 	private Integer hash;
 	private Vector<String> source;
 	private Vector<String> species;
-	
+
 	private String description;
 	private String specie;
 
 	/**
 	 * Constructor instantiates the data that pretends to a given brain region.
 	 * The brain region name is the 'key' that is used in a multi-hash-map
-	 * and the NeurolexPageId is the value.
+	 * and the NeurolexPageId is the value.  Data is obtained from Neurolex.
 	 * @param Name
 	 * @param Page
 	 * @param Id
@@ -35,21 +35,31 @@ public class NeurolexPageId {
 		this.name = Name;
 		this.specie = Species;
 		this.hash = Hash;
-		
-		
+
+
 	}
+	
+	/**
+	 * Constructor instantiates the data that pretends to a given brain region.
+	 * The brain region name is the 'key' that is used in a multi-hash-map
+	 * and the NeurolexPageId is the value.  Data is obtained from BAMS.
+	 * @param Hash
+	 * @param Name
+	 * @param Description
+	 * @param Species
+	 */
 	public NeurolexPageId(Integer Hash,String Name, String Description, String Species){
 		this.name = Name;
 		this.description = Description;
 		this.specie = Species;
 		this.hash = Hash;
 	}
-	
+
 	public static NeurolexPageId getInstance(){
 		if(instance == null)
 			System.err.println("ERROR: No prior instance created.");
 		return instance;
-		
+
 	}
 
 	public Integer getHash(){
@@ -78,7 +88,7 @@ public class NeurolexPageId {
 	public String getName(){
 		return this.name;
 	}
-	
+
 	/**
 	 * Method returns vector that stores the sources.
 	 * @return source
@@ -86,7 +96,7 @@ public class NeurolexPageId {
 	public Vector<String> getSource(){
 		return this.source;
 	}
-	
+
 	/**
 	 * Method adds source to data base.
 	 * @param source
@@ -94,16 +104,16 @@ public class NeurolexPageId {
 	public void addSource(String source){
 		this.source.add(source);
 	}
-	
+
 	/**
 	 * Method returns the species to which the data belongs to.
 	 * @return
 	 */
-	
+
 	public Vector<String> getSpecies(){
 		return this.species;
 	}
-	
+
 	/**
 	 * Method adds species to data base.
 	 * @param species
@@ -111,11 +121,20 @@ public class NeurolexPageId {
 	public void addSpecies(String species){
 		this.species.add(species);
 	}
-	
+
+	/**
+	 * Method returns the description for a given brain region.
+	 * @return
+	 */
 	public String getDescription(){
 		return this.description;
 	}
-	
+
+	/**
+	 * Method returns the species to which the brain region
+	 * data belongs to.
+	 * @return
+	 */
 	public String getSpecie(){
 		return this.specie;
 	}
