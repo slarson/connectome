@@ -27,7 +27,7 @@ public class SetDisjoint {
 	private static HashMap<Integer,brainRegionSynonyms> hashCodeNeurolex;
 	private static HashMap<Integer,NeurolexPageId> neurolexNoSynonyms;
 	private static HashMap<Integer, NeurolexPageId> data;
-	private static HashMap<Integer, NeurolexPageId> dataDummy = new HashMap();
+	
 
 	public static void main(String[] args) throws IOException {
 
@@ -36,20 +36,21 @@ public class SetDisjoint {
 		hashCodeNeurolex = RunQuery.RunNeurolexQueryHashCode();
 		data = RunQuery.RunNeurolexQueryNamePageId();
 
-		expandData();
+		expandDataWithSynonyms();
 
 		findMatchesAndWrite();
 
 	}
 	
 	/**
-	 * Method merges the data form neurolexNoSynonyms and from hahsCodeNeurolex
-	 * to a single source in data.
-	 * 
+	 * Method merges the data that belongs to brain regions that
+	 * have synonyms with the rest of the data.
 	 */
-	private static void expandData() {
-		Set<Integer> keySet  = data.keySet();
-		for(Integer key: keySet){
+	private static void expandDataWithSynonyms() {
+		
+		HashMap<Integer, NeurolexPageId> dataDummy = new HashMap<Integer, NeurolexPageId>();
+
+		for(Integer key: data.keySet()){
 			if(hashCodeNeurolex.containsKey(key)){
 				for(String synonym: hashCodeNeurolex.get(key).getSynonyms()){
 					dataDummy.put(getHash(synonym), createNeurolexPageId(synonym,key));					
@@ -59,9 +60,19 @@ public class SetDisjoint {
 		for(Integer key: dataDummy.keySet()){
 			data.put(key, dataDummy.get(key));
 		}
+		expandDataWithNoSynonyms();	
+	}
+	
+	/**
+	 * Method merges the data that belongs to brain regions that
+	 * have no synonyms with the rest of the data that contains
+	 * brain regions that have synonyms.
+	 */
+	private static void expandDataWithNoSynonyms() {
 
-		dataDummy.clear();
-		for(Integer key: keySet){
+		HashMap<Integer, NeurolexPageId> dataDummy = new HashMap<Integer, NeurolexPageId>();
+		
+		for(Integer key: data.keySet()){
 			if(neurolexNoSynonyms.containsKey(key)){
 				dataDummy.put(key, neurolexNoSynonyms.get(key));					
 			}
@@ -69,8 +80,9 @@ public class SetDisjoint {
 		for(Integer key: dataDummy.keySet()){
 			data.put(key, dataDummy.get(key));
 		}
+		
 	}
-	
+
 	/**
 	 * Method creates a NeurolexPageId object from the synonyms to be 
 	 * stored in data.
