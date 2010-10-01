@@ -368,16 +368,16 @@ public class SparqlQuery
 						//	closedParanthesesString = elementText.substring(elementText.indexOf(")")+1,elementText.length());
 
 						if(selectedVariable.equals("$name"))
-							elementName = elementText;
+							elementName = elementText.toLowerCase().replace(",", "");
 						else if(selectedVariable.equals("$description"))
-							elementDescription = elementText;
+							elementDescription = elementText.toLowerCase().replace(",", "");
 						else if(selectedVariable.equals("$species"))
-							elementSpecies = elementText;
+							elementSpecies = elementText.toLowerCase().replace(",", "");
 						if(elementName != null && elementDescription != null && elementSpecies != null){
 							//elementText = openParanthesesString+closedParanthesesString;
 							//elementText = elementText.replaceAll("  ", " ");
 							//System.out.println("elementText: "+elementText);
-							vec.put(elementName.replace(" ", "").toLowerCase().hashCode(),new NeurolexPageId(elementName.replace(" ", "").toLowerCase().hashCode(),
+							vec.put(elementName.replace(" ", "").hashCode(),new NeurolexPageId(elementName.replace(" ", "").hashCode(),
 									elementName.toLowerCase(),elementDescription,elementSpecies));
 
 						}
@@ -517,23 +517,23 @@ public class SparqlQuery
 							elementText = elementText.replaceAll("[ \t]+", " ");
 
 							if(selectedVariable.equals("$name")){
-								elementKey = elementText;
+								elementKey = elementText.toLowerCase().replace(",", "");
 							}	
 							else if(selectedVariable.equals("$synonym")){
-								elementValue = elementText;
+								elementValue = elementText.toLowerCase().replace(",", "");
 							}	
 
 							if(elementKey != null && elementValue != null){
 								if(!resultMap.containsKey(elementKey)){
 									brainRegionSynonyms synonym = new brainRegionSynonyms(elementKey);
-									synonym.addSynonym(elementValue.toLowerCase());
-									resultMap.put(elementKey.replace(" ", "").toLowerCase().hashCode(), 
+									synonym.addSynonym(elementValue);
+									resultMap.put(elementKey.replace(" ","").hashCode(), 
 											synonym);
 								}
 								else if(resultMap.containsKey(elementKey)){
 									brainRegionSynonyms synonym = resultMap.get(elementKey);
-									synonym.addSynonym(elementValue.toLowerCase());							
-									resultMap.put(elementValue.replace(" ", "").toLowerCase().hashCode(), 
+									synonym.addSynonym(elementValue);							
+									resultMap.put(elementValue.replace(" ", "").hashCode(), 
 											synonym);
 								}
 								elementKey = null;
@@ -554,7 +554,6 @@ public class SparqlQuery
 	}
 	private HashMap<Integer,NeurolexPageId> parseSPARQLResultNeurolexHashCodeNoSynonyms(InputStream queryResult)
 	throws Exception {
-		String elementKey="";
 		String elementName = null;
 		String elementPage = null;
 		String elementId  = null;
@@ -595,7 +594,7 @@ public class SparqlQuery
 						elementText = elementText.replaceAll("[ \t]+", " ");
 
 						if(selectedVariable.equals("$name")){
-							elementName = elementText;
+							elementName = elementText.toLowerCase().replace(",", "");
 						}	
 						else if(selectedVariable.equals("$page")){
 							elementPage = elementText;
@@ -604,18 +603,14 @@ public class SparqlQuery
 							elementId = elementText;
 						}
 
-						if(elementName != null && elementPage != null && elementId != null){
-							NeurolexPageId neurolex = 
-								new NeurolexPageId(elementName.replace(" ", "").toLowerCase().hashCode(),
-										elementName.toLowerCase(), elementPage.toLowerCase(),
-										elementId.toLowerCase(),"");
-
-							resultMap.put(elementName.replace(" ", "").toLowerCase().hashCode(),
-									neurolex);
+						if(elementName != null && elementPage != null && elementId != null){							
+							resultMap.put(elementName.replace(" ", "").hashCode(),
+									new NeurolexPageId(elementName.replace(" ", "").hashCode(),
+											elementName, elementPage,
+											elementId,""));
 							elementName = null;
 							elementPage = null;
 							elementId = null;
-							neurolex = null;
 						}
 
 
@@ -661,7 +656,6 @@ public class SparqlQuery
 		String elementName = null;
 		String elementPage = null;
 		String elementId = null;
-		String elementSpecies = null;
 		//String elementValue="";
 		HashMap<Integer, NeurolexPageId> resultMap = 
 			new HashMap<Integer, NeurolexPageId>();
@@ -700,22 +694,22 @@ public class SparqlQuery
 						elementText = elementText.replaceAll("[ \t]+", " ");
 
 						if(selectedVariable.equals("$name")){
-							elementName = elementText;
+							elementName = elementText.toLowerCase().replace(",", "");
 						}	
 						else if(selectedVariable.equals("$page")){
 							elementPage = elementText;
 						}
 						else if(selectedVariable.equals("$id")){
-							elementId = elementText;
+							elementId = elementText.toLowerCase();
 						}
 
 						if(elementName != null && elementPage != null && elementId != null){
 							NeurolexPageId neurolex = 
-								new NeurolexPageId(elementName.replace(" ", "").toLowerCase().hashCode(),
-										elementName.toLowerCase(), elementPage.toLowerCase(),
-										elementId.toLowerCase(),"");
+								new NeurolexPageId(elementName.replace(" ", "").hashCode(),
+										elementName, elementPage,
+										elementId,"");
 
-							resultMap.put(elementName.replace(" ", "").toLowerCase().hashCode(),
+							resultMap.put(elementName.replace(" ", "").hashCode(),
 									neurolex);
 							elementName = null;
 							elementPage = null;

@@ -35,8 +35,6 @@ public class NeurolexPageId {
 		this.name = Name;
 		this.specie = Species;
 		this.hash = Hash;
-
-
 	}
 	
 	/**
@@ -54,7 +52,10 @@ public class NeurolexPageId {
 		this.specie = Species;
 		this.hash = Hash;
 	}
-
+	/**
+	 * Method returns the instance of the class.
+	 * @return NeurolexPageId 
+	 */
 	public static NeurolexPageId getInstance(){
 		if(instance == null)
 			System.err.println("ERROR: No prior instance created.");
@@ -62,6 +63,10 @@ public class NeurolexPageId {
 
 	}
 
+	/**
+	 * Method returns the hash of the given brain region name.
+	 * @return Integer
+	 */
 	public Integer getHash(){
 		return this.hash;
 	}
