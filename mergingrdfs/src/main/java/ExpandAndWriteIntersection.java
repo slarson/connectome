@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+
 /**
  * This class takes care of merging the data obtained from the 
  * BAMS rdf and the neurolex rdf.  After the date is merged it
@@ -59,7 +60,8 @@ public class ExpandAndWriteIntersection {
 			}
 		}
 		for(Integer key: dataDummy.keySet()){
-			completeData.put(key, dataDummy.get(key));
+			if(!completeData.containsKey(key))
+				completeData.put(key, dataDummy.get(key));
 		}
 		expandDataWithNoSynonyms();	
 	}
@@ -73,14 +75,14 @@ public class ExpandAndWriteIntersection {
 
 		HashMap<Integer, NeurolexPageId> dataDummy = new HashMap<Integer, NeurolexPageId>();
 
-		for(Integer key: completeData.keySet()){
-			if(neurolexNoSynonyms.containsKey(key)){
-				dataDummy.put(key, neurolexNoSynonyms.get(key));					
+		for(Integer key: neurolexNoSynonyms.keySet()){
+			if(!completeData.containsKey(key)){
+				completeData.put(key, neurolexNoSynonyms.get(key));					
 			}
 		}
-		for(Integer key: dataDummy.keySet()){
-			completeData.put(key, dataDummy.get(key));
-		}
+		//for(Integer key: dataDummy.keySet()){
+			//completeData.put(key, dataDummy.get(key));
+		//}
 
 	}
 
@@ -92,8 +94,10 @@ public class ExpandAndWriteIntersection {
 	 * @return
 	 */
 	private static NeurolexPageId createNeurolexPageId(String synonym, Integer key) {
+		//System.out.println("getHash(): "+getHash(synonym)+" synonym: "+synonym+" completeData.get(key).getPage(): "+
+		//		completeData.get(key).getPage()+" completeData.get(key).getId(): "+completeData.get(key).getId());
 		return new NeurolexPageId(getHash(synonym),synonym,
-				completeData.get(key).getPage(),completeData.get(key).getId());
+				completeData.get(key).getPage(),completeData.get(key).getId(),"");
 
 	}
 
@@ -120,11 +124,9 @@ public class ExpandAndWriteIntersection {
 		long start = System.currentTimeMillis();
 		out.writeBytes("Brain region name, Source, Species, Neurolex page, Neurolex id \n");
 		for(Integer bamsNameHash: bamsRegions.keySet()){
-			if(completeData.containsKey(bamsNameHash)){
-				out.writeBytes(getName(bamsRegions.get(bamsNameHash))+","
-						+getDescription(bamsRegions.get(bamsNameHash))+","+
-						getSpecies(bamsRegions.get(bamsNameHash))+
-						","+getPage(completeData.get(bamsNameHash))+","+getId(completeData.get(bamsNameHash))+"\n");
+			if(completeData.containsKey(bamsNameHash) && completeData.get(bamsNameHash) != null){
+				out.writeBytes(getName(bamsNameHash)+","+getDescription(bamsNameHash)+","+
+						getSpecies(bamsNameHash)+","+getPage(bamsNameHash)+","+getId(bamsNameHash)+"\n");
 			}
 		}
 		out.close();
@@ -138,8 +140,8 @@ public class ExpandAndWriteIntersection {
 	 * @param neurolexPageId
 	 * @return
 	 */
-	private static String getId(NeurolexPageId neurolexPageId) {
-		return neurolexPageId.getId();
+	private static String getId(Integer key) {
+		return completeData.get(key).getId();
 	}
 
 	/**
@@ -147,8 +149,8 @@ public class ExpandAndWriteIntersection {
 	 * @param neurolexPageId
 	 * @return
 	 */
-	private static String getPage(NeurolexPageId neurolexPageId) {
-		return neurolexPageId.getPage();
+	private static String getPage(Integer key) {
+		return completeData.get(key).getPage();
 	}
 
 	/**
@@ -156,8 +158,8 @@ public class ExpandAndWriteIntersection {
 	 * @param neurolexPageId
 	 * @return
 	 */
-	private static String getSpecies(NeurolexPageId neurolexPageId) {
-		return neurolexPageId.getSpecie();
+	private static String getSpecies(Integer key) {
+		return bamsRegions.get(key).getSpecie();
 	}
 
 	/**
@@ -165,9 +167,9 @@ public class ExpandAndWriteIntersection {
 	 * @param neurolexPageId
 	 * @return
 	 */
-	private static String getDescription(NeurolexPageId neurolexPageId) {
+	private static String getDescription(Integer key) {
 
-		return neurolexPageId.getDescription().replace(",", "");
+		return bamsRegions.get(key).getDescription().replace(",", "");
 	}
 
 	/**
@@ -175,8 +177,8 @@ public class ExpandAndWriteIntersection {
 	 * @param neurolexPageId
 	 * @return
 	 */
-	private static String getName(NeurolexPageId neurolexPageId) {
-		return neurolexPageId.getName().replace(",","" );
+	private static String getName(Integer key) {
+		return bamsRegions.get(key).getName().replace(",","");
 
 	}
 
