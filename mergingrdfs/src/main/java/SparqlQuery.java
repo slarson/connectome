@@ -327,6 +327,7 @@ public class SparqlQuery
 		String elementName = null;
 		String elementDescription = null;
 		String elementSpecies = null;
+		String elementMarker = null;
 		MultiHashMap<String, String> resultMap = 
 			new MultiHashMap<String,String>();
 
@@ -373,12 +374,23 @@ public class SparqlQuery
 							elementDescription = elementText.toLowerCase().replace(",", "");
 						else if(selectedVariable.equals("$species"))
 							elementSpecies = elementText.toLowerCase().replace(",", "");
-						if(elementName != null && elementDescription != null && elementSpecies != null){
-							//elementText = openParanthesesString+closedParanthesesString;
-							//elementText = elementText.replaceAll("  ", " ");
-							//System.out.println("elementText: "+elementText);
-							vec.put(elementName.replace(" ", "").hashCode(),new NeurolexPageId(elementName.replace(" ", "").hashCode(),
-									elementName.toLowerCase(),elementDescription,elementSpecies));
+						else if(selectedVariable.equals("$marker"))
+							elementMarker = elementText;
+						if(elementName != null && elementDescription != null && elementSpecies != null && elementMarker != null){
+							if(elementMarker.contains("http://api.talis.com/stores/neurolex/items/") ){
+								if(!vec.containsKey(elementName.replace(" ", "").hashCode()))
+								vec.put(elementName.replace(" ", "").hashCode(),
+										new NeurolexPageId(elementName.replace(" ", "").hashCode(),
+												elementName.toLowerCase(),elementSpecies));
+								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription);
+							}
+							else if(vec.containsKey(elementName.replace(" ", "").hashCode())){
+								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription);
+							}
+							elementName = null;
+							elementSpecies = null;
+							elementDescription = null;
+							elementMarker = null;
 
 						}
 					}

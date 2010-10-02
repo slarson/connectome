@@ -46,11 +46,11 @@ public class NeurolexPageId {
 	 * @param Description
 	 * @param Species
 	 */
-	public NeurolexPageId(Integer Hash,String Name, String Description, String Species){
+	public NeurolexPageId(Integer Hash,String Name, String Species){
 		this.name = Name;
-		this.description = Description;
 		this.specie = Species;
 		this.hash = Hash;
+		this.source = new Vector<String>();
 	}
 	/**
 	 * Method returns the instance of the class.
