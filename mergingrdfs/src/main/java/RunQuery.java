@@ -15,6 +15,8 @@ public class RunQuery {
 	private static HashMap<Integer,NeurolexPageId> mapNeurolexHashCodeNoSynonyms = 
 		new HashMap<Integer,NeurolexPageId>();
 	private static HashMap<Integer,NeurolexPageId> completeData = new HashMap<Integer,NeurolexPageId>();
+	private static HashMap<Integer,NeurolexPageId> bamsData = 
+		new HashMap<Integer,NeurolexPageId>();
 	/**
 	 * This method returns the brain region names that appear in 
 	 * the BAMS document located in the talis store.
@@ -27,16 +29,38 @@ public class RunQuery {
 		String nameVar = "$name";
 		String descriptionVar = "$description";
 		String speciesVar = "$species";
-		// add query triplets
-		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/name>" + nameVar);
-		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/species>" + speciesVar);
-		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/nomenclature> $z" );
-		q.addQueryTriplet("$z" + " <http://brancusi1.usc.edu/RDF/name>" + descriptionVar);
-		q.addSelectVariable(nameVar);
-		q.addSelectVariable(descriptionVar);
-		q.addSelectVariable(speciesVar);
+		String markerVar = "$marker";
+		int limit =10000;
+		int offset = 0;
+		q.setFlagNeurolexData(true);
+		while(offset <= 50000){
+			// add query triplets
+			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/name>" + nameVar);
+			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/species>" + speciesVar);
+			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/nomenclature> $z" );
+			q.addQueryTriplet("$marker" + " <http://brancusi1.usc.edu/RDF/name>" + descriptionVar);
+			q.addSelectVariable(nameVar);
+			q.addSelectVariable(descriptionVar);
+			q.addSelectVariable(speciesVar);
+			q.addSelectVariable(markerVar);
+			q.setCurrentLimitAndOffset(limit,offset);
 
-		return q.runSelectQueryBAMS();
+			//add union between all sets of variables except the last
+			addToBAMSData(q.runSelectQueryBAMS());
+			q.resetVariables();
+			offset=offset+10000;
+		}
+		q.setFlagNeurolexData(false);
+
+		return bamsData;
+	}
+
+	private static void addToBAMSData(
+			HashMap<Integer, NeurolexPageId> dataBams) {
+		for(Integer key: dataBams.keySet()){
+			bamsData.put(key, dataBams.get(key));
+		}
+
 	}
 
 	/**

@@ -28,12 +28,13 @@ public class SetDisjoint {
 
 	public static void main(String[] args) throws IOException {
 
-		HashMap<Integer,NeurolexPageId> bamsRegions = RunQuery.RunBAMSQuery();
-		HashMap<Integer,NeurolexPageId> neurolexNoSynonyms = RunQuery.RunNeurolxQueryNoSynonyms();
-		HashMap<Integer,brainRegionSynonyms> hashCodeNeurolex = RunQuery.RunNeurolexQueryHashCode();
-		HashMap<Integer, NeurolexPageId> data = RunQuery.RunNeurolexQueryNamePageId();
+		//HashMap<Integer,NeurolexPageId> bamsRegions = RunQuery.RunBAMSQuery();
+		//HashMap<Integer,NeurolexPageId> neurolexNoSynonyms = RunQuery.RunNeurolxQueryNoSynonyms();
+		//HashMap<Integer,brainRegionSynonyms> hashCodeNeurolex = RunQuery.RunNeurolexQueryHashCode();
+		//HashMap<Integer, NeurolexPageId> data = RunQuery.RunNeurolexQueryNamePageId();
 
-		ExpandAndWriteIntersection.getInstance().setData(bamsRegions, hashCodeNeurolex, neurolexNoSynonyms, data);
+		ExpandAndWriteIntersection.getInstance().setData(RunQuery.RunBAMSQuery(), RunQuery.RunNeurolexQueryHashCode()
+				, RunQuery.RunNeurolxQueryNoSynonyms(), RunQuery.RunNeurolexQueryNamePageId());
 
 		ExpandAndWriteIntersection.getInstance().expandDataWithSynonyms();
 
