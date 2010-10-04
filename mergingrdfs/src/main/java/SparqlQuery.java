@@ -73,6 +73,8 @@ public class SparqlQuery
 	private int OFFSET = 0;
 
 	private boolean neurolexData = false;
+	
+	private boolean comesFromBAMS = false;
 	/**
 	 * Constructor for SparqlQuery
 	 * @param sparqlEndPoint - the URL of the SPARQL
@@ -194,13 +196,19 @@ public class SparqlQuery
 		queryString += endBracket;
 		if(this.neurolexData)
 			queryString +="ORDER BY $name "+"LIMIT "+getCurrentLimit()+" OFFSET "+getCurrentOffset();
-
+		if(this.comesFromBAMS)
+			queryString += "LIMIT "+getCurrentLimit()+" OFFSET "+getCurrentOffset();
+		
 		System.out.println(queryString);
 		return queryString;
 	}
 
 	public void setFlagNeurolexData(boolean value){
 		this.neurolexData = value;
+	}
+	
+	public void setFlagBAMSData(boolean value){
+		this.comesFromBAMS =value;
 	}
 	/**
 	 * Method return the current limit in the search.
@@ -379,14 +387,15 @@ public class SparqlQuery
 						if(elementName != null && elementDescription != null && elementSpecies != null && elementMarker != null){
 							if(elementMarker.contains("http://api.talis.com/stores/neurolex/items/") ){
 								if(!vec.containsKey(elementName.replace(" ", "").hashCode()))
-								vec.put(elementName.replace(" ", "").hashCode(),
-										new NeurolexPageId(elementName.replace(" ", "").hashCode(),
-												elementName.toLowerCase(),elementSpecies));
+									vec.put(elementName.replace(" ", "").hashCode(),
+											new NeurolexPageId(elementName.replace(" ", "").hashCode(),
+													elementName.toLowerCase(),elementSpecies));
 								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription);
 							}
 							else if(vec.containsKey(elementName.replace(" ", "").hashCode())){
 								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription);
 							}
+
 							elementName = null;
 							elementSpecies = null;
 							elementDescription = null;

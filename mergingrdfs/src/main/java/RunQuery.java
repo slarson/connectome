@@ -32,7 +32,8 @@ public class RunQuery {
 		String markerVar = "$marker";
 		int limit =10000;
 		int offset = 0;
-		q.setFlagNeurolexData(true);
+		q.setFlagNeurolexData(false);
+		q.setFlagBAMSData(true);
 		while(offset <= 50000){
 			// add query triplets
 			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/name>" + nameVar);
@@ -50,7 +51,7 @@ public class RunQuery {
 			q.resetVariables();
 			offset=offset+10000;
 		}
-		q.setFlagNeurolexData(false);
+		q.setFlagBAMSData(false);
 
 		return bamsData;
 	}
