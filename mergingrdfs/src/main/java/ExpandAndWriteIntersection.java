@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Vector;
 
 /**
  * This class takes care of merging the data obtained from the 
@@ -125,14 +126,21 @@ public class ExpandAndWriteIntersection {
 		out.writeBytes("Brain region name, Source, Species, Neurolex page, Neurolex id \n");
 		for(Integer bamsNameHash: bamsRegions.keySet()){
 			if(completeData.containsKey(bamsNameHash) && completeData.get(bamsNameHash) != null){
-				out.writeBytes(getName(bamsNameHash)+","+getDescription(bamsNameHash)+","+
+				for(String source: bamsRegions.get(bamsNameHash).getSource() ){
+				   out.writeBytes(getName(bamsNameHash).replace(",", "")+","+source.replace(",", "")+","+
 						getSpecies(bamsNameHash)+","+getPage(bamsNameHash)+","+getId(bamsNameHash)+"\n");
+				}
 			}
 		}
 		out.close();
 		long end = System.currentTimeMillis();
 		long total = end - start;
 		System.out.println("time to look for matches " + total + " ms");
+	}
+
+	private static Vector<String> getSource(Integer bamsNameHash) {
+		
+		return bamsRegions.get(bamsNameHash).getSource();
 	}
 
 	/**
