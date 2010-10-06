@@ -34,7 +34,7 @@ public class RunQuery {
 		int offset = 0;
 		q.setFlagNeurolexData(false);
 		q.setFlagBAMSData(true);
-		while(offset <= 50000){
+		while(offset <= 250000){
 			// add query triplets
 			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/name>" + nameVar);
 			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/species>" + speciesVar);
@@ -44,6 +44,8 @@ public class RunQuery {
 			q.addSelectVariable(descriptionVar);
 			q.addSelectVariable(speciesVar);
 			q.addSelectVariable(markerVar);
+
+
 			q.setCurrentLimitAndOffset(limit,offset);
 
 			//add union between all sets of variables except the last

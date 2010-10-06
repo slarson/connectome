@@ -27,19 +27,33 @@ public class SetDisjoint {
 	 */
 
 	public static void main(String[] args) throws IOException {
-
+		int count = 0;
 		//HashMap<Integer,NeurolexPageId> bamsRegions = RunQuery.RunBAMSQuery();
 		//HashMap<Integer,NeurolexPageId> neurolexNoSynonyms = RunQuery.RunNeurolxQueryNoSynonyms();
 		//HashMap<Integer,brainRegionSynonyms> hashCodeNeurolex = RunQuery.RunNeurolexQueryHashCode();
 		//HashMap<Integer, NeurolexPageId> data = RunQuery.RunNeurolexQueryNamePageId();
-
+		long start = System.currentTimeMillis();
 		ExpandAndWriteIntersection.getInstance().setData(RunQuery.RunBAMSQuery(), RunQuery.RunNeurolexQueryHashCode()
-				, RunQuery.RunNeurolxQueryNoSynonyms(), RunQuery.RunNeurolexQueryNamePageId());
+			, RunQuery.RunNeurolxQueryNoSynonyms(), RunQuery.RunNeurolexQueryNamePageId());
 
 		ExpandAndWriteIntersection.getInstance().expandDataWithSynonyms();
 
 		ExpandAndWriteIntersection.getInstance().findMatchesAndWrite();
-
+		
+		long end = System.currentTimeMillis();
+		long total = end - start;
+		System.out.println("time to look for matches " + total + " ms");
+		
+		/**for(Integer key: bamsRegions.keySet()){
+			for(String nomenclature: bamsRegions.get(key).getSource()){
+				System.out.println("Element name: "+bamsRegions.get(key).getName()+
+						" elementSource: "+nomenclature);
+				count++;
+			}	
+		
+		}
+		System.out.println("Total: "+count);
+		**/
 	}
 
 }
