@@ -73,7 +73,7 @@ public class SparqlQuery
 	private int OFFSET = 0;
 
 	private boolean neurolexData = false;
-	
+
 	private boolean comesFromBAMS = false;
 	/**
 	 * Constructor for SparqlQuery
@@ -198,7 +198,7 @@ public class SparqlQuery
 			queryString +="ORDER BY $name "+"LIMIT "+getCurrentLimit()+" OFFSET "+getCurrentOffset();
 		if(this.comesFromBAMS)
 			queryString += "LIMIT "+getCurrentLimit()+" OFFSET "+getCurrentOffset();
-		
+
 		System.out.println(queryString);
 		return queryString;
 	}
@@ -206,7 +206,7 @@ public class SparqlQuery
 	public void setFlagNeurolexData(boolean value){
 		this.neurolexData = value;
 	}
-	
+
 	public void setFlagBAMSData(boolean value){
 		this.comesFromBAMS =value;
 	}
@@ -371,11 +371,6 @@ public class SparqlQuery
 						String elementText = parser.getElementText();
 						elementText = elementText.replaceAll("[ \t]+", " ");
 
-						//System.out.println("elementText: "+elementText);
-						//if(elementText.contains("(") && elementText.contains(")")){				
-						//	openParanthesesString = elementText.substring(0,elementText.indexOf("("));
-						//	closedParanthesesString = elementText.substring(elementText.indexOf(")")+1,elementText.length());
-
 						if(selectedVariable.equals("$name"))
 							elementName = elementText.toLowerCase().replace(",", "");
 						else if(selectedVariable.equals("$description"))
@@ -386,16 +381,16 @@ public class SparqlQuery
 							elementMarker = elementText;
 						if(elementName != null && elementDescription != null && elementSpecies != null && elementMarker != null){
 							if(elementMarker.contains("http://api.talis.com/stores/neurolex/items/") ){
-								if(!vec.containsKey(elementName.replace(" ", "").hashCode()))
+								if(!vec.containsKey(elementName.replace(" ", "").hashCode())){
 									vec.put(elementName.replace(" ", "").hashCode(),
 											new NeurolexPageId(elementName.replace(" ", "").hashCode(),
 													elementName.toLowerCase(),elementSpecies));
-								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription);
+									vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription,elementSpecies);
+								}
+								else if(vec.containsKey(elementName.replace(" ", "").hashCode())){
+									vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription,elementSpecies);
+								}
 							}
-							else if(vec.containsKey(elementName.replace(" ", "").hashCode())){
-								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription);
-							}
-
 							elementName = null;
 							elementSpecies = null;
 							elementDescription = null;

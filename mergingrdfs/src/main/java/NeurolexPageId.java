@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -15,7 +16,7 @@ public class NeurolexPageId {
 	private String id;
 	private String name;
 	private Integer hash;
-	private Vector<String> source;
+	private HashMap<String,String> source;
 	private Vector<String> species;
 
 	private String description;
@@ -50,7 +51,7 @@ public class NeurolexPageId {
 		this.name = Name;
 		this.specie = Species;
 		this.hash = Hash;
-		this.source = new Vector<String>();
+		this.source = new HashMap<String,String>();
 	}
 	/**
 	 * Method returns the instance of the class.
@@ -98,7 +99,7 @@ public class NeurolexPageId {
 	 * Method returns vector that stores the sources.
 	 * @return source
 	 */
-	public Vector<String> getSource(){
+	public HashMap<String,String> getSource(){
 		return this.source;
 	}
 
@@ -106,8 +107,8 @@ public class NeurolexPageId {
 	 * Method adds source to data base.
 	 * @param source
 	 */
-	public void addSource(String source){
-		this.source.add(source);
+	public void addSource(String source,String species){
+		this.source.put(source,species);
 	}
 
 	/**

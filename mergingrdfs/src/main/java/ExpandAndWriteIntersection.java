@@ -122,27 +122,30 @@ public class ExpandAndWriteIntersection {
 		FileOutputStream fos = new FileOutputStream(file);
 		DataOutputStream out=new DataOutputStream(fos);
 
-		long start = System.currentTimeMillis();
 		out.writeBytes("Brain region name, Source, Species, Neurolex page, Neurolex id \n");
 		for(Integer bamsNameHash: bamsRegions.keySet()){
 			if(completeData.containsKey(bamsNameHash) && completeData.get(bamsNameHash) != null){
-				for(String source: bamsRegions.get(bamsNameHash).getSource() ){
+				for(String source: getSourceAndSpecies(bamsNameHash).keySet()){
 				   out.writeBytes(getName(bamsNameHash).replace(",", "")+","+source.replace(",", "")+","+
-						getSpecies(bamsNameHash)+","+getPage(bamsNameHash)+","+getId(bamsNameHash)+"\n");
+						   getSourceAndSpecies(bamsNameHash).get(source)+","+getPage(bamsNameHash)+","+getId(bamsNameHash)+"\n");
 				}
 			}
 		}
 		out.close();
-		long end = System.currentTimeMillis();
-		long total = end - start;
-		System.out.println("time to look for matches " + total + " ms");
+
 	}
 
-	private static Vector<String> getSource(Integer bamsNameHash) {
-		
-		return bamsRegions.get(bamsNameHash).getSource();
+	/**
+	 * Method returns the hash map containing the data that
+	 * pretends to a given key.
+	 * @param bamsNameHash
+	 * @return
+	 */
+	private static HashMap<String,String> getSourceAndSpecies(Integer bamsNameHash) {
+		return bamsRegions.get(bamsNameHash).getSource() ;
 	}
 
+	
 	/**
 	 * Method returns the id of the given brain region.
 	 * @param neurolexPageId
