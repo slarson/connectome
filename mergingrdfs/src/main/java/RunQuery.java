@@ -29,30 +29,29 @@ public class RunQuery {
 		String nameVar = "$name";
 		String descriptionVar = "$description";
 		String speciesVar = "$species";
-		String markerVar = "$marker";
-		int limit =10000;
-		int offset = 0;
+
+		
 		q.setFlagNeurolexData(false);
-		q.setFlagBAMSData(true);
-		while(offset <= 250000){
-			// add query triplets
-			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/name>" + nameVar);
-			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/species>" + speciesVar);
-			q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/nomenclature> $z" );
-			q.addQueryTriplet("$marker" + " <http://brancusi1.usc.edu/RDF/name>" + descriptionVar);
-			q.addSelectVariable(nameVar);
-			q.addSelectVariable(descriptionVar);
-			q.addSelectVariable(speciesVar);
-			q.addSelectVariable(markerVar);
+
+		// This is where it gets tricky.  If you get the nomenclature first the you can get a hold of
+		// the talis uri for a particular description.  Then you can use that 'pointer' to 
+		// obtain the description the uri point to.  The other way will not work.
+		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/nomenclature> $nodeid" );
+		q.addQueryTriplet("$nodeid" + " <http://brancusi1.usc.edu/RDF/name>" + descriptionVar);
+		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/name> " + nameVar);
+		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/species> " + speciesVar);
 
 
-			q.setCurrentLimitAndOffset(limit,offset);
+		q.addSelectVariable(nameVar);
+		q.addSelectVariable(descriptionVar);
+		q.addSelectVariable(speciesVar);
 
-			//add union between all sets of variables except the last
-			addToBAMSData(q.runSelectQueryBAMS());
-			q.resetVariables();
-			offset=offset+10000;
-		}
+		//q.setCurrentLimitAndOffset(limit,offset);
+
+		//add union between all sets of variables except the last
+		addToBAMSData(q.runSelectQueryBAMS());
+
+
 		q.setFlagBAMSData(false);
 
 		return bamsData;

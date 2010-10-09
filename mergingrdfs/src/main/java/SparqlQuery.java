@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -330,8 +331,7 @@ public class SparqlQuery
 	throws Exception {
 		HashMap<Integer,NeurolexPageId> vec = new HashMap<Integer,NeurolexPageId>();
 		int index = 0;
-		String openParanthesesString;
-		String closedParanthesesString;
+		Pattern p = Pattern.compile("[\\-][0-9]");
 		String elementName = null;
 		String elementDescription = null;
 		String elementSpecies = null;
@@ -372,29 +372,27 @@ public class SparqlQuery
 						elementText = elementText.replaceAll("[ \t]+", " ");
 
 						if(selectedVariable.equals("$name"))
-							elementName = elementText.toLowerCase().replace(",", "");
+							elementName = elementText.toLowerCase().replace(",", "");	
 						else if(selectedVariable.equals("$description"))
 							elementDescription = elementText.toLowerCase().replace(",", "");
 						else if(selectedVariable.equals("$species"))
 							elementSpecies = elementText.toLowerCase().replace(",", "");
-						else if(selectedVariable.equals("$marker"))
-							elementMarker = elementText;
-						if(elementName != null && elementDescription != null && elementSpecies != null && elementMarker != null){
-							if(elementMarker.contains("http://api.talis.com/stores/neurolex/items/") ){
-								if(!vec.containsKey(elementName.replace(" ", "").hashCode())){
-									vec.put(elementName.replace(" ", "").hashCode(),
-											new NeurolexPageId(elementName.replace(" ", "").hashCode(),
-													elementName.toLowerCase(),elementSpecies));
-									vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription,elementSpecies);
-								}
-								else if(vec.containsKey(elementName.replace(" ", "").hashCode())){
-									vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription,elementSpecies);
-								}
+						if(elementName != null && elementDescription != null && elementSpecies != null ){
+
+							if(!vec.containsKey(elementName.replace(" ", "").hashCode())){
+								vec.put(elementName.replace(" ", "").hashCode(),
+										new NeurolexPageId(elementName.replace(" ", "").hashCode(),
+												elementName.toLowerCase(),elementSpecies));
+								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription,elementSpecies);
 							}
+							else if(vec.containsKey(elementName.replace(" ", "").hashCode())){
+								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription,elementSpecies);
+							}
+
 							elementName = null;
 							elementSpecies = null;
 							elementDescription = null;
-							elementMarker = null;
+							//elementMarker = null;
 
 						}
 					}
