@@ -46,7 +46,7 @@ public class BAMSToNeurolexMap {
 			line = br.readLine();
 			do{ 
 				line = br.readLine();
-				if(line != null){
+				if(line != null && line.contains(",")){
 					BAMSToNeurolexData data = buildDataRelation(line);
 					dataMap.put(data.getNeurolexPage(), data);
 					data = null;
