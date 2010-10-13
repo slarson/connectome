@@ -25,7 +25,8 @@ public class RunQuery {
 	public static HashMap<Integer,NeurolexPageId> RunBAMSQuery(){
 		String sparqlNif = "http://api.talis.com/stores/neurolex/services/sparql";
 		SparqlQuery q = new SparqlQuery(sparqlNif);
-
+		
+		String nameUri = "$uri";
 		String nameVar = "$name";
 		String descriptionVar = "$description";
 		String speciesVar = "$species";
@@ -36,12 +37,12 @@ public class RunQuery {
 		// This is where it gets tricky.  If you get the nomenclature first the you can get a hold of
 		// the talis uri for a particular description.  Then you can use that 'pointer' to 
 		// obtain the description the uri point to.  The other way will not work.
-		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/nomenclature> $nodeid" );
+		q.addQueryTriplet(nameUri + " <http://brancusi1.usc.edu/RDF/nomenclature> $nodeid" );
 		q.addQueryTriplet("$nodeid" + " <http://brancusi1.usc.edu/RDF/name>" + descriptionVar);
-		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/name> " + nameVar);
-		q.addQueryTriplet("$x" + " <http://brancusi1.usc.edu/RDF/species> " + speciesVar);
+		q.addQueryTriplet(nameUri + " <http://brancusi1.usc.edu/RDF/name> " + nameVar);
+		q.addQueryTriplet(nameUri + " <http://brancusi1.usc.edu/RDF/species> " + speciesVar);
 
-
+		q.addSelectVariable(nameUri);
 		q.addSelectVariable(nameVar);
 		q.addSelectVariable(descriptionVar);
 		q.addSelectVariable(speciesVar);

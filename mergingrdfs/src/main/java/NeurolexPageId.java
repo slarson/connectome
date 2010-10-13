@@ -15,6 +15,7 @@ public class NeurolexPageId {
 	private String page;
 	private String id;
 	private String name;
+	private String bamsUri;
 	private Integer hash;
 	private HashMap<String,String> source;
 	private Vector<String> species;
@@ -36,6 +37,7 @@ public class NeurolexPageId {
 		this.name = Name;
 		this.specie = Species;
 		this.hash = Hash;
+		
 	}
 	
 	/**
@@ -47,11 +49,21 @@ public class NeurolexPageId {
 	 * @param Description
 	 * @param Species
 	 */
-	public NeurolexPageId(Integer Hash,String Name, String Species){
+	public NeurolexPageId(Integer Hash,String Name, String Species, String Uri){
 		this.name = Name;
 		this.specie = Species;
 		this.hash = Hash;
+		this.bamsUri = Uri;
 		this.source = new HashMap<String,String>();
+	}
+	
+	/**
+	 * Method returns the BAMS URI for a given brain region that is 
+	 * present in BAMS.
+	 * @return
+	 */
+	public String getBAMSUri(){
+		return this.bamsUri;
 	}
 	/**
 	 * Method returns the instance of the class.
