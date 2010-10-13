@@ -30,12 +30,14 @@ public class SetDisjoint {
 		int count = 0;
 		
 		long start = System.currentTimeMillis();
+		ExpandAndWriteIntersection.getInstance().findingMatches(false);
 		ExpandAndWriteIntersection.getInstance().setData(RunQuery.RunBAMSQuery(), RunQuery.RunNeurolexQueryHashCode()
 			, RunQuery.RunNeurolxQueryNoSynonyms(), RunQuery.RunNeurolexQueryNamePageId());
 
 		ExpandAndWriteIntersection.getInstance().expandDataWithSynonyms();
 
 		ExpandAndWriteIntersection.getInstance().findMatchesAndWrite();
+		
 		
 		long end = System.currentTimeMillis();
 		long total = end - start;

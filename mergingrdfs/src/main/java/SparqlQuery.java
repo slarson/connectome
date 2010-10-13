@@ -335,7 +335,7 @@ public class SparqlQuery
 		String elementName = null;
 		String elementDescription = null;
 		String elementSpecies = null;
-		String elementMarker = null;
+		String elementUri = null;
 		MultiHashMap<String, String> resultMap = 
 			new MultiHashMap<String,String>();
 
@@ -377,12 +377,15 @@ public class SparqlQuery
 							elementDescription = elementText.toLowerCase().replace(",", "");
 						else if(selectedVariable.equals("$species"))
 							elementSpecies = elementText.toLowerCase().replace(",", "");
-						if(elementName != null && elementDescription != null && elementSpecies != null ){
+						else if(selectedVariable.equals("$uri"))
+							elementUri = elementText.toLowerCase().replace(",", "");
+						if(elementName != null && elementDescription != null && elementSpecies != null && 
+								elementUri != null){
 
 							if(!vec.containsKey(elementName.replace(" ", "").hashCode())){
 								vec.put(elementName.replace(" ", "").hashCode(),
 										new NeurolexPageId(elementName.replace(" ", "").hashCode(),
-												elementName.toLowerCase(),elementSpecies));
+												elementName.toLowerCase(),elementSpecies,elementUri));
 								vec.get(elementName.replace(" ", "").hashCode()).addSource(elementDescription,elementSpecies);
 							}
 							else if(vec.containsKey(elementName.replace(" ", "").hashCode())){
@@ -392,7 +395,7 @@ public class SparqlQuery
 							elementName = null;
 							elementSpecies = null;
 							elementDescription = null;
-							//elementMarker = null;
+							elementUri= null;
 
 						}
 					}

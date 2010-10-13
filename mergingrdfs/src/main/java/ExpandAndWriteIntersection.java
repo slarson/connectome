@@ -22,6 +22,7 @@ public class ExpandAndWriteIntersection {
 	private static HashMap<Integer,brainRegionSynonyms> neurolexSynonyms;
 	private static HashMap<Integer,NeurolexPageId> neurolexNoSynonyms;
 	private static HashMap<Integer, NeurolexPageId> completeData;
+	private static boolean findingMatches;
 
 	public static ExpandAndWriteIntersection getInstance(){
 		if(instance == null){
@@ -82,7 +83,7 @@ public class ExpandAndWriteIntersection {
 			}
 		}
 		//for(Integer key: dataDummy.keySet()){
-			//completeData.put(key, dataDummy.get(key));
+		//completeData.put(key, dataDummy.get(key));
 		//}
 
 	}
@@ -118,21 +119,53 @@ public class ExpandAndWriteIntersection {
 	 * @throws IOException
 	 */
 	static void findMatchesAndWrite() throws IOException{
-		File file = new File("/Users/rcarloz/Desktop/regions_matched_with_BAMS_and_neurolex.txt");
+		String fileName = null;
+
+		//decide the name of the file depending on what is it that we
+		// want to do.
+		if(findingMatches)
+			fileName = "regions_in_BAMS_that_map_to_neurolex.txt";
+		else if(!findingMatches)
+			fileName = "regions_in_BAMS_but_not_in_neurolex.txt";
+
+		File file = new File("/Users/rcarloz/Desktop/"+fileName);
 		FileOutputStream fos = new FileOutputStream(file);
 		DataOutputStream out=new DataOutputStream(fos);
 
-		out.writeBytes("Brain region name, Source, Species, Neurolex page, Neurolex id \n");
+		if(findingMatches)
+			out.writeBytes("Brain region name, Source, Species, Neurolex page, Neurolex id \n");
+		else if(!findingMatches)
+			out.writeBytes("Brain region name,BAMS uri, Source, Species\n");
+
 		for(Integer bamsNameHash: bamsRegions.keySet()){
-			if(completeData.containsKey(bamsNameHash) && completeData.get(bamsNameHash) != null){
-				for(String source: getSourceAndSpecies(bamsNameHash).keySet()){
-				   out.writeBytes(getName(bamsNameHash).replace(",", "")+","+source.replace(",", "")+","+
-						   getSourceAndSpecies(bamsNameHash).get(source)+","+getPage(bamsNameHash)+","+getId(bamsNameHash)+"\n");
+			if(findingMatches){
+				if(completeData.containsKey(bamsNameHash) && completeData.get(bamsNameHash) != null){
+					for(String source: getSourceAndSpecies(bamsNameHash).keySet()){
+						out.writeBytes(getName(bamsNameHash).replace(",", "")+","+source.replace(",", "")+","+
+								getSourceAndSpecies(bamsNameHash).get(source)+","+getPage(bamsNameHash)+","+getId(bamsNameHash)+"\n");
+					}
+				}
+			}
+			else if(!findingMatches){
+				if(!completeData.containsKey(bamsNameHash)){
+					for(String source: getSourceAndSpecies(bamsNameHash).keySet()){
+						out.writeBytes(getName(bamsNameHash).replace(",", "")+","+getUri(bamsNameHash)+","+
+								source.replace(",", "")+","+getSourceAndSpecies(bamsNameHash).get(source)+"\n");
+					}
 				}
 			}
 		}
 		out.close();
 
+	}
+
+	/**
+	 * Method gets the uri that belongs to the given BAMS brain region
+	 * @param bamsNameHash
+	 * @return
+	 */
+	private static String getUri(Integer bamsNameHash) {
+		return bamsRegions.get(bamsNameHash).getBAMSUri();
 	}
 
 	/**
@@ -145,7 +178,7 @@ public class ExpandAndWriteIntersection {
 		return bamsRegions.get(bamsNameHash).getSource() ;
 	}
 
-	
+
 	/**
 	 * Method returns the id of the given brain region.
 	 * @param neurolexPageId
@@ -191,6 +224,10 @@ public class ExpandAndWriteIntersection {
 	private static String getName(Integer key) {
 		return bamsRegions.get(key).getName().replace(",","");
 
+	}
+
+	public void findingMatches(boolean flag){
+		this.findingMatches = flag;
 	}
 
 
