@@ -6,6 +6,8 @@ import java.util.Properties;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
+import org.wholebrainproject.mcb.data.BAMSToNeurolexMap;
+
 /**
  * Main entrance point to the application.
  *
@@ -53,6 +55,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	public static void main(String[] args) {
 
 		try {
+			BAMSToNeurolexMap.getInstance();
 			Properties p = getProperties();
 			f = new JFrame(
 					 p.getProperty("application.name") + " version " + 
