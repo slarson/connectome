@@ -8,11 +8,13 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 public class BAMSToNeurolexData {
 	private HashMap<String,String> NomenclatureSpecies;
 	private String BAMSName;
+	private String BAMSPage;
 	private String NeurolexPage;
 	private String NeurolexId;
 	
-	public BAMSToNeurolexData(String Name,String NeurolexPage, String Id){
+	public BAMSToNeurolexData(String Name,String BAMSPage,String NeurolexPage, String Id){
 		this.BAMSName = Name;
+		this.BAMSPage = BAMSPage;
 		this.NeurolexPage = NeurolexPage;
 		this.NeurolexId = Id;
 		this.NomenclatureSpecies = new HashMap();		
@@ -51,6 +53,14 @@ public class BAMSToNeurolexData {
 	 */
 	public Collection<String> getAllSpecies(){
 		return this.NomenclatureSpecies.values();
+	}
+	
+	/**
+	 * Method returns the brain region's BAMS URI.
+	 * @return
+	 */
+	public String getBAMSPage(){
+		return this.BAMSPage;
 	}
 	/**
 	 * Method return the neurolex page of the brain region.

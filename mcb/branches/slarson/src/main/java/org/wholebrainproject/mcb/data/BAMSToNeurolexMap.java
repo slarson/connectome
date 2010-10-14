@@ -12,7 +12,7 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 
 public class BAMSToNeurolexMap {
 
-	private File file = new File("/Users/rcarloz/Desktop/BAMSBrainregionsmatchedwithNeuroLex.csv");
+	private File file = new File("/Users/rcarloz/Desktop/BAMSBrainRegionMatchedWithNeuroLex.txt");
 	private FileInputStream fis = null;
 	private BufferedReader br = null;
 	private DataInputStream in = null;
@@ -42,8 +42,6 @@ public class BAMSToNeurolexMap {
 			in = new DataInputStream(fis);
 			br = new BufferedReader(new InputStreamReader(in));
 
-			//skip the file's header
-			line = br.readLine();
 			do{ 
 				line = br.readLine();
 				if(line != null && line.contains(",")){
@@ -82,10 +80,13 @@ public class BAMSToNeurolexMap {
 		line = line.substring(line.indexOf(',')+1);
 		String species = line.substring(0, line.indexOf(','));
 		line = line.substring(line.indexOf(',')+1);
-		String uri = line.substring(0, line.indexOf(','));
+		String BAMSUri = line.substring(0, line.indexOf(','));
+		line = line.substring(line.indexOf(',')+1);
+		String NeurolexUri = line.substring(0,line.indexOf(','));
+		line = line.substring(line.indexOf(',')+1);
 		String id = line = line.substring(line.indexOf(',')+1);
-
-		data = new BAMSToNeurolexData(name,uri,id);
+		
+		data = new BAMSToNeurolexData(name,BAMSUri,NeurolexUri,id);
 		data.addNomenclatureSpecies(nomenclature, species);
 
 		return data;

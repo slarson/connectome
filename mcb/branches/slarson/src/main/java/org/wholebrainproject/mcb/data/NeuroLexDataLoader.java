@@ -76,7 +76,7 @@ public class NeuroLexDataLoader {
 		query.addPrefixMapping("nlx_cat", "<http://neurolex.org/wiki/Special:URIResolver/Category-3A>");
 
 		for(Node RegionName : brainRegionNames){
-			System.out.println("RegionName: "+RegionName.toString());
+			//System.out.println("RegionName: "+RegionName.toString());
 			if(brainRegionSufixName == null)
 				brainRegionSufixName =  BrainRegionNameShortener.reduceName(RegionName.toString());
 
@@ -91,7 +91,7 @@ public class NeuroLexDataLoader {
 						" <http://neurolex.org/wiki/Category:"+RegionName.toString().toLowerCase()+">");
 			}
 
-			System.out.println("http://neurolex.org/wiki/Category:"+RegionName.getName());
+			//System.out.println("http://neurolex.org/wiki/Category:"+RegionName.getName());
 
 			query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix +
 					" nlx_prop:Located_in $" +
