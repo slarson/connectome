@@ -285,7 +285,7 @@ public class BuildConnections {
 
 	private Node[] convertDeeperResultsIntoNodes(Node[] nodes, MultiHashMap<String,String> results) {
 		List<Node> nodesOut = new ArrayList<Node>();
-		System.out.println("Number of nodes: "+nodes.length);
+		//System.out.println("Number of nodes: "+nodes.length);
 		Iterator<String> namesIt = null;
 		Iterator<String> urisIt = null;
 
@@ -342,7 +342,7 @@ public class BuildConnections {
 
 		for (Node brainRegion : nodes){
 			String brainRegionName = brainRegion.getName();
-			System.out.println("brainRegionName: "+brainRegion.getName());
+			//System.out.println("brainRegionName: "+brainRegion.getName());
 			String var = BrainRegionNameShortener.reduceName(brainRegionName);
 			String uriVar = "$" + var + "_uri";
 			String referenceReceivingVar = "$" + var + "_ref_rec";

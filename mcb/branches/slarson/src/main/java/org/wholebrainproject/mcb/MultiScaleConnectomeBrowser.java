@@ -56,7 +56,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 
 		try {
 			BAMSToNeurolexMap.getInstance();
-			/**Properties p = getProperties();
+			Properties p = getProperties();
 			f = new JFrame(
 					 p.getProperty("application.name") + " version " + 
 					 p.getProperty("application.version"));
@@ -71,7 +71,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 			
 			f.pack();
 			f.setVisible(true);
-			v.launchInstructionPopup();**/
+			v.launchInstructionPopup();
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
 			e.printStackTrace();
