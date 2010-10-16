@@ -25,25 +25,34 @@ public class SetDisjoint {
 	 * @author ruggero carloz
 	 * @date 08-24-10
 	 */
-
+	private static boolean numberOfNumenclaturePerBrainRegionInBAMS = true;
 	public static void main(String[] args) throws IOException {
 		int count = 0;
-		
+
 		long start = System.currentTimeMillis();
-		ExpandAndWriteIntersection.getInstance().findingMatches(false);
-		ExpandAndWriteIntersection.getInstance().setData(RunQuery.RunBAMSQuery(), RunQuery.RunNeurolexQueryHashCode()
-			, RunQuery.RunNeurolxQueryNoSynonyms(), RunQuery.RunNeurolexQueryNamePageId());
 
-		ExpandAndWriteIntersection.getInstance().expandDataWithSynonyms();
+		//HashMap<Integer, NeurolexPageId> bamsData = RunQuery.RunBAMSQuery();
+		if(numberOfNumenclaturePerBrainRegionInBAMS){
+			ExpandAndWriteIntersection.getInstance().getNumberOfNomenclaturesPerBrainRegionInBAMS(RunQuery.RunBAMSQuery());
+		}
+		else{
+			ExpandAndWriteIntersection.getInstance().findingMatches(true);
+			ExpandAndWriteIntersection.getInstance().setData(RunQuery.RunBAMSQuery(), RunQuery.RunNeurolexQueryHashCode()
+					, RunQuery.RunNeurolxQueryNoSynonyms(), RunQuery.RunNeurolexQueryNamePageId());
 
-		ExpandAndWriteIntersection.getInstance().findMatchesAndWrite();
-		
-		
+			ExpandAndWriteIntersection.getInstance().expandDataWithSynonyms();
+
+			ExpandAndWriteIntersection.getInstance().findMatchesAndWrite();
+		}	
+
+		/**for(Integer key: bamsData.keySet())
+			System.out.println("name: "+bamsData.get(key).getName());
+		 **/
 		long end = System.currentTimeMillis();
 		long total = end - start;
 		System.out.println("time to look for matches " + total + " ms");
 		System.out.println("Total: "+count);
-		
+
 	}
 
 }

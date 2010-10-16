@@ -11,7 +11,6 @@ import java.util.Vector;
  */
 public class NeurolexPageId {
 
-	private static NeurolexPageId instance = null;
 	private String page;
 	private String id;
 	private String name;
@@ -19,7 +18,7 @@ public class NeurolexPageId {
 	private Integer hash;
 	private HashMap<String,String> source;
 	private Vector<String> species;
-
+	private int[] nomenclatureFrequency = new int[31];
 	private String description;
 	private String specie;
 
@@ -64,16 +63,6 @@ public class NeurolexPageId {
 	 */
 	public String getBAMSUri(){
 		return this.bamsUri;
-	}
-	/**
-	 * Method returns the instance of the class.
-	 * @return NeurolexPageId 
-	 */
-	public static NeurolexPageId getInstance(){
-		if(instance == null)
-			System.err.println("ERROR: No prior instance created.");
-		return instance;
-
 	}
 
 	/**
@@ -155,5 +144,22 @@ public class NeurolexPageId {
 	 */
 	public String getSpecie(){
 		return this.specie;
+	}
+	
+	/**
+	 * Method updates the nomenclature value.
+	 * @param index
+	 * @param value
+	 */
+	public void updateNomenclatureFrequency(int index, int value){
+		this.nomenclatureFrequency[index] = value; 
+	}
+	
+	/**
+	 * Method returns the array that stores the nomenclature frequency.
+	 * @return
+	 */
+	public int[] getNomenclatureFrequency(){
+		return this.nomenclatureFrequency ;
 	}
 }

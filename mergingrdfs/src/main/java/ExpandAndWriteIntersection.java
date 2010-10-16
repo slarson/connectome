@@ -1,5 +1,6 @@
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,6 +24,18 @@ public class ExpandAndWriteIntersection {
 	private static HashMap<Integer,NeurolexPageId> neurolexNoSynonyms;
 	private static HashMap<Integer, NeurolexPageId> completeData;
 	private static boolean findingMatches;
+	public static String nomenclatureHeaderFrequency = "-- "+
+	",Alheid et al."+",Bayer"+",Berman/Jones-1982"+
+	",Bleier"+",Bowden-Human-2002"+",Bowden-Macaca-2002"+
+	",Craigie"+",Dong-2007"+",Felleman & van Essen"+
+	",Geeraedts"+",Gurdjian"+",Hammack -2007"+
+	",His-Nomina Anatomica-1895"+",Hof et al.-2000"+",Johnston"+
+	",Ju/Swanson"+",Koenig & Klippel"+",Krettek & Price"+
+	",Mai-1997"+",McDonald"+",Moga-Fulwiler-Saper"+
+	",Paxinos/Franklin-2001"+",Paxinos/Watson-1998"+",Pellegrino"+
+	",Swanson-1992"+",Swanson-1998"+",Swanson-2004"+
+	",Swanson/Cowan"+",Zeman & Maitland"+",de Groot"+
+	",de Olmos - 1985"+",de Olmos -1995";
 
 	public static ExpandAndWriteIntersection getInstance(){
 		if(instance == null){
@@ -82,10 +95,6 @@ public class ExpandAndWriteIntersection {
 				completeData.put(key, neurolexNoSynonyms.get(key));					
 			}
 		}
-		//for(Integer key: dataDummy.keySet()){
-		//completeData.put(key, dataDummy.get(key));
-		//}
-
 	}
 
 	/**
@@ -96,8 +105,6 @@ public class ExpandAndWriteIntersection {
 	 * @return
 	 */
 	private static NeurolexPageId createNeurolexPageId(String synonym, Integer key) {
-		//System.out.println("getHash(): "+getHash(synonym)+" synonym: "+synonym+" completeData.get(key).getPage(): "+
-		//		completeData.get(key).getPage()+" completeData.get(key).getId(): "+completeData.get(key).getId());
 		return new NeurolexPageId(getHash(synonym),synonym,
 				completeData.get(key).getPage(),completeData.get(key).getId(),"");
 
@@ -124,16 +131,16 @@ public class ExpandAndWriteIntersection {
 		//decide the name of the file depending on what is it that we
 		// want to do.
 		if(findingMatches)
-			fileName = "regions_in_BAMS_that_map_to_neurolex.txt";
+			fileName = "BAMSBrainRegionMatchedWithNeurolex.txt";
 		else if(!findingMatches)
-			fileName = "regions_in_BAMS_but_not_in_neurolex.txt";
+			fileName = "BAMSBrainRegionNotMatchedWithNeurolex.txt";
 
 		File file = new File("/Users/rcarloz/Desktop/"+fileName);
 		FileOutputStream fos = new FileOutputStream(file);
 		DataOutputStream out=new DataOutputStream(fos);
 
 		if(findingMatches)
-			out.writeBytes("Brain region name, Source, Species, Neurolex page, Neurolex id \n");
+			out.writeBytes("Brain region name, Source, Species, BAMS page, Neurolex page, Neurolex id \n");
 		else if(!findingMatches)
 			out.writeBytes("Brain region name,BAMS uri, Source, Species\n");
 
@@ -142,20 +149,126 @@ public class ExpandAndWriteIntersection {
 				if(completeData.containsKey(bamsNameHash) && completeData.get(bamsNameHash) != null){
 					for(String source: getSourceAndSpecies(bamsNameHash).keySet()){
 						out.writeBytes(getName(bamsNameHash).replace(",", "")+","+source.replace(",", "")+","+
-								getSourceAndSpecies(bamsNameHash).get(source)+","+getPage(bamsNameHash)+","+getId(bamsNameHash)+"\n");
+								getSourceAndSpecies(bamsNameHash).get(source)+","+getPageBAMS(bamsNameHash)
+								+","+getPageNeurolex(bamsNameHash)+","+getId(bamsNameHash)+"\n");
 					}
 				}
 			}
 			else if(!findingMatches){
 				if(!completeData.containsKey(bamsNameHash)){
 					for(String source: getSourceAndSpecies(bamsNameHash).keySet()){
-						out.writeBytes(getName(bamsNameHash).replace(",", "")+","+getUri(bamsNameHash)+","+
+						out.writeBytes(getName(bamsNameHash).replace(",", "")+","+getPageBAMS(bamsNameHash)+","+
 								source.replace(",", "")+","+getSourceAndSpecies(bamsNameHash).get(source)+"\n");
 					}
 				}
 			}
 		}
+		fos.close();
 		out.close();
+
+	}
+
+	public void getNumberOfNomenclaturesPerBrainRegionInBAMS(HashMap<Integer,NeurolexPageId> bamsData) throws IOException{
+		bamsRegions = bamsData;
+		for(Integer key : bamsRegions.keySet()){
+			for(String data: bamsRegions.get(key).getSource().keySet() ){
+				updateNomenclautureFrequency(key,data);
+			}
+		}
+		printNomenclautreFrequency();
+	}
+	private void printNomenclautreFrequency() throws IOException {
+		String dataOut;
+		String fileName ="BAMSNomenclatureFrequency.txt"; 
+		File file = new File("/Users/rcarloz/Desktop/"+fileName);
+		FileOutputStream fos = new FileOutputStream(file);
+		DataOutputStream out=new DataOutputStream(fos);
+		out.writeBytes(nomenclatureHeaderFrequency+"\n");
+		
+		for(Integer key : bamsRegions.keySet()){
+			dataOut = getDataOut(key);
+			out.writeBytes(dataOut+"\n");
+		}
+		
+		out.close();
+		fos.close();
+	}
+
+	private String getDataOut(Integer key) {
+		String data = bamsRegions.get(key).getName();
+		for(Integer isPresent: bamsRegions.get(key).getNomenclatureFrequency()){
+			data += ","+isPresent;
+
+		}
+		return data;
+	}
+
+	private void updateNomenclautureFrequency(Integer key, String data) {
+
+		if(data.hashCode() == "alheid et al.".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(0, 1);
+		if(data.hashCode() == "bayer".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(1, 1);
+		if(data.hashCode() == "berman/jones-1982".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(2, 1);
+		if(data.hashCode() == "bleier".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(3, 1);
+		if(data.hashCode() == "bowden-human-2002".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(4, 1);
+		if(data.hashCode() == "bowden-macaca-2002".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(5, 1);
+		if(data.hashCode() == "craigie".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(6, 1);
+		if(data.hashCode() == "dong-2007".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(7, 1);
+		if(data.hashCode() == "felleman & van essen".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(8, 1);
+		if(data.hashCode() == "geeraedts".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(9, 1);
+		if(data.hashCode() == "gurdjian".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(10, 1);
+		if(data.hashCode() == "hammack-2007".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(11, 1);
+		if(data.hashCode() == "his-nomina anatomica-1895".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(12, 1);
+		if(data.hashCode() == "hof et al.-2000".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(13, 1);
+		if(data.hashCode() == "johnston".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(14, 1);
+		if(data.hashCode() == "ju/swanson".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(15, 1);
+		if(data.hashCode() == "koenig & klippel".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(16, 1);
+		if(data.hashCode() == "krettek & price".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(17, 1);
+		if(data.hashCode() == "mai-1997".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(18, 1);
+		if(data.hashCode() == "mcdonald".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(19, 1);
+		if(data.hashCode() == "moga-fulwiler-saper".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(20, 1);
+		if(data.hashCode() == "paxinos/franklin-2001".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(21, 1);
+		if(data.hashCode() == "paxinos/watson-1998".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(22, 1);
+		if(data.hashCode() == "pellegrino".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(23, 1);
+		if(data.hashCode() == "swanson-1992".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(24, 1);
+		if(data.hashCode() == "swanson-1998".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(25, 1);
+		if(data.hashCode() == "swanson-2004".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(26, 1);
+		if(data.hashCode() == "swanson/cowan".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(27, 1);
+		if(data.hashCode() == "zeman & maitland".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(28, 1);
+		if(data.hashCode() == "de groot".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(29, 1);
+		if(data.hashCode() == "de olmos - 1985".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(30, 1);
+		if(data.hashCode() == "de olmos -1995".hashCode())
+			bamsRegions.get(key).updateNomenclatureFrequency(31, 1);
 
 	}
 
@@ -164,7 +277,7 @@ public class ExpandAndWriteIntersection {
 	 * @param bamsNameHash
 	 * @return
 	 */
-	private static String getUri(Integer bamsNameHash) {
+	private static String getPageBAMS(Integer bamsNameHash) {
 		return bamsRegions.get(bamsNameHash).getBAMSUri();
 	}
 
@@ -193,7 +306,7 @@ public class ExpandAndWriteIntersection {
 	 * @param neurolexPageId
 	 * @return
 	 */
-	private static String getPage(Integer key) {
+	private static String getPageNeurolex(Integer key) {
 		return completeData.get(key).getPage();
 	}
 
