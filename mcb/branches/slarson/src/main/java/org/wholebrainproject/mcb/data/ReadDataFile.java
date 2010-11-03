@@ -30,7 +30,7 @@ public class ReadDataFile {
 	 */
 	public  MultiHashMap<String, BAMSToNeurolexData> populateData() throws IOException {
 		String line;
-		File file = new File("/Users/rcarloz/Desktop/BAMSBrainRegionMatchedWithNeuroLex.txt");
+		File file = new File("src/main/resources/BAMSBrainRegionMatchedWithNeuroLex.txt");
 		FileInputStream fis = null;
 		BufferedReader br = null;
 		DataInputStream in = null;
@@ -43,6 +43,7 @@ public class ReadDataFile {
 			do{ 
 				line = br.readLine();
 				if(line != null && line.contains(",")){
+					System.out.println(line);
 					BAMSToNeurolexData data = buildDataRelation(line);
 					dataMap.put(data.getBAMSPage(), data);
 					data = null;
