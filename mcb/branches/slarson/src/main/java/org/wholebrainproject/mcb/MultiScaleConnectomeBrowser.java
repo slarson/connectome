@@ -55,7 +55,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	public static void main(String[] args) {
 
 		try {
-			BAMSToNeurolexMap.getInstance();
+			//BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
 			Properties p = getProperties();
 			f = new JFrame(
 					 p.getProperty("application.name") + " version " + 

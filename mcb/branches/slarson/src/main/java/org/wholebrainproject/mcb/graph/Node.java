@@ -152,7 +152,7 @@ public class Node implements Factory{
 		catch(IOException e){
 			System.err.println("Error: Class Node method getMoreDetailURL.");
 		}
-		return "http://neurolex.org/wiki/Category:" + this.name;
+		return "http://neurolex.org/wiki/Category:" + this.name.toLowerCase();
 	}
 
 	public String getNeurotransmitter(int index) {

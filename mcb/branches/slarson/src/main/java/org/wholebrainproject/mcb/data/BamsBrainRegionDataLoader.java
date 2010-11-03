@@ -20,7 +20,7 @@ public class BamsBrainRegionDataLoader {
 
 	/**
 	 * This class takes care of getting the cell data for each node 
-	 * and takes care of incorporating the data into the nodes.
+	 * and incorporating the data into the nodes.
 	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
 	 */
@@ -28,8 +28,8 @@ public class BamsBrainRegionDataLoader {
 
 		String region_suffix = "_r";
 		String part_suffix = "_p";
-		String[] brainRegionsCellData = { "Thalamus",
-				"Cerebral_cortex", "Brainstem","Basal_ganglia" };
+		String[] brainRegionsCellData = { "Cortex",
+				"brainstem", "thalamus","basal-ganglia" };
 		
 		String brainRegionSufixName = null;
 
