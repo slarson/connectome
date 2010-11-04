@@ -43,7 +43,6 @@ public class ReadDataFile {
 			do{ 
 				line = br.readLine();
 				if(line != null && line.contains(",")){
-					System.out.println(line);
 					BAMSToNeurolexData data = buildDataRelation(line);
 					dataMap.put(data.getBAMSPage(), data);
 					data = null;
