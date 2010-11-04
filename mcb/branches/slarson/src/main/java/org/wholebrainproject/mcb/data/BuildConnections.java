@@ -34,7 +34,6 @@ import java.util.Vector;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
-import org.wholebrainproject.mcb.graph.CustomGraphCollapser;
 import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.BrainRegionNameShortener;
@@ -76,27 +75,31 @@ public class BuildConnections {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}**/
-		String[] initialBamsNames = {"brainstem","basal-ganglia","cerebral-cortex","thalamus"};//{"cerebral-cortex", "thalamus-4", "basal-ganglia", "midbrain-hindbrain-motor-extrapyramidal"};
+		String[] initialBamsNames = {"brainstem","basal-ganglia","cerebral-cortex","thalamus","striatum",
+		"substantia-nigra-pars-compacta"};//{"cerebral-cortex", "thalamus-4", "basal-ganglia", "midbrain-hindbrain-motor-extrapyramidal"};
 
 		//obtain the BAMS brain region names that intersect with neurolex.
 		//String[] initialBamsNames = getInitialBAMSNames();
 		//obtain the BAMS uris.
 		//addInitialBamsURIs();
-		
+
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/brainstem/");
-		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus-2/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/basal-ganglia/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cerebral-cortex-10/");
+		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus-2/");
+		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/striatum-4/");
+		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/substantia-nigra-pars-compacta/");
 
 		MultiHashMap<String,String> results = getBAMSPartOfResults(initialBamsNames);
+		results = eliminateDataNotPresentInIntersection(results);
 		/**for(String key: results.keySet()){
 			for(String currentResult: results.get(key)){
 				System.out.println("Current key: "+ key +" result: "+currentResult);
 			}
 		}**/
 		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames, results);
-		
 		Node[] childlessNodes = filterParentNodes(nodes);
+
 		MultiHashMap<String,String> deeperResults = increaseDepthOfPartOfResults(childlessNodes);
 		//System.out.println("deeperResults: "+deeperResults.size());
 		Node[] deeperNodes = convertDeeperResultsIntoNodes(childlessNodes, deeperResults);
@@ -107,7 +110,7 @@ public class BuildConnections {
 		//populate the nodes with the cell data.
 		//MultiHashMap<String,String> cellResults = NeuroLexDataLoader.populate(nodes);
 		//NeuroLexDataLoader.storeData(nodes, cellResults);
-		
+
 		//System.out.println("nodeList: "+nodeList.size());
 		List<ConnectionEdge> edges = new ArrayList<ConnectionEdge>();
 
@@ -179,6 +182,32 @@ public class BuildConnections {
 		//CustomGraphCollapser.getInstance().collapse();
 	}
 
+	/**
+	 * Method removes the elements that are not present in the file
+	 * BAMSBrainRegionsMatchedWithNeurolex.
+	 * @param results
+	 * @return
+	 */
+	private MultiHashMap<String, String> eliminateDataNotPresentInIntersection(
+			MultiHashMap<String, String> results) {
+		for(String key: results.keySet()){
+			for(String value: results.get(key)){
+				if(value.contains("http//brancusi1.usc.edu/brain_parts/")){
+					try {
+						if(!BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(value)){
+							results.remove(key);
+						}
+					} catch (IOException e) {
+						System.err.println("Something went wrong in method eliminateDataNotPresentInIntersection");
+						e.printStackTrace();
+					}
+					
+				}
+			}
+		}
+		return results;
+	}
+
 	private MultiHashMap<String,String> getBAMSPartOfResults(String[] initialBamsNames) {
 		String sparqlNif = "http://api.talis.com/stores/neurolex/services/sparql";
 		SparqlQuery q = new SparqlQuery(sparqlNif);
@@ -219,6 +248,7 @@ public class BuildConnections {
 	public Node[] convertPartOfResultsIntoNodes(String[] initialBamsNames, 
 			MultiHashMap<String,String> results) {
 		List<Node> nodes = new ArrayList<Node>();
+		String brainRegionPrettyName;
 		Node n;
 		for (String brainRegion: initialBamsNames) {
 
@@ -228,34 +258,54 @@ public class BuildConnections {
 			String nameVar = "$" + var + "_name";
 			String childUriVar = "$" + var + "_child_uri";
 			String childNameVar = "$" + var + "_child_name";
-			String brainRegionPrettyName = results.get(nameVar).iterator().next();
-			if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
+
+
+			brainRegionPrettyName = results.get(nameVar).iterator().next();
+
+			/**if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
 				n = new Node(uri, brainRegionPrettyName.toLowerCase());
 			else{
 			    n = new Node(uri, "basal_ganglia");
-			}
-			nodes.add(n);
+			}**/
+			//System.out.println("uri: "+uri+ " brain region name: "+brainRegionPrettyName);
 
-			Collection<String> childUris = results.get(childUriVar);
-			Collection<String> childNames = results.get(childNameVar);
 
-			// might not have children
-			if (childUris != null) {
-				Iterator<String> urisIt = childUris.iterator();
-				Iterator<String> namesIt = childNames.iterator();
+			n = new Node(uri,brainRegionPrettyName);
 
-				ArrayList<Node> childrenNodes = new ArrayList<Node>();
-				for (int i = 0; i < childUris.size(); i++) {
-					Node child = new Node(urisIt.next(), namesIt.next());
-					child.setParent(n);
-					childrenNodes.add(child);
-					nodes.add(child);
+			if(n!= null){
+				nodes.add(n);
+
+				Collection<String> childUris = results.get(childUriVar);
+				Collection<String> childNames = results.get(childNameVar);
+
+				// might not have children
+				if (childUris != null) {
+					Iterator<String> urisIt = childUris.iterator();
+					Iterator<String> namesIt = childNames.iterator();
+
+					ArrayList<Node> childrenNodes = new ArrayList<Node>();
+					for (int i = 0; i < childUris.size(); i++) {
+						String currentUri = urisIt.next();
+						String currentName = namesIt.next();
+						try {
+							if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(currentUri)){
+								//System.out.println("current child name: "+currentName);
+								Node child = new Node(currentUri,currentName);
+								child.setParent(n);
+								childrenNodes.add(child);
+								nodes.add(child);
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
+					n.setPartOfNodes(childrenNodes);
 				}
-
-				n.setPartOfNodes(childrenNodes);
 			}
-		}
 
+		}
 		Node[] out = new Node[nodes.size()];
 		return (Node[]) nodes.toArray(out);
 	}
@@ -306,7 +356,7 @@ public class BuildConnections {
 			String brainRegion = n.getName();
 
 			String var = BrainRegionNameShortener.reduceName(brainRegion);
-			
+
 			String childUriVar = "$" + var + "_child_uri";
 			String childNameVar = "$" + var + "_child_name";
 
@@ -316,7 +366,7 @@ public class BuildConnections {
 			if(childUris != null){
 				urisIt = childUris.iterator();
 			}
-			
+
 			if(childNames != null){
 				namesIt = childNames.iterator();
 			}
@@ -324,7 +374,7 @@ public class BuildConnections {
 			ArrayList<Node> childrenNodes = new ArrayList<Node>();
 
 			//System.out.println("childrenNodes :"+childUris.size());
-			
+
 			if(urisIt != null && namesIt != null){
 				for (int i = 0; i < childUris.size(); i++) { 
 					Node child = new Node(urisIt.next(), namesIt.next());
@@ -333,10 +383,10 @@ public class BuildConnections {
 					nodesOut.add(child);
 				}
 			}
-			
+
 			urisIt = null;
 			namesIt = null;
-			
+
 			n.setPartOfNodes(childrenNodes);
 
 		}
@@ -407,7 +457,7 @@ public class BuildConnections {
 			String strengthSendingVar = "$" + var + "_str_send";
 			String sendingVar = "$" + var + "_send";
 
-			
+
 			Collection<String> receivingStrengths = results.get(strengthReceivingVar);
 			//System.out.println("receivingStrengths: "+receivingStrengths);
 			Collection<String> receivingReferences = results.get(referenceReceivingVar);
@@ -641,16 +691,16 @@ public class BuildConnections {
 			brainRegionNames[index] = currentBrainRegionName;
 			index++;
 		}
-		
+
 		return brainRegionNames;
 	}
-	
+
 	/**
 	 * Method obtains the BAMS uris and stores them in a list.
 	 */
 	private void addInitialBamsURIs() {
 		for(String bamsUri: BAMSToNeurolexHashMap.keySet())
 			initialBamsURIs.add(bamsUri);
-		
+
 	}
 }
