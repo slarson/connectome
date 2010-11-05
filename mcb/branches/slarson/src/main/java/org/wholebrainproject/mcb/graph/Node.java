@@ -138,7 +138,7 @@ public class Node implements Factory{
 	 */
 	public String getMoreDetailURL()  {
 		String NeurolexUri = null;
-		System.out.println(this.uri);
+		//System.out.println(this.uri);
 		try{
 			if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(uri) ){
 				for(BAMSToNeurolexData data: BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().get(uri)){
