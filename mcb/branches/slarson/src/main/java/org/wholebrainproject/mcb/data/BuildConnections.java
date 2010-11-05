@@ -91,6 +91,7 @@ public class BuildConnections {
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/substantia-nigra-pars-compacta/");
 
 		MultiHashMap<String,String> results = getBAMSPartOfResults(initialBamsNames);
+		//***Some filtering been done here.
 		results = eliminateDataNotPresentInIntersection(results);
 		/**for(String key: results.keySet()){
 			for(String currentResult: results.get(key)){
@@ -101,15 +102,16 @@ public class BuildConnections {
 		Node[] childlessNodes = filterParentNodes(nodes);
 
 		MultiHashMap<String,String> deeperResults = increaseDepthOfPartOfResults(childlessNodes);
-		//System.out.println("deeperResults: "+deeperResults.size());
+
+		//***Some filtering being done here
 		Node[] deeperNodes = convertDeeperResultsIntoNodes(childlessNodes, deeperResults);
 		//Node[] deeperNodes = new Node[0];
-		//System.out.println("depperNodes: "+deeperNodes.length);
+
 		List<Node> nodeList = mergeNodes(deeperNodes, nodes);
 
 		//populate the nodes with the cell data.
-		//MultiHashMap<String,String> cellResults = NeuroLexDataLoader.populate(nodes);
-		//NeuroLexDataLoader.storeData(nodes, cellResults);
+		MultiHashMap<String,String> cellResults = NeuroLexDataLoader.populate(nodes);
+		NeuroLexDataLoader.storeData(nodes, cellResults);
 
 		//System.out.println("nodeList: "+nodeList.size());
 		List<ConnectionEdge> edges = new ArrayList<ConnectionEdge>();
@@ -164,7 +166,7 @@ public class BuildConnections {
 
 			boolean receivingParentContains = receivingParent != null && 
 			initialBamsURIs.contains(receivingParent.getUri());
-
+			//graph.addEdge(edge, sending, receiving);
 			if (initialBamsURIs.contains(sending.getUri()) || initialBamsURIs.contains(receiving.getUri())
 					|| sendingParentContains ||
 					receivingParentContains) {
@@ -201,7 +203,7 @@ public class BuildConnections {
 						System.err.println("Something went wrong in method eliminateDataNotPresentInIntersection");
 						e.printStackTrace();
 					}
-					
+
 				}
 			}
 		}
@@ -262,15 +264,11 @@ public class BuildConnections {
 
 			brainRegionPrettyName = results.get(nameVar).iterator().next();
 
-			/**if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
+			if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
 				n = new Node(uri, brainRegionPrettyName.toLowerCase());
 			else{
-			    n = new Node(uri, "basal_ganglia");
-			}**/
-			//System.out.println("uri: "+uri+ " brain region name: "+brainRegionPrettyName);
-
-
-			n = new Node(uri,brainRegionPrettyName);
+			    n = new Node(uri,brainRegionPrettyName);
+			}
 
 			if(n!= null){
 				nodes.add(n);
@@ -351,7 +349,7 @@ public class BuildConnections {
 		Iterator<String> urisIt = null;
 
 		for (Node n : nodes) {
-			System.out.println("Current node:"+n.toString());
+			//System.out.println("Current node:"+n.toString());
 			nodesOut.add(n);
 			String brainRegion = n.getName();
 
@@ -372,15 +370,24 @@ public class BuildConnections {
 			}
 
 			ArrayList<Node> childrenNodes = new ArrayList<Node>();
-
-			//System.out.println("childrenNodes :"+childUris.size());
-
+			
 			if(urisIt != null && namesIt != null){
 				for (int i = 0; i < childUris.size(); i++) { 
-					Node child = new Node(urisIt.next(), namesIt.next());
-					child.setParent(n);
-					childrenNodes.add(child);
-					nodesOut.add(child);
+					String childURI = urisIt.next();
+					String childName = namesIt.next();
+					try {
+//need to consider this line of code.  By filtering the brain regions that only appear in the list
+//we are reducing the number of parts per parent node.						
+						if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(childURI)){
+							Node child = new Node(childURI, childName);
+							child.setParent(n);
+							childrenNodes.add(child);
+							nodesOut.add(child);
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 
