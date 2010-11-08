@@ -1,6 +1,8 @@
 package org.wholebrainproject.mcb.graph;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -146,13 +148,32 @@ public class Node implements Factory{
 				}
 			}
 			else{
+				System.out.println(this.uri);
 				System.out.println("The URI you are requesting is not present in the data.");
 			}
 		}
 		catch(IOException e){
 			System.err.println("Error: Class Node method getMoreDetailURL.");
 		}
+		//if(exists("http://neurolex.org/wiki/Category:" + this.name.toLowerCase()))
+			//return "http://neurolex.org/wiki/Category:" + this.name.toLowerCase();
 		return "http://neurolex.org/wiki/Category:" + this.name.toLowerCase();
+	}
+
+	private boolean exists(String URLName) {
+		try {
+		      HttpURLConnection.setFollowRedirects(false);
+		      // note : you may also need
+		      //        HttpURLConnection.setInstanceFollowRedirects(false)
+		      HttpURLConnection con =
+		         (HttpURLConnection) new URL(URLName).openConnection();
+		      con.setRequestMethod("HEAD");
+		      return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+		    }
+		    catch (Exception e) {
+		       e.printStackTrace();
+		       return false;
+		    }
 	}
 
 	public String getNeurotransmitter(int index) {
