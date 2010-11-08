@@ -12,51 +12,51 @@ public class NeuroLexDataLoader {
 
 	/**
 	 * TARGET QUERY FOR A SINGLE BRAIN REGION (e.g. Globus Pallidus):
-	 * 
-	 * select $Globus_pallidus_cells_label 
-	 * 		  $Globus_pallidus_cells_url
-	 *        $Globus_pallidus_neurotransmitter_label 
-	 *        $Globus_pallidus_transmitter_role_label 
 	 *
-	 *{$Globus_pallidus_rigion 
-	 * <http://semantic-mediawiki.org/swivt/1.0#page> 
-	 * <http://neurolex.org/wiki/Category:Globus_pallidus> . 
-	 * 
-	 * $Globus_pallidus_cells 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in> 
-	 * $Globus_pallidus_rigion . 
-	 * 
-	 * $Globus_pallidus_cells 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> 
-	 * $Globus_pallidus_cells_label . 
-	 * 
-	 * $Globus_pallidus_cells 
+	 * select $Globus_pallidus_cells_label
+	 *                $Globus_pallidus_cells_url
+	 *        $Globus_pallidus_neurotransmitter_label
+	 *        $Globus_pallidus_transmitter_role_label
+	 *
+	 *{$Globus_pallidus_rigion
+	 * <http://semantic-mediawiki.org/swivt/1.0#page>
+	 * <http://neurolex.org/wiki/Category:Globus_pallidus> .
+	 *
+	 * $Globus_pallidus_cells
+	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALocated_in>
+	 * $Globus_pallidus_rigion .
+	 *
+	 * $Globus_pallidus_cells
+	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel>
+	 * $Globus_pallidus_cells_label .
+	 *
+	 * $Globus_pallidus_cells
 	 * <http://semantic-mediawiki.org/swivt/1.0#page>
 	 * $Globus_pallidus_cells_url .
-	 * 
-	 * $Globus_pallidus_cells 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Category-3APrincipal_neuron_role> . 
-	 * 
-	 * $Globus_pallidus_cells 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ANeurotransmitter> 
-	 * $Globus_pallidus_neurotransmitter . 
-	 * 
-	 * $Globus_pallidus_neurotransmitter 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> 
-	 * $Globus_pallidus_neurotransmitter_label . 
-	 * 
-	 * $Globus_pallidus_neurotransmitter 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role> 
-	 * $Globus_pallidus_transmitter_role . 
-	 * 
-	 * $Globus_pallidus_transmitter_role 
-	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel> 
+	 *
+	 * $Globus_pallidus_cells
+	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role>
+	 * <http://neurolex.org/wiki/Special:URIResolver/Category-3APrincipal_neuron_role> .
+	 *
+	 * $Globus_pallidus_cells
+	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ANeurotransmitter>
+	 * $Globus_pallidus_neurotransmitter .
+	 *
+	 * $Globus_pallidus_neurotransmitter
+	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel>
+	 * $Globus_pallidus_neurotransmitter_label .
+	 *
+	 * $Globus_pallidus_neurotransmitter
+	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3AHas_role>
+	 * $Globus_pallidus_transmitter_role .
+	 *
+	 * $Globus_pallidus_transmitter_role
+	 * <http://neurolex.org/wiki/Special:URIResolver/Property-3ALabel>
 	 * $Globus_pallidus_transmitter_role_label . }
 	 */
 
 	/**
-	 * This class takes care of getting the cell data for each node 
+	 * This class takes care of getting the cell data for each node
 	 * and takes care of incorporating the data into the nodes.
 	 * @param query - the data reader to populate
 	 * @param brainRegionNames - the names of brain regions to populate it with.
@@ -85,13 +85,19 @@ public class NeuroLexDataLoader {
 						brainRegionSufixName =  BrainRegionNameShortener.reduceName(RegionName.toString());
 
 					if(RegionName.toString().equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal")){
-						query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
-								" swivt:page " + 
+						query.addQueryTriplet("$" + brainRegionSufixName + region_suffix +
+								" swivt:page " +
 								" <http://neurolex.org/wiki/Category:"+"basal_ganglia"+">");
 					}
+					else if(RegionName.toString().equalsIgnoreCase("Anterior hypothalamic area")){
+						System.out.println("current brain region name: "+RegionName.toString());
+						query.addQueryTriplet("$" + brainRegionSufixName + region_suffix +
+								" swivt:page " +
+								"<http://neurolex.org/wiki/Category:anterior_nucleus_of_hypothalamus>");
+					}
 					else{
-						query.addQueryTriplet("$" + brainRegionSufixName + region_suffix + 
-								" swivt:page " + 
+						query.addQueryTriplet("$" + brainRegionSufixName + region_suffix +
+								" swivt:page " +
 								"<"+RegionName.getMoreDetailURL()+">");
 						//" <http://neurolex.org/wiki/Category:"+RegionName.toString().toLowerCase()+">");
 					}
@@ -154,12 +160,12 @@ public class NeuroLexDataLoader {
 
 
 	/**
-	 * Method searches for the cell data that corresponds to a given node and 
+	 * Method searches for the cell data that corresponds to a given node and
 	 * stores it in the correct node field.
 	 * @param existingNodes -  nodes.
 	 * @param cellResults - cell data to be stored in the nodes.
 	 */
-	public static void storeData(Node[] existingNodes, 
+	public static void storeData(Node[] existingNodes,
 			MultiHashMap<String, String> cellResults) {
 		String brainRegionName = null;
 
@@ -168,18 +174,19 @@ public class NeuroLexDataLoader {
 			if(brainRegionName == null)
 				brainRegionName =  BrainRegionNameShortener.reduceName(node.toString());
 
-			Collection<String> cells = 
+			Collection<String> cells =
 				cellResults.get("$" + brainRegionName + "_cl");
-			Collection<String> cellUrls = 
+			Collection<String> cellUrls =
 				cellResults.get("$" + brainRegionName + "_cu");
-			Collection<String> transmitters = 
+			Collection<String> transmitters =
 				cellResults.get("$" + brainRegionName + "_nl");
-			Collection<String> roles = 
+			Collection<String> roles =
 				cellResults.get("$" + brainRegionName + "_trl");
 			//System.out.println("NeuroLexDataLoader roles: "+roles.toString());
 			node.setCellInfo(cells, cellUrls, transmitters, roles);
 
 			brainRegionName = null;
-		}	
+		}      
 	}
 }
+
