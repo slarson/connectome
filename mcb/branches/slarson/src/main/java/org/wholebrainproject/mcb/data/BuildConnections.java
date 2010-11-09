@@ -203,18 +203,30 @@ public class BuildConnections {
 	private MultiHashMap<String, String> eliminateDataNotNeeded(
 			MultiHashMap<String, String> results) {
 		MultiHashMap<String,String> checkedMap = results;
+		MultiHashMap<String,String> sendingStruc = new MultiHashMap();
+		MultiHashMap<String,String> receivingStruc = new MultiHashMap();
 		String sending = null;
 		String receiving = null;
 		
 		for(String key: results.keySet()){
 			for(String value: results.get(key)){
-				//System.out.println("key: "+key+  "  value: "+value);
-				if(sendingStructure(key))
-					sending = value;
-				if(receivingStructure(key))
-					receiving = value;
+				if(sendingStructure(key)){
+					//System.out.println("varaibale: "+ key +"     sending: "+value);
+					sendingStruc.put(key,value);
+					
+				}	
+				if(receivingStructure(key)){
+					//System.out.println("varaibale: "+ key +"     receiving: "+receiving);
+					receivingStruc.put(key,value);
+					
+				}
+			}
+		}	
+		for(String key: receivingStruc.keySet()){
+				String sendingKey = getSendingKey(key);
+				System.out.println("sending : "+sendingKey);
 				if(sending != null && receiving != null){
-					if(containsStructure(sending) && containsStructure(receiving)){
+					if(containsStructure(sendingKey) && containsStructure(key)){
 						String currentVar = getVarName(key);
 						checkedMap.remove(currentVar+"_str_rec");
 						checkedMap.remove(currentVar+"_ref_rec");
@@ -223,10 +235,11 @@ public class BuildConnections {
 						checkedMap.remove(currentVar+"_ref_send");
 						checkedMap.remove(currentVar+"_send");
 						checkedMap.remove(currentVar+"str_send");
-						//results.remove(key);						
+						sending = null;
+						receiving = null;
 					}
 				}
-			}
+			
 		}
 		return results;
 	}
@@ -256,6 +269,9 @@ public class BuildConnections {
 		return results;
 	}
 
+	private String getSendingKey(String key){
+		return key.substring(0,key.indexOf("_"))+"_send";
+	}
 private boolean containsStructure(String structure){
 	structure ="http://brancusi1.usc.edu/brain_parts/"+ structure.replace(" ", "-").toLowerCase()+"/";
 	try {
@@ -269,16 +285,20 @@ private boolean containsStructure(String structure){
 }
 
 	private boolean sendingStructure(String key) {
-		//System.out.println("is uri: "+key.substring(key.indexOf('_')+1));
-		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("send"))
+		
+		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("send")){
+			//System.out.println("is uri: "+key.substring(key.indexOf('_')+1)+"       key: "+key   );
 		   return true;
+		} 
 		return false;	
 	}
 
 	private boolean receivingStructure(String key) {
 		//System.out.println("is uri: "+key.substring(key.indexOf('_')+1));
-		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("rec"))
+		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("rec")){
+			//System.out.println("is uri: "+key.substring(key.indexOf('_')+1)+"       key: "+key   );
 		   return true;
+		}  
 		return false;	
 	}
 	private String getVarName(String key) {
