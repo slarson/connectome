@@ -97,7 +97,7 @@ public class BuildConnections {
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/caudoputamen/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cuneiform-nucleus/");
 		//initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/hippocampal-region/");
-		
+
 		MultiHashMap<String,String> results = getBAMSPartOfResults(initialBamsNames);
 		//***Some filtering been done here.
 		results = eliminateDataNotPresentInIntersection(results);
@@ -135,10 +135,11 @@ public class BuildConnections {
 				MultiHashMap<String,String> connResults = 
 					getConnectionsResults(partialNodeChunk);
 				
-				connResults = eliminateDataNotPresentInIntersection(results);
+				connResults = eliminateDataNotNeeded(connResults);
+				
 				List<ConnectionEdge> partialEdges = 
 					convertConnectionResultsIntoEdges(connResults, partialNodeChunk);
-
+				//System.out.println("partialEdges: "+partialEdges.size());
 				edges.addAll(partialEdges);
 
 				partialNodeChunk = new ArrayList<Node>();
@@ -176,7 +177,7 @@ public class BuildConnections {
 
 			boolean receivingParentContains = receivingParent != null && 
 			initialBamsURIs.contains(receivingParent.getUri());
-			//graph.addEdge(edge, sending, receiving);
+
 			if (initialBamsURIs.contains(sending.getUri()) || initialBamsURIs.contains(receiving.getUri())
 					|| sendingParentContains ||
 					receivingParentContains) {
@@ -193,7 +194,43 @@ public class BuildConnections {
 		}
 		//CustomGraphCollapser.getInstance().collapse();
 	}
+	/**
+	 * Method removes the elements that are not present in the file
+	 * BAMSBrainRegionsMatchedWithNeurolex.
+	 * @param results
+	 * @return
+	 */
+	private MultiHashMap<String, String> eliminateDataNotNeeded(
+			MultiHashMap<String, String> results) {
+		String urlString = "http//brancusi1.usc.edu/brain_parts/";
 
+		for(String key: results.keySet()){
+			for(String value: results.get(key)){
+				//System.out.println("key: "+key+  "  value: "+value);
+				if(sendingStructure(key)){
+					try {
+						if(!BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(value)){
+							String currentVar = getVarName(key);
+							results.remove(currentVar+"_str_rec");
+							results.remove(currentVar+"_ref_rec");
+							results.remove(currentVar+"_rec");
+							results.remove(currentVar+"_str_send");
+							results.remove(currentVar+"_ref_send");
+							results.remove(currentVar+"_send");
+							results.remove(currentVar+"str_send");
+							results.remove(key);
+							
+						}
+					} catch (IOException e) {
+						System.err.println("Something went wrong in method eliminateDataNotPresentInIntersection");
+						e.printStackTrace();
+					}
+
+				}
+			}
+		}
+		return results;
+	}
 	/**
 	 * Method removes the elements that are not present in the file
 	 * BAMSBrainRegionsMatchedWithNeurolex.
@@ -218,6 +255,20 @@ public class BuildConnections {
 			}
 		}
 		return results;
+	}
+
+
+
+	private boolean sendingStructure(String key) {
+		//System.out.println("is uri: "+key.substring(key.indexOf('_')+1));
+		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("send"))
+		   return true;
+		return false;	
+	}
+
+	private String getVarName(String key) {
+		return key.substring(0, key.indexOf("_"));
+
 	}
 
 	private MultiHashMap<String,String> getBAMSPartOfResults(String[] initialBamsNames) {
