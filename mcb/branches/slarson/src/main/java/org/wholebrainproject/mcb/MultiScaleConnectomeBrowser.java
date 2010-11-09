@@ -17,23 +17,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	/**
 	 * the gui frame
 	 **/
-	static JFrame f;
-
-	public MultiScaleConnectomeBrowser() {
-		try {
-			//setSize(500,600);
-			View v = new View();
-			getContentPane().add(v.getMainPanel());
-			//getContentPane().setPreferredSize(new Dimension(500,900));
-			this.setJMenuBar(v.getMainMenuBar());
-			v.launchInstructionPopup();
-
-		} catch (Exception e) {
-			System.out.println("Unrecoverable error!");
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
+	static JFrame mainFrame;
 	
 	public static Properties getProperties() {
 		try {
@@ -57,20 +41,23 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 		try {
 			//BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
 			Properties p = getProperties();
-			f = new JFrame(
+			mainFrame = new JFrame(
 					 p.getProperty("application.name") + " version " + 
 					 p.getProperty("application.version"));
-			//f.setSize(500, 600);
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//mainFrame.setSize(500, 600);
+			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			//create new instance of View.  Implicitly kicks off loading of
+			//data behind the scenes.
 			View v = new View();
-			f.setJMenuBar(v.getMainMenuBar());
-			//f.getContentPane().setPreferredSize(new Dimension(500,900));
-			JFrame mainFrame = f;
+			mainFrame.setJMenuBar(v.getMainMenuBar());
+			//mainFrame.getContentPane().setPreferredSize(new Dimension(500,900));
+			
 			mainFrame.setLayout(new BorderLayout());
 			mainFrame.add(v.getMainPanel(), BorderLayout.CENTER);
 			
-			f.pack();
-			f.setVisible(true);
+			mainFrame.pack();
+			mainFrame.setVisible(true);
 			v.launchInstructionPopup();
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
