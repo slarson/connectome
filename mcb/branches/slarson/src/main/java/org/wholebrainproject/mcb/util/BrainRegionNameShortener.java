@@ -12,7 +12,8 @@ public class BrainRegionNameShortener {
 	private static Map<String,String> brainRegionsToShortVariableNames = null;
 	
 	/**
-	 * Method reduces the name of the brain regions.
+	 * Method reduces the name of the brain regions for the purposes of more
+	 * efficient SPARQL queries.
 	 * @param brainRegionName - full name of the brain region.
 	 * @return reducedName - reduced name of the brain region.
 	 */

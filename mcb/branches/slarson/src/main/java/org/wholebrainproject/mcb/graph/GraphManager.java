@@ -124,35 +124,48 @@ public class GraphManager {
         return instance;
     }
 
+    /**
+     * Set up the Graph Manager and load necessary data!
+     */
     private GraphManager() {
 
+    	//initialize the graph
         graph = new DirectedSparseMultigraph<Node,Edge>();
 
+        //load the data on to the graph
         BuildConnections.getInstance().getDataAndCreateGraphBetter(graph);
        
-        layout =
-            new AggregateLayout<Node,Edge>(
+        layout = new AggregateLayout<Node,Edge>(
                     new CircleLayout<Node,Edge>(graph));
 
         scaler = new CrossoverScalingControl();
        
-        Dimension preferredSize = new Dimension(800,400);
-        final VisualizationModel<Node,Edge> visualizationModel =
-            new DefaultVisualizationModel<Node,Edge>(layout, preferredSize);
-        vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize) {
-            // Override create tool tip method to use HyperLinkTooltip
-            public JToolTip createToolTip() {
-                JToolTip tip = new HyperLinkToolTip();
-                tip.setComponent(this);
-                return tip;
-            }
-        };
-         // uses a gradient edge if unpicked, otherwise uses picked selection
-        GradientEdgePaintTransformer<Node, Edge> edgeDrawPaint =
-            new GradientEdgePaintTransformer<Node, Edge>(Color.BLUE,Color.GREEN,vv);
-            
+        //initialize the visualization viewer, which will make the graph look
+        //the way we want
+        initializeVisViewer();
+        
         setGraphMouse();
+        
+        //configure the look and feel of the graph
+        configureVisViewer();
+      
        
+        for (Node n: graph.getVertices()) {
+            if (BuildConnections.getInstance().getInitialBamsURIs().contains(n.getUri())) {
+                hideBrainParts(n);
+            }
+        }
+        
+        //by default, collapse all the edges
+        //collapser.collapse();
+    }
+   
+    /**
+     * Set various configurations on the visualization viewer to make
+     * the graph look and react the way we want it to.
+     */
+    private void configureVisViewer() {
+
         VertexLabelAsShapeRenderer vlasr = new VertexLabelAsShapeRenderer(vv.getRenderContext());
        
         vv.getRenderContext().setVertexShapeTransformer(vlasr);
@@ -164,6 +177,11 @@ public class GraphManager {
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
         vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabeller());
         vv.getRenderContext().setEdgeLabelRenderer(new DefaultEdgeLabelRenderer(Color.RED));
+        
+        // uses a gradient edge if unpicked, otherwise uses picked selection
+        GradientEdgePaintTransformer<Node, Edge> edgeDrawPaint =
+            new GradientEdgePaintTransformer<Node, Edge>(Color.BLUE,Color.GREEN,vv);
+            
         vv.getRenderContext().setEdgeDrawPaintTransformer(edgeDrawPaint);
        
        
@@ -251,25 +269,34 @@ public class GraphManager {
             });
 
         vv.setEdgeToolTipTransformer(new ToolTipEdgeLabeller());
-       
-
+        
         collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
         //collapser = CustomGraphCollapser.getInstance();
         //collapser.setGraph(graph);
         //collapser.setLayout(layout);
         //collapser.setVisualizationViewer(vv);
         //collapser.setExclusions(exclusions);
-       
-        for (Node n: graph.getVertices()) {
-            if (BuildConnections.initialBamsURIs.contains(n.getUri())) {
-                hideBrainParts(n);
+	}
+
+	/**
+     * Initialize the visualization viewer which drives how the graph nodes
+     * and edges will look and react.
+     */
+    private void initializeVisViewer() {
+    	Dimension preferredSize = new Dimension(800,400);
+        final VisualizationModel<Node,Edge> visualizationModel =
+            new DefaultVisualizationModel<Node,Edge>(layout, preferredSize);
+        vv =  new VisualizationViewer<Node,Edge>(visualizationModel, preferredSize) {
+            // Override create tool tip method to use HyperLinkTooltip
+            public JToolTip createToolTip() {
+                JToolTip tip = new HyperLinkToolTip();
+                tip.setComponent(this);
+                return tip;
             }
-        }
-        //by default, collapse all the edges
-        //collapser.collapse();
-    }
-   
-    /**
+        };
+	}
+
+	/**
      * Render connection arcs differently based on their projection strengths
      * @param showProjectionStrengths
      */

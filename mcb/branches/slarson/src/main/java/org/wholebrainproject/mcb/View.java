@@ -57,15 +57,12 @@ public class View extends JPanel{
 	
 
 	public View() {
-		buildGUI();
-	}
-
-	private void buildGUI() {
-		Container content = this;
+		//load the graph zoom scroll pane.
+		//doing the getInstance() on GraphManager causes data to be loaded.
 		GraphZoomScrollPane gzsp = GraphManager.getInstance()
 				.getGraphZoomScrollPane();
 		gzsp.setPreferredSize(new Dimension(800,800));
-		content.add(gzsp);
+		add(gzsp);
 	}
 	
 	protected Component getLensPanel() {
