@@ -202,30 +202,29 @@ public class BuildConnections {
 	 */
 	private MultiHashMap<String, String> eliminateDataNotNeeded(
 			MultiHashMap<String, String> results) {
-		String urlString = "http//brancusi1.usc.edu/brain_parts/";
-
+		MultiHashMap<String,String> checkedMap = results;
+		String sending = null;
+		String receiving = null;
+		
 		for(String key: results.keySet()){
 			for(String value: results.get(key)){
 				//System.out.println("key: "+key+  "  value: "+value);
-				if(sendingStructure(key)){
-					try {
-						if(!BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(value)){
-							String currentVar = getVarName(key);
-							results.remove(currentVar+"_str_rec");
-							results.remove(currentVar+"_ref_rec");
-							results.remove(currentVar+"_rec");
-							results.remove(currentVar+"_str_send");
-							results.remove(currentVar+"_ref_send");
-							results.remove(currentVar+"_send");
-							results.remove(currentVar+"str_send");
-							results.remove(key);
-							
-						}
-					} catch (IOException e) {
-						System.err.println("Something went wrong in method eliminateDataNotPresentInIntersection");
-						e.printStackTrace();
+				if(sendingStructure(key))
+					sending = value;
+				if(receivingStructure(key))
+					receiving = value;
+				if(sending != null && receiving != null){
+					if(containsStructure(sending) && containsStructure(receiving)){
+						String currentVar = getVarName(key);
+						checkedMap.remove(currentVar+"_str_rec");
+						checkedMap.remove(currentVar+"_ref_rec");
+						checkedMap.remove(currentVar+"_rec");
+						checkedMap.remove(currentVar+"_str_send");
+						checkedMap.remove(currentVar+"_ref_send");
+						checkedMap.remove(currentVar+"_send");
+						checkedMap.remove(currentVar+"str_send");
+						//results.remove(key);						
 					}
-
 				}
 			}
 		}
@@ -257,7 +256,17 @@ public class BuildConnections {
 		return results;
 	}
 
-
+private boolean containsStructure(String structure){
+	structure ="http://brancusi1.usc.edu/brain_parts/"+ structure.replace(" ", "-").toLowerCase()+"/";
+	try {
+		if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(structure))
+			return true;
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return false;
+}
 
 	private boolean sendingStructure(String key) {
 		//System.out.println("is uri: "+key.substring(key.indexOf('_')+1));
@@ -266,6 +275,12 @@ public class BuildConnections {
 		return false;	
 	}
 
+	private boolean receivingStructure(String key) {
+		//System.out.println("is uri: "+key.substring(key.indexOf('_')+1));
+		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("rec"))
+		   return true;
+		return false;	
+	}
 	private String getVarName(String key) {
 		return key.substring(0, key.indexOf("_"));
 
