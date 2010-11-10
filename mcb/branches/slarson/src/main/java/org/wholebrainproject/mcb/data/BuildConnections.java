@@ -60,12 +60,17 @@ public class BuildConnections {
 	private String[] initialBamsNames = null;
 	//the uris in BAMS of the initial set of brain regions
 	private static List<String> initialBamsURIs = new ArrayList<String>();
-	
+	private static MultiHashMap<String, BAMSToNeurolexData> masterList; 
 	private static MultiHashMap<String, BAMSToNeurolexData> BAMSToNeurolexHashMap;
 	private static BuildConnections instance = null;
 
 	private BuildConnections() {
-
+		try {
+			masterList = BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static BuildConnections getInstance() {
@@ -81,15 +86,15 @@ public class BuildConnections {
 
 		//do a query to get a map with brain regions and their parts
 		MultiHashMap<String,String> brainRegionToChildBrainRegion = 
-						getBAMSPartOfResults(initialBamsNames);
+			getBAMSPartOfResults(initialBamsNames);
 		//Filter out brain regions that are not in our master connection list.
 		brainRegionToChildBrainRegion = 
 			eliminateDataNotPresentInIntersection(brainRegionToChildBrainRegion);
 
 		//turn the map of brain regions into a set of nodes
 		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames, 
-											brainRegionToChildBrainRegion);
-		
+				brainRegionToChildBrainRegion);
+
 		//take current list of nodes and find children one more level down 
 		//from those nodes that do not have children
 		Node[] deeperNodes = getMoreChildNodes(nodes);
@@ -98,7 +103,7 @@ public class BuildConnections {
 
 		//populate the nodes with the cell data.
 		MultiHashMap<String,String> cellResults = NeuroLexDataLoader.populate(nodes);
-		
+
 		NeuroLexDataLoader.storeData(nodes, cellResults);
 
 		//create the edges based on the list.
@@ -152,7 +157,7 @@ public class BuildConnections {
 		}
 		//CustomGraphCollapser.getInstance().collapse();
 	}
-	
+
 	/**
 	 * Create the connection edges based on the list of nodes.
 	 * @param nodes
@@ -171,9 +176,10 @@ public class BuildConnections {
 
 				MultiHashMap<String,String> connResults = 
 					getConnectionsResults(partialNodeChunk);
-				
+				//eliminate connection results that contain brain regions that are not present in
+				//master list.
 				connResults = eliminateDataNotNeeded(connResults);
-				
+
 				List<ConnectionEdge> partialEdges = 
 					convertConnectionResultsIntoEdges(connResults, partialNodeChunk);
 				//System.out.println("partialEdges: "+partialEdges.size());
@@ -203,25 +209,25 @@ public class BuildConnections {
 	}
 
 	private void setInitialBrainRegions() {
-				/**try {
+		/**try {
 		        BAMSToNeurolexHashMap = BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
 		} catch (IOException e) {
 		        // TODO Auto-generated catch block
 		        e.printStackTrace();
 		}**/
 		String[] initialBamsNamesTemp = {"brainstem","basal-ganglia","cerebral-cortex","thalamus","striatum",
-		"substantia-nigra-pars-compacta","ventral-tegmental-area","septofimbrial-nucleus",
-		"caudoputamen","cuneiform-nucleus"};//,"hippocampal-region"};
+				"substantia-nigra-pars-compacta","ventral-tegmental-area","septofimbrial-nucleus",
+				"caudoputamen","cuneiform-nucleus"};//,"hippocampal-region"};
 		//{"cerebral-cortex", "thalamus-4", "basal-ganglia", "midbrain-hindbrain-motor-extrapyramidal"};
-		
+
 		//taking advantage of the string array initializer
 		initialBamsNames = initialBamsNamesTemp;
-		
+
 		//obtain the BAMS brain region names that intersect with neurolex.
 		//String[] initialBamsNames = getInitialBAMSNames();
 		//obtain the BAMS uris.
 		//addInitialBamsURIs();
-		
+
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/brainstem/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/basal-ganglia/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cerebral-cortex-10/");
@@ -237,53 +243,85 @@ public class BuildConnections {
 	}
 
 	/**
-	 * Method removes the elements that are not present in the file
+	 * Method finds the elements that are not present in the file
 	 * BAMSBrainRegionsMatchedWithNeurolex.
 	 * @param results
-	 * @return
+	 * @return MultiHashMap - a filtered map containing only brain regions 
+	 * 						  present in the master list.
 	 */
 	private MultiHashMap<String, String> eliminateDataNotNeeded(
 			MultiHashMap<String, String> results) {
-		MultiHashMap<String,String> checkedMap = results;
-		MultiHashMap<String,String> sendingStruc = new MultiHashMap();
-		MultiHashMap<String,String> receivingStruc = new MultiHashMap();
-		String sending = null;
-		String receiving = null;
-		
+		MultiHashMap<String,String> sendingStruc = new MultiHashMap<String, String>();
+		MultiHashMap<String,String> receivingStruc = new MultiHashMap<String, String>();
+
 		for(String key: results.keySet()){
 			for(String value: results.get(key)){
 				if(sendingStructure(key)){
-					//System.out.println("varaibale: "+ key +"     sending: "+value);
-					sendingStruc.put(key,value);
-					
+					if(!isStructureInList(value))
+						sendingStruc.put(key,value);
 				}	
-				if(receivingStructure(key)){
-					//System.out.println("varaibale: "+ key +"     receiving: "+receiving);
-					receivingStruc.put(key,value);
-					
+				else if(receivingStructure(key)){
+					if(!isStructureInList(value))
+						receivingStruc.put(key,value);
 				}
 			}
-		}	
-		for(String key: receivingStruc.keySet()){
-				String sendingKey = getSendingKey(key);
-				System.out.println("sending : "+sendingKey);
-				if(sending != null && receiving != null){
-					if(containsStructure(sendingKey) && containsStructure(key)){
-						String currentVar = getVarName(key);
-						checkedMap.remove(currentVar+"_str_rec");
-						checkedMap.remove(currentVar+"_ref_rec");
-						checkedMap.remove(currentVar+"_rec");
-						checkedMap.remove(currentVar+"_str_send");
-						checkedMap.remove(currentVar+"_ref_send");
-						checkedMap.remove(currentVar+"_send");
-						checkedMap.remove(currentVar+"str_send");
-						sending = null;
-						receiving = null;
-					}
-				}
+		}
+		return filterList(results,sendingStruc,receivingStruc);
+	}
+
+	/**
+	 * Method removes the elements that are not present in the master list
+	 * and returns the updated list.
+	 * @param results
+	 * @param sendingStruc - sending structures not present in master list
+	 * @param receivingStruc - receiving structures not present in master list.
+	 * @return
+	 */
+	private MultiHashMap<String, String> filterList(
+			MultiHashMap<String, String> results,
+			MultiHashMap<String, String> sendingStruc,
+			MultiHashMap<String, String> receivingStruc) {
+		String variableName;
+		
+		for(String sendingKey: sendingStruc.keySet()){
+			variableName = getVarKey(sendingKey);
+			results.remove(variableName+"_str_rec");
+			results.remove(variableName+"_ref_rec");
+			results.remove(variableName+"_rec");
+			results.remove(variableName+"_str_send");
+			results.remove(variableName+"_ref_send");
+			results.remove(variableName+"_send");
+			results.remove(variableName+"str_send");
 			
 		}
+		for(String receivingKey: receivingStruc.keySet()){
+			variableName = getVarKey(receivingKey);
+			results.remove(variableName+"_str_rec");
+			results.remove(variableName+"_ref_rec");
+			results.remove(variableName+"_rec");
+			results.remove(variableName+"_str_send");
+			results.remove(variableName+"_ref_send");
+			results.remove(variableName+"_send");
+			results.remove(variableName+"str_send");
+			
+		}
+		
 		return results;
+	}
+
+	/**
+	 * Method checks that a given brain region is present in the master list.
+	 * @param value
+	 * @return boolean - true if the brain region is in master list
+	 * 					 false if the brain region is not present in master list.
+	 */
+	private boolean isStructureInList(String value){
+		value = value.toLowerCase();
+		value = "http://brancusi1.usc.edu/brain_parts/"+value.replace(' ', '-')+"/";
+		if(masterList.containsKey(value))
+			return true;
+
+		return false;
 	}
 	/**
 	 * Method removes the elements that are not present in the file
@@ -296,44 +334,33 @@ public class BuildConnections {
 		for(String key: results.keySet()){
 			for(String value: results.get(key)){
 				if(value.contains("http//brancusi1.usc.edu/brain_parts/")){
-					try {
-						if(!BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(value)){
-							results.remove(key);
-						}
-					} catch (IOException e) {
-						System.err.println("Something went wrong in method eliminateDataNotPresentInIntersection");
-						e.printStackTrace();
+					if(!masterList.containsKey(value)){
+						results.remove(key);
 					}
-
 				}
 			}
 		}
 		return results;
 	}
 
-	private String getSendingKey(String key){
-		return key.substring(0,key.indexOf("_"))+"_send";
+	private String getVarKey(String key){
+		return key.substring(0,key.indexOf("_"));
 	}
-	
+
 	private boolean containsStructure(String structure) {
 		structure = "http://brancusi1.usc.edu/brain_parts/"
-				+ structure.replace(" ", "-").toLowerCase() + "/";
-		try {
-			if (BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap()
-					.containsKey(structure))
-				return true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			+ structure.replace(" ", "-").toLowerCase() + "/";
+
+		if (masterList.containsKey(structure))
+			return true;
 		return false;
 	}
 
 	private boolean sendingStructure(String key) {
-		
+
 		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("send")){
 			//System.out.println("is uri: "+key.substring(key.indexOf('_')+1)+"       key: "+key   );
-		   return true;
+			return true;
 		} 
 		return false;	
 	}
@@ -342,7 +369,7 @@ public class BuildConnections {
 		//System.out.println("is uri: "+key.substring(key.indexOf('_')+1));
 		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("rec")){
 			//System.out.println("is uri: "+key.substring(key.indexOf('_')+1)+"       key: "+key   );
-		   return true;
+			return true;
 		}  
 		return false;	
 	}
