@@ -24,6 +24,7 @@ package org.wholebrainproject.mcb.data;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.commons.collections15.ListUtils;
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
 import org.wholebrainproject.mcb.graph.Edge;
@@ -46,7 +48,7 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 /**
  * Responsible for accessing the server, querying data, and turning those
- * data into edges for the graph.
+ * data into nodes and edges for the graph.
  * @author Ruggero Carloz - adaptation 
  * 
  */
@@ -80,54 +82,27 @@ public class BuildConnections {
 		//do a query to get a map with brain regions and their parts
 		MultiHashMap<String,String> brainRegionToChildBrainRegion = 
 						getBAMSPartOfResults(initialBamsNames);
-		//Filter out brain regions that are not in 
+		//Filter out brain regions that are not in our master connection list.
 		brainRegionToChildBrainRegion = 
 			eliminateDataNotPresentInIntersection(brainRegionToChildBrainRegion);
 
+		//turn the map of brain regions into a set of nodes
 		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames, 
 											brainRegionToChildBrainRegion);
-		Node[] childlessNodes = filterParentNodes(nodes);
+		
+		//take current list of nodes and find children one more level down 
+		//from those nodes that do not have children
+		Node[] deeperNodes = getMoreChildNodes(nodes);
 
-		MultiHashMap<String,String> deeperResults = increaseDepthOfPartOfResults(childlessNodes);
-		deeperResults = eliminateDataNotPresentInIntersection(deeperResults);
-
-		//***Some filtering being done here
-		Node[] deeperNodes = convertDeeperResultsIntoNodes(childlessNodes, deeperResults);
-
-		List<Node> nodeList = mergeNodes(deeperNodes, nodes);
+		Set<Node> nodeList = mergeNodes(deeperNodes, nodes);
 
 		//populate the nodes with the cell data.
 		MultiHashMap<String,String> cellResults = NeuroLexDataLoader.populate(nodes);
-		/**for(String key: cellResults.keySet()){
-			for(String value: cellResults.get(key)){
-				System.out.println("key: "+key+ "   value: "+value);
-			}
-		}**/
+		
 		NeuroLexDataLoader.storeData(nodes, cellResults);
 
-		//System.out.println("nodeList: "+nodeList.size());
-		List<ConnectionEdge> edges = new ArrayList<ConnectionEdge>();
-
-		//to avoid making query strings too long for the server to handle,
-		//break the request for edges into chunks of 10 nodes at a time
-		List<Node> partialNodeChunk = new ArrayList<Node>();
-		for (int i = 0; i < nodeList.size(); i++) {
-			partialNodeChunk.add(nodeList.get(i));
-			if (i % 10 == 0 || i == nodeList.size() -1) {
-
-				MultiHashMap<String,String> connResults = 
-					getConnectionsResults(partialNodeChunk);
-				
-				connResults = eliminateDataNotNeeded(connResults);
-				
-				List<ConnectionEdge> partialEdges = 
-					convertConnectionResultsIntoEdges(connResults, partialNodeChunk);
-				//System.out.println("partialEdges: "+partialEdges.size());
-				edges.addAll(partialEdges);
-
-				partialNodeChunk = new ArrayList<Node>();
-			}
-		}
+		//create the edges based on the list.
+		List<ConnectionEdge> edges = createAndPopulateEdges(nodeList);
 
 		Set<String> missingNodeNames = findMissingNodeStrings(edges, nodeList);
 
@@ -177,6 +152,56 @@ public class BuildConnections {
 		}
 		//CustomGraphCollapser.getInstance().collapse();
 	}
+	
+	/**
+	 * Create the connection edges based on the list of nodes.
+	 * @param nodes
+	 * @return
+	 */
+	private List<ConnectionEdge> createAndPopulateEdges(Set<Node> nodes) {
+		List<Node> nodeList = new ArrayList<Node>(nodes);
+		List<ConnectionEdge> edges = new ArrayList<ConnectionEdge>();
+
+		//to avoid making query strings too long for the server to handle,
+		//break the request for edges into chunks of 10 nodes at a time
+		List<Node> partialNodeChunk = new ArrayList<Node>();
+		for (int i = 0; i < nodeList.size(); i++) {
+			partialNodeChunk.add(nodeList.get(i));
+			if (i % 10 == 0 || i == nodeList.size() -1) {
+
+				MultiHashMap<String,String> connResults = 
+					getConnectionsResults(partialNodeChunk);
+				
+				connResults = eliminateDataNotNeeded(connResults);
+				
+				List<ConnectionEdge> partialEdges = 
+					convertConnectionResultsIntoEdges(connResults, partialNodeChunk);
+				//System.out.println("partialEdges: "+partialEdges.size());
+				edges.addAll(partialEdges);
+
+				partialNodeChunk = new ArrayList<Node>();
+			}
+		}
+		return edges;
+	}
+
+	/**
+	 * Takes the list of nodes and gives back a larger list that contains
+	 * children of any node that was missing them.
+	 * @param nodes - the list to begin with
+	 * @return - a Node array that just has the additional children of the given
+	 *           nodes, as defined on the BAMS graph by the part of relationships
+	 */
+	private Node[] getMoreChildNodes(Node[] nodes) {
+		Node[] childlessNodes = filterParentNodes(nodes);
+
+		MultiHashMap<String,String> deeperResults = increaseDepthOfPartOfResults(childlessNodes);
+		deeperResults = eliminateDataNotPresentInIntersection(deeperResults);
+
+		//***Some filtering being done here
+		return convertDeeperResultsIntoNodes(childlessNodes, deeperResults);
+	}
+
 	private void setInitialBrainRegions() {
 				/**try {
 		        BAMSToNeurolexHashMap = BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
@@ -379,6 +404,12 @@ public class BuildConnections {
 		return q.runSelectQuery();
 	}
 
+	/**
+	 * Processing the results map and turning them into Node objects
+	 * @param initialBamsNames
+	 * @param results
+	 * @return
+	 */
 	public Node[] convertPartOfResultsIntoNodes(String[] initialBamsNames, 
 			MultiHashMap<String,String> results) {
 		List<Node> nodes = new ArrayList<Node>();
@@ -392,7 +423,6 @@ public class BuildConnections {
 			String nameVar = "$" + var + "_name";
 			String childUriVar = "$" + var + "_child_uri";
 			String childNameVar = "$" + var + "_child_name";
-
 
 			brainRegionPrettyName = results.get(nameVar).iterator().next();
 
@@ -666,19 +696,14 @@ public class BuildConnections {
 	 * @param nodeSet2
 	 * @return - an array with all nodes in nodeSet1 and nodeSet2.
 	 */
-	private List<Node> mergeNodes(Node[] nodeSet1, Node[] nodeSet2) {
-		Set<Node> nodesOut = new HashSet<Node>();
-		for (Node n: nodeSet1) {
-			nodesOut.add(n);
-		}
-		for (Node n: nodeSet2) {
-			nodesOut.add(n);
-		}
-
-		return new ArrayList<Node>(nodesOut);
+	private Set<Node> mergeNodes(Node[] nodeSet1, Node[] nodeSet2) {
+		List<Node> list1 = Arrays.asList(nodeSet1);
+		List<Node> list2 = Arrays.asList(nodeSet2);
+		//faster than iterating over both lists.
+		return new HashSet<Node>(ListUtils.union(list1, list2));
 	}
 
-	private Set<String> findMissingNodeStrings(List<ConnectionEdge> edges, List<Node> nodes) {
+	private Set<String> findMissingNodeStrings(List<ConnectionEdge> edges, Set<Node> nodes) {
 		Set<String> missingNodeNames = new HashSet<String>();
 		Map<String, Node> nodeNames = new HashMap<String,Node>();
 		for (Node n : nodes) {

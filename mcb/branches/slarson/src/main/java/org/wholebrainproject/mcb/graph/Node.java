@@ -40,7 +40,12 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
-public class Node implements Factory{
+
+/**
+ * A graph vertex that has been specialized for MCB to have 
+ * additional data associated with.
+ */
+public class Node {
 
 	/**
 	 * Name of vertex.

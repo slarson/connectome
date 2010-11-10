@@ -29,6 +29,10 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @author  Ruggero Carloz
  * @version 0.0.1
  */
+/**
+ * A directed edge in the graph that indicates a connection between two brain
+ * regions.
+ */
 public class ConnectionEdge implements Edge{
 	
 	public enum STRENGTH {
