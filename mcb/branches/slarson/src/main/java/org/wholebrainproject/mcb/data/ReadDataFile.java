@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.commons.collections15.multimap.MultiHashMap;
@@ -30,13 +31,13 @@ public class ReadDataFile {
 	 */
 	public  MultiHashMap<String, BAMSToNeurolexData> populateData() throws IOException {
 		String line;
-		File file = new File("src/main/resources/BAMSBrainRegionMatchedWithNeurolex.csv");
-		FileInputStream fis = null;
+		//File file = new File("src/main/resources/BAMSBrainRegionMatchedWithNeurolex.csv");
+		InputStream fis = null;
 		BufferedReader br = null;
 		DataInputStream in = null;
 		
 		try{
-			fis = new FileInputStream(file);
+			fis = ReadDataFile.class.getResourceAsStream("/BAMSBrainRegionMatchedWithNeurolex.csv");
 			in = new DataInputStream(fis);
 			br = new BufferedReader(new InputStreamReader(in));
 

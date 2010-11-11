@@ -19,6 +19,22 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	 **/
 	static JFrame mainFrame;
 	
+	public MultiScaleConnectomeBrowser() {
+		try {
+			//setSize(500,600);
+			View v = new View();
+			getContentPane().add(v.getMainPanel());
+			//getContentPane().setPreferredSize(new Dimension(500,900));
+			this.setJMenuBar(v.getMainMenuBar());
+			v.launchInstructionPopup();
+
+		} catch (Exception e) {
+			System.out.println("Unrecoverable error!");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
 	public static Properties getProperties() {
 		try {
 			Properties mcbProps = new Properties();
