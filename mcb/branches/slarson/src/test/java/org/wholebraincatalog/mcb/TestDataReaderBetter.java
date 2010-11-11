@@ -133,6 +133,7 @@ public class TestDataReaderBetter extends TestCase {
 		System.out.println(results);
 	}
 
+	/*
 	public void testParseSPARQLResult() {
 		String sparql = "http://api.talis.com/stores/neurolex-dev1/services/sparql";
 		SparqlQuery d = 
@@ -159,7 +160,7 @@ public class TestDataReaderBetter extends TestCase {
 		//assertEquals("http://neurolex.org/wiki/Special:URIResolver/Category-3AGlobus pallidus", results.get("$s"));
 		//assertEquals("http://semantic-mediawiki.org/swivt/1.0#page", results.get("$x"));
 
-	}
+	}*/
 	
 	/**
 	 * Populate a data reader for neurolex data.
