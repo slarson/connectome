@@ -12,7 +12,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -158,6 +160,26 @@ public class GraphManager {
         
         //by default, collapse all the edges
         //collapser.collapse();
+    }
+    
+    public void clearAllNodesAndEdges() {
+    	List<Edge> edges = new ArrayList<Edge>(); 
+    	for (Edge e: graph.getEdges()) {
+    		edges.add(e);
+    	}
+    	//done in two loops to avoid concurrent modification exception
+    	for (Edge e: edges) {
+    		graph.removeEdge(e);
+    	}
+    	
+    	List<Node> nodes = new ArrayList<Node>();
+    	for (Node n : graph.getVertices()) {
+    		nodes.add(n);
+    	}
+    	//done in two loops to avoid concurrent modification exception
+    	for (Node n : nodes) {
+    		graph.removeVertex(n);
+    	}
     }
    
     /**
