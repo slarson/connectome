@@ -61,12 +61,14 @@ public class BuildConnections {
 	//the uris in BAMS of the initial set of brain regions
 	private static List<String> initialBamsURIs = new ArrayList<String>();
 	private static MultiHashMap<String, BAMSToNeurolexData> masterList; 
+	private static HashMap<String,BAMSProjectionData> projectionList;
 	private static MultiHashMap<String, BAMSToNeurolexData> BAMSToNeurolexHashMap;
 	private static BuildConnections instance = null;
 
 	private BuildConnections() {
 		try {
 			masterList = BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
+			projectionList = BAMSProjectionMap.getInstance().getBAMSProjectionMap();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -282,7 +284,7 @@ public class BuildConnections {
 			MultiHashMap<String, String> sendingStruc,
 			MultiHashMap<String, String> receivingStruc) {
 		String variableName;
-		
+
 		for(String sendingKey: sendingStruc.keySet()){
 			variableName = getVarKey(sendingKey);
 			results.remove(variableName+"_str_rec");
@@ -292,7 +294,7 @@ public class BuildConnections {
 			results.remove(variableName+"_ref_send");
 			results.remove(variableName+"_send");
 			results.remove(variableName+"str_send");
-			
+
 		}
 		for(String receivingKey: receivingStruc.keySet()){
 			variableName = getVarKey(receivingKey);
@@ -303,9 +305,9 @@ public class BuildConnections {
 			results.remove(variableName+"_ref_send");
 			results.remove(variableName+"_send");
 			results.remove(variableName+"str_send");
-			
+
 		}
-		
+
 		return results;
 	}
 
@@ -326,21 +328,26 @@ public class BuildConnections {
 	/**
 	 * Method removes the elements that are not present in the file
 	 * BAMSBrainRegionsMatchedWithNeurolex.
-	 * @param results
-	 * @return
+	 * @param results- The list to be filtered.
+	 * @return returnedMap - The multi has map containing only elements present in
+	 * 						 master list.
 	 */
 	private MultiHashMap<String, String> eliminateDataNotPresentInIntersection(
 			MultiHashMap<String, String> results) {
+		String keyValue;
+		MultiHashMap<String,String> returnedMap = results;
+
 		for(String key: results.keySet()){
-			for(String value: results.get(key)){
-				if(value.contains("http//brancusi1.usc.edu/brain_parts/")){
-					if(!masterList.containsKey(value)){
-						results.remove(key);
-					}
-				}
+			keyValue = getVarKey(key);
+			if(!masterList.containsKey(results.get("$"+keyValue+"_uri")) || !masterList.containsKey("$"+keyValue+"_child_uri")){
+				returnedMap.remove("$"+keyValue+"_uri");
+				returnedMap.remove("$"+keyValue+"_name");
+				returnedMap.remove("$"+keyValue+"_child_uri");
+				returnedMap.remove("$"+keyValue+"_child_name");
 			}
 		}
-		return results;
+
+		return returnedMap;
 	}
 
 	private String getVarKey(String key){

@@ -1,9 +1,9 @@
 package org.wholebrainproject.mcb;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.net.URL;
 import java.util.Properties;
+
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
