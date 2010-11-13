@@ -64,6 +64,7 @@ public class SearchPanel extends JPanel {
 		try {
 			Map<String, URI> namesMap = BAMSToNeurolexMap.getInstance().getNamesMap();
 			names = new ArrayList(namesMap.keySet());
+			Collections.sort(names);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
