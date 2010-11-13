@@ -9,6 +9,8 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import org.wholebrainproject.mcb.search.SearchPanel;
+
 public class ToolBar extends JToolBar
 {
 	
@@ -19,6 +21,7 @@ public class ToolBar extends JToolBar
 	
 	ToolBarButton btnClear = new ToolBarButton(null, "Clear Regions");
 	ToolBarButton btnAdd = new ToolBarButton(null, "Add Region");
+	SearchPanel pnlSearch = null;
 	
 	protected MouseListener createListener()
 	{
@@ -64,6 +67,7 @@ public class ToolBar extends JToolBar
 		if ( sourceButton == btnAdd)
 		{
 			System.out.println("Add Button pressed");
+			pnlSearch.setVisible(true);
 		}
 		else if ( sourceButton == btnClear)
 		{
@@ -74,6 +78,8 @@ public class ToolBar extends JToolBar
 	
 	public ToolBar() 
 	{
+		pnlSearch = new SearchPanel();
+		
 		toolBarListener = createListener();
 		
 		
