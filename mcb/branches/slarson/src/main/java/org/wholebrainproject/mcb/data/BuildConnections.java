@@ -89,10 +89,11 @@ public class BuildConnections {
 		//do a query to get a map with brain regions and their parts
 		MultiHashMap<String,String> brainRegionToChildBrainRegion = 
 			getBAMSPartOfResults(initialBamsNames);
+		
 		//Filter out brain regions that are not in our master connection list.
 		brainRegionToChildBrainRegion = 
 			eliminateDataNotPresentInIntersection(brainRegionToChildBrainRegion);
-
+		
 		//turn the map of brain regions into a set of nodes
 		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames, 
 				brainRegionToChildBrainRegion);
@@ -217,7 +218,7 @@ public class BuildConnections {
 		        // TODO Auto-generated catch block
 		        e.printStackTrace();
 		}**/
-		String[] initialBamsNamesTemp = {"brainstem","basal-ganglia","cerebral-cortex","striatum",
+		String[] initialBamsNamesTemp = {"brainstem","basal-ganglia","cerebral-cortex","thalamus","striatum",
 				"substantia-nigra-pars-compacta","ventral-tegmental-area","septofimbrial-nucleus",
 				"caudoputamen","cuneiform-nucleus"};//,"hippocampal-region"};
 		//{"cerebral-cortex", "thalamus-4", "basal-ganglia", "midbrain-hindbrain-motor-extrapyramidal"};
@@ -233,7 +234,7 @@ public class BuildConnections {
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/brainstem/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/basal-ganglia/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cerebral-cortex/");
-		//initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus/");
+		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/striatum/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/substantia-nigra-pars-compacta/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/ventral-tegmental-area/");
@@ -335,18 +336,30 @@ public class BuildConnections {
 	private MultiHashMap<String, String> eliminateDataNotPresentInIntersection(
 			MultiHashMap<String, String> results) {
 		String keyValue;
-		MultiHashMap<String,String> returnedMap = results;
-
+		MultiHashMap<String,String> returnedMap = new MultiHashMap<String,String>();
+		for(String key: results.keySet()){
+			for(String value: results.get(key))
+			   returnedMap.put(key, value);
+		}
+		
 		for(String key: results.keySet()){
 			keyValue = getVarKey(key);
-			if(!masterList.containsKey(results.get("$"+keyValue+"_uri")) || !masterList.containsKey("$"+keyValue+"_child_uri")){
-				returnedMap.remove("$"+keyValue+"_uri");
-				returnedMap.remove("$"+keyValue+"_name");
-				returnedMap.remove("$"+keyValue+"_child_uri");
-				returnedMap.remove("$"+keyValue+"_child_name");
+			/**if(key.equalsIgnoreCase(keyValue+"_child_uri"))
+			    System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_child_uri"));
+			else if(key.equalsIgnoreCase(keyValue+"_child_name"))
+				System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_child_name"));
+			else if(key.equalsIgnoreCase(keyValue+"_name"))
+				System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_name"));
+			else if(key.equalsIgnoreCase(keyValue+"_uri"))
+				System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_uri"));**/
+			if(!masterList.containsKey(keyValue+"_child_uri")){
+				System.out.println("filtering");
+				//returnedMap.remove(keyValue+"_name");
+				returnedMap.remove(keyValue+"_child_uri");
+				returnedMap.remove(keyValue+"_child_name");
 			}
 		}
-
+		//System.out.println(returnedMap.size());
 		return returnedMap;
 	}
 
@@ -484,7 +497,7 @@ public class BuildConnections {
 
 						try {
 							if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(currentUri)){
-								System.out.println("currentURI: "+currentUri);
+								//System.out.println("currentURI: "+currentUri);
 								//System.out.println("current child name: "+currentName);
 								Node child = new Node(currentUri,currentName);
 								child.setParent(n);
