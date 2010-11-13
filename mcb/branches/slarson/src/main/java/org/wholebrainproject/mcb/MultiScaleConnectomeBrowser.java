@@ -7,8 +7,6 @@ import java.util.Properties;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
-import org.wholebrainproject.mcb.data.BAMSToNeurolexMap;
-
 /**
  * Main entrance point to the application.
  *
@@ -69,7 +67,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 			//data behind the scenes.
 			View v = new View();
 			mainFrame.setJMenuBar(v.getMainMenuBar());
-			mainFrame.getContentPane().setPreferredSize(new Dimension(500,900));
+			//mainFrame.getContentPane().setPreferredSize(new Dimension(500,900));
 			
 			mainFrame.setLayout(new BorderLayout());
 			mainFrame.add(v.getMainPanel(), BorderLayout.CENTER);

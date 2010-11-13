@@ -2,7 +2,12 @@ package org.wholebrainproject.mcb.data;
 
 import java.io.IOException;
 import java.util.HashMap;
-
+/**
+ * Class takes care of managing the data map that pretends to 
+ * the BAMS projection data.
+ * @author ruggero carloz
+ *
+ */
 public class BAMSProjectionMap {
 
 	
@@ -26,8 +31,8 @@ public class BAMSProjectionMap {
 	}
 	
 	/**
-	 * Method returns the multi hash map containing the data maped
-	 * from BAMS to Neurolex.
+	 * Method returns the hash map containing the projection data
+	 * from BAMS.
 	 * @return
 	 */
 	public HashMap<String, BAMSProjectionData> getBAMSProjectionMap(){
