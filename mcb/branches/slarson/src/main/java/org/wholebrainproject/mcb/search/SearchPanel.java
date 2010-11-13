@@ -1,5 +1,7 @@
 package org.wholebrainproject.mcb.search;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,7 +13,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -26,7 +30,7 @@ import org.wholebrainproject.mcb.data.BAMSToNeurolexMap;
  * @author slarson
  * 
  */
-public class SearchPanel extends JPanel {
+public class SearchPanel extends JDialog {
 
 	private List<String> names;
 
@@ -35,7 +39,12 @@ public class SearchPanel extends JPanel {
 	/**
 	 * {@inheritDoc}
 	 */
-	public SearchPanel() {
+	
+	JButton btnOK = new JButton("OK");
+	JButton btnCancel = new JButton("Cancel");
+	
+	public SearchPanel() 
+	{
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints gridBagConstraints;
@@ -55,9 +64,25 @@ public class SearchPanel extends JPanel {
 		gridBagConstraints.insets = new Insets(3, 3, 3, 3);
 		add(strictComboBox, gridBagConstraints);
 		
+		GridBagConstraints buttonConstraints = new GridBagConstraints();
+		buttonConstraints.gridwidth = GridBagConstraints.NONE;
+		buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
+		buttonConstraints.insets = new Insets(1, 3, 3, 3);
+		
+		add(btnOK, buttonConstraints);
+		add(btnCancel, buttonConstraints);
+		
+		Dimension size = new Dimension(500, 250);
+		
+		setMinimumSize(size);
+		setSize(size);
+		setPreferredSize(size);
+		
 		injectResources();
 		bind();
 		decorate();
+		repaint();
+		
 	}
 
 	protected void injectResources() {
