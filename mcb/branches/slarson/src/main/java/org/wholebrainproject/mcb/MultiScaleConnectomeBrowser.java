@@ -1,11 +1,14 @@
 package org.wholebrainproject.mcb;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.net.URL;
 import java.util.Properties;
 
 import javax.swing.JApplet;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 /**
  * Main entrance point to the application.
@@ -22,10 +25,12 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 		try {
 			//setSize(500,600);
 			View v = new View();
-			getContentPane().add(v.getMainPanel());
-			//getContentPane().setPreferredSize(new Dimension(500,900));
+			getContentPane().add(v.getMainPanel(), BorderLayout.CENTER);
+			getContentPane().add(new ToolBar(), BorderLayout.NORTH);
+			
+			getContentPane().setPreferredSize(new Dimension(500,900));
 			this.setJMenuBar(v.getMainMenuBar());
-			v.launchInstructionPopup();
+			//v.launchInstructionPopup();
 
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
@@ -54,6 +59,10 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	public static void main(String[] args) {
 
 		try {
+			
+			
+			MultiScaleConnectomeBrowser app = new MultiScaleConnectomeBrowser();
+			
 			//ReadProjectionData.getInstance();
 			//BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
 			Properties p = getProperties();
@@ -63,18 +72,16 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 			mainFrame.setSize(500, 600);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
-			//create new instance of View.  Implicitly kicks off loading of
-			//data behind the scenes.
-			View v = new View();
-			mainFrame.setJMenuBar(v.getMainMenuBar());
-			//mainFrame.getContentPane().setPreferredSize(new Dimension(500,900));
+			mainFrame.add(app);
 			
-			mainFrame.setLayout(new BorderLayout());
-			mainFrame.add(v.getMainPanel(), BorderLayout.CENTER);
+			mainFrame.show();
 			
-			mainFrame.pack();
-			mainFrame.setVisible(true);
-			v.launchInstructionPopup();
+			/*
+				To Avoid duplicating unneccessary code, 
+				this just creates a new instance of the MultiConenctomeBrowser and shows it
+				this is prefered over special casing for Appl versus Applet
+			 */
+			
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
 			e.printStackTrace();
