@@ -187,7 +187,7 @@ public class View extends JPanel{
 	}
 	
 	
-	private Frame findParentFrame(){ 
+	public Frame findParentFrame(){ 
 	    Container c = this; 
 	    while(c != null){ 
 	      if (c instanceof Frame) 

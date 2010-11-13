@@ -16,11 +16,13 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
+import org.wholebrainproject.mcb.View;
 import org.wholebrainproject.mcb.data.BAMSToNeurolexMap;
 
 /**
@@ -43,8 +45,11 @@ public class SearchPanel extends JDialog {
 	JButton btnOK = new JButton("OK");
 	JButton btnCancel = new JButton("Cancel");
 	
-	public SearchPanel() 
+	
+	public SearchPanel(JFrame owner) 
 	{
+		super(owner);
+		setModal(true);
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints gridBagConstraints;
