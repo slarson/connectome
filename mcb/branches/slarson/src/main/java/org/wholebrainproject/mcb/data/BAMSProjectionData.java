@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class BAMSToNeurolexData {
+public class BAMSProjectionData {
 	private HashMap<String,String> NomenclatureSpecies;
 	private String BAMSName;
 	private String BAMSPage;
@@ -13,19 +13,12 @@ public class BAMSToNeurolexData {
 	private Vector<String> projectsTo;
 	private int index;
 	
-	public BAMSToNeurolexData(String Name,String BAMSPage,String NeurolexPage, String Id){
-		this.BAMSName = Name;
-		this.BAMSPage = BAMSPage;
-		this.NeurolexPage = NeurolexPage;
-		this.NeurolexId = Id;
-		this.NomenclatureSpecies = new HashMap();		
-	}
 	
 	/**
 	 * Constructor for the brain regions that have projections.
 	 * @param brainRegionName
 	 */
-	public BAMSToNeurolexData(String brainRegionName,int index){
+	public BAMSProjectionData(String brainRegionName,int index){
 		this.BAMSName = brainRegionName;
 		this.projectsTo = new Vector<String>();
 		this.index = index;
