@@ -63,6 +63,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 			
 			MultiScaleConnectomeBrowser app = new MultiScaleConnectomeBrowser();
 			
+			
 			//ReadProjectionData.getInstance();
 			//BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
 			Properties p = getProperties();

@@ -7,6 +7,9 @@ import java.awt.event.MouseListener;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
 import org.wholebrainproject.mcb.search.SearchPanel;
@@ -22,6 +25,7 @@ public class ToolBar extends JToolBar
 	ToolBarButton btnClear = new ToolBarButton(null, "Clear Regions");
 	ToolBarButton btnAdd = new ToolBarButton(null, "Add Region");
 	SearchPanel pnlSearch = null;
+	
 	
 	protected MouseListener createListener()
 	{
@@ -67,7 +71,7 @@ public class ToolBar extends JToolBar
 		if ( sourceButton == btnAdd)
 		{
 			System.out.println("Add Button pressed");
-			pnlSearch.setVisible(true);
+			showSearch();
 		}
 		else if ( sourceButton == btnClear)
 		{
@@ -76,9 +80,28 @@ public class ToolBar extends JToolBar
 			
 	}
 	
+	private void showSearch()
+	{
+		/*
+		Dimension size = new Dimension(500, 70);
+		JFrame frame = new JFrame("Search Panel");
+		frame.add(pnlSearch);
+		
+		frame.setPreferredSize(size);
+		frame.setMinimumSize(size);
+		frame.setSize(size);
+		frame.pack();
+		frame.setVisible(true);
+		*/
+		
+		pnlSearch.setVisible(true);
+		
+	}
+	
 	public ToolBar() 
 	{
 		pnlSearch = new SearchPanel();
+		
 		
 		toolBarListener = createListener();
 		
