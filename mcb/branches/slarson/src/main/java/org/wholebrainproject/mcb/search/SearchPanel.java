@@ -3,9 +3,13 @@ package org.wholebrainproject.mcb.search;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -13,6 +17,7 @@ import javax.swing.JPanel;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
+import org.wholebrainproject.mcb.data.BAMSToNeurolexMap;
 
 /**
  * A panel to pick from a list of brain regions that are available to put on the
@@ -56,14 +61,13 @@ public class SearchPanel extends JPanel {
 	}
 
 	protected void injectResources() {
-
-		/*FIXME
-		String s = Application.getInstance().getContext().getResourceMap(
-				getClass()).getString("names");
-		
-		// prevent changes; we're sharing the list among several models
-		names = Collections.unmodifiableList(Arrays.asList(s.split(",")));
-				*/
+		try {
+			Map<String, URI> namesMap = BAMSToNeurolexMap.getInstance().getNamesMap();
+			names = new ArrayList(namesMap.keySet());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void bind() {
