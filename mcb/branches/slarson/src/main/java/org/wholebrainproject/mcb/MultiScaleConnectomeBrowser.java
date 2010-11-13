@@ -1,6 +1,7 @@
 package org.wholebrainproject.mcb;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.net.URL;
 import java.util.Properties;
 import javax.swing.JApplet;
@@ -55,19 +56,20 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	public static void main(String[] args) {
 
 		try {
+			//ReadProjectionData.getInstance();
 			//BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
 			Properties p = getProperties();
 			mainFrame = new JFrame(
 					 p.getProperty("application.name") + " version " + 
 					 p.getProperty("application.version"));
-			//mainFrame.setSize(500, 600);
+			mainFrame.setSize(500, 600);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 			//create new instance of View.  Implicitly kicks off loading of
 			//data behind the scenes.
 			View v = new View();
 			mainFrame.setJMenuBar(v.getMainMenuBar());
-			//mainFrame.getContentPane().setPreferredSize(new Dimension(500,900));
+			mainFrame.getContentPane().setPreferredSize(new Dimension(500,900));
 			
 			mainFrame.setLayout(new BorderLayout());
 			mainFrame.add(v.getMainPanel(), BorderLayout.CENTER);

@@ -215,7 +215,7 @@ public class BuildConnections {
 		        // TODO Auto-generated catch block
 		        e.printStackTrace();
 		}**/
-		String[] initialBamsNamesTemp = {"brainstem","basal-ganglia","cerebral-cortex","thalamus","striatum",
+		String[] initialBamsNamesTemp = {"brainstem","basal-ganglia","cerebral-cortex","striatum",
 				"substantia-nigra-pars-compacta","ventral-tegmental-area","septofimbrial-nucleus",
 				"caudoputamen","cuneiform-nucleus"};//,"hippocampal-region"};
 		//{"cerebral-cortex", "thalamus-4", "basal-ganglia", "midbrain-hindbrain-motor-extrapyramidal"};
@@ -230,9 +230,9 @@ public class BuildConnections {
 
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/brainstem/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/basal-ganglia/");
-		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cerebral-cortex-10/");
-		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus-2/");
-		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/striatum-4/");
+		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/cerebral-cortex/");
+		//initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/thalamus/");
+		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/striatum/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/substantia-nigra-pars-compacta/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/ventral-tegmental-area/");
 		initialBamsURIs.add("http://brancusi1.usc.edu/brain_parts/septofimbrial-nucleus/");
