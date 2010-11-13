@@ -8,10 +8,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
-
+/**
+ * Class takes care of treading the file containing the data
+ * that pretends to projections between brain regions.
+ * @author ruggero carloz
+ *
+ */
 public class ReadProjectionDataFile {
 	private static ReadProjectionDataFile instance;
-	public HashMap<String, BAMSProjectionData> dataMap = new HashMap();
+	public HashMap<String, BAMSProjectionData> dataMap = new HashMap<String, BAMSProjectionData>();
 
 	public ReadProjectionDataFile() throws IOException{
 		populateData();
@@ -25,7 +30,7 @@ public class ReadProjectionDataFile {
 
 	/**
 	 * Method populates the hash map with the data that is 
-	 * contained in the file BAMSBrainregionsmatchedwithNeuroLex.csv
+	 * contained in the file BAMSProjections.csv
 	 * @throws IOException
 	 */
 	public  HashMap<String, BAMSProjectionData> populateData() throws IOException {
@@ -41,7 +46,6 @@ public class ReadProjectionDataFile {
 			in = new DataInputStream(fis);
 			br = new BufferedReader(new InputStreamReader(in));
 			projectionMap = readFirstLine(br.readLine());
-			System.out.println("Finished Reading");
 			do{ 
 				line = br.readLine();
 				if(line != null && line.contains(",")){
@@ -81,7 +85,7 @@ public class ReadProjectionDataFile {
 			currentValue = line.substring(0, line.indexOf(','));
 			if(currentValue.equalsIgnoreCase("1")){
 				currentData.addProjection(projectionMap.get(currentIndex).getName());
-				System.out.println("currentData: "+currentData.getName()+" projectos to: "+projectionMap.get(currentIndex).getName());
+				//System.out.println("currentData: "+currentData.getName()+" projectos to: "+projectionMap.get(currentIndex).getName());
 			}
 			line =  line.substring(line.indexOf(',')+1);
 			currentIndex++;
