@@ -1,6 +1,8 @@
 package org.wholebrainproject.mcb;
 
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -98,9 +100,12 @@ public class ToolBar extends JToolBar
 		
 	}
 	
+
+	
 	public ToolBar() 
 	{
-		pnlSearch = new SearchPanel();
+		
+		pnlSearch = new SearchPanel(null);
 		
 		
 		toolBarListener = createListener();
