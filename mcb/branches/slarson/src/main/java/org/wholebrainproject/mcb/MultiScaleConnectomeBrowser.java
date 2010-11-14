@@ -21,17 +21,18 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 	 **/
 	static JFrame mainFrame;
 	
+	public static int width = 700;
+	public static int height = 600;
+	
 	public MultiScaleConnectomeBrowser() {
 		try {
-			//setSize(500,600);
 			View v = new View();
 			getContentPane().add(v.getMainPanel(), BorderLayout.CENTER);
 			getContentPane().add(new ToolBar(), BorderLayout.NORTH);
 			
-			getContentPane().setPreferredSize(new Dimension(500,900));
+			getContentPane().setPreferredSize(new Dimension(width,height));
 			this.setJMenuBar(v.getMainMenuBar());
 			//v.launchInstructionPopup();
-
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
 			e.printStackTrace();
@@ -70,18 +71,12 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 			mainFrame = new JFrame(
 					 p.getProperty("application.name") + " version " + 
 					 p.getProperty("application.version"));
-			mainFrame.setSize(500, 600);
+			mainFrame.setSize(width, height);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 			mainFrame.add(app);
-			
-			mainFrame.show();
-			
-			/*
-				To Avoid duplicating unneccessary code, 
-				this just creates a new instance of the MultiConenctomeBrowser and shows it
-				this is prefered over special casing for Appl versus Applet
-			 */
+			mainFrame.pack();
+			mainFrame.setVisible(true);
 			
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");

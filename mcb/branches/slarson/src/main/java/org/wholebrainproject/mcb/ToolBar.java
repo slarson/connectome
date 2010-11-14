@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
+import org.wholebrainproject.mcb.graph.GraphManager;
 import org.wholebrainproject.mcb.search.SearchPanel;
 
 public class ToolBar extends JToolBar
@@ -72,12 +73,11 @@ public class ToolBar extends JToolBar
 	{
 		if ( sourceButton == btnAdd)
 		{
-			System.out.println("Add Button pressed");
 			showSearch();
 		}
 		else if ( sourceButton == btnClear)
 		{
-			System.out.println("Clear Button Pressed");
+			GraphManager.getInstance().clearAllNodesAndEdges();
 		}
 			
 	}
@@ -116,6 +116,8 @@ public class ToolBar extends JToolBar
 		
 		add(btnClear);
 		btnClear.addMouseListener(toolBarListener);
+		this.setFloatable(false);
+		this.setRollover(true);
 	}
 	
 	class ToolBarButton extends JButton
