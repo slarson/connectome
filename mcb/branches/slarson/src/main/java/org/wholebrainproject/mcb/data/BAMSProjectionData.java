@@ -13,7 +13,6 @@ public class BAMSProjectionData {
 	private Vector<String> projectsTo;
 	private int index;
 	
-	
 	/**
 	 * Constructor for the brain regions that have projections.
 	 * @param brainRegionName

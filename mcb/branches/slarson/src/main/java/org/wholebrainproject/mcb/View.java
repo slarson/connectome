@@ -61,7 +61,7 @@ public class View extends JPanel{
 		//doing the getInstance() on GraphManager causes data to be loaded.
 		GraphZoomScrollPane gzsp = GraphManager.getInstance()
 				.getGraphZoomScrollPane();
-		gzsp.setPreferredSize(new Dimension(800,800));
+		gzsp.validate();
 		add(gzsp);
 	}
 	
