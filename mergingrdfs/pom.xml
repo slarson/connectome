@@ -82,13 +82,13 @@
 		<site>
 			<id>google.download</id>
 			<name>wholebrain googlecode scm</name>
-			<url>scm:svn:https://connectome.googlecode.com/svn/site/mcb
+			<url>scm:hg:https://connectome.googlecode.com/hg/site/mcb
 			</url>
 		</site>
 		<repository>
 			<id>google.code</id>
 			<name>Google code</name>
-			<url>https://connectome.googlecode.com/svn/mcb/</url>
+			<url>https://connectome.googlecode.com/hg/mcb/</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
@@ -323,4 +323,3 @@
 		</dependency>
 	</dependencies>
 </project>
-  
