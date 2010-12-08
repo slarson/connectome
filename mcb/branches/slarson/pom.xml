@@ -11,9 +11,9 @@
 		of brain networks at multiple levels of analysis</description>
 	<url>http://connectomebrowser.org</url>
 	<scm>
-		<connection>scm:svn:http://connectome.googlecode.com/svn/mcb/trunk
+		<connection>scm:hg:http://connectome.googlecode.com/hg/mcb/trunk
 		</connection>
-		<developerConnection>scm:svn:https://connectome.googlecode.com/svn/mcb/trunk
+		<developerConnection>scm:hg:https://connectome.googlecode.com/hg/mcb/trunk
 		</developerConnection>
 		<url>http://code.google.com/p/connectome/source/checkout</url>
 	</scm>
@@ -115,7 +115,7 @@
 				<version>2.0-beta-9</version>
 				<configuration>
 					<tagBase>
-						https://connectome.googlecode.com/svn/mcb/tags
+						https://connectome.googlecode.com/hg/mcb/tags
 					</tagBase>
 					<!--
 						triggers the profile below called 'release', which causes
@@ -159,7 +159,7 @@
 		<site>
 			<id>google.download</id>
 			<name>wholebrain googlecode scm</name>
-			<url>scm:svn:https://connectome.googlecode.com/svn/site/mcb
+			<url>scm:hg:https://connectome.googlecode.com/hg/site/mcb
 			</url>
 		</site>
 		<repository>
