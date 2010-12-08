@@ -16,6 +16,7 @@ public class ToolBar extends JToolBar
 
 	private MouseListener toolBarListener = null;
 
+	private static String currentSelectedBrainRegion;
 	ToolBarButton btnClear = new ToolBarButton(null, "Clear Regions");
 	ToolBarButton btnAdd = new ToolBarButton(null, "Add Region");
 	SearchPanel pnlSearch = null;
@@ -88,6 +89,7 @@ public class ToolBar extends JToolBar
 	 */
 	private void showSearch()
 	{
+
 		System.out.println("Show search: ");
 		/*
 		Dimension size = new Dimension(500, 70);
@@ -102,7 +104,8 @@ public class ToolBar extends JToolBar
 
 		 */
 		pnlSearch.setVisible(true);
-
+		currentSelectedBrainRegion = SearchPanel.getSelectedItem();
+		System.out.println(currentSelectedBrainRegion);
 	}
 
 	/**
