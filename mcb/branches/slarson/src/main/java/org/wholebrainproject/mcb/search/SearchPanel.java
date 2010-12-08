@@ -36,6 +36,7 @@ public class SearchPanel extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
+	private static String currentElement;
 	private MouseListener mouseListener = null;
 
 	private List<String> names;
@@ -112,7 +113,7 @@ public class SearchPanel extends JDialog {
 	 */
 	protected MouseListener createListener()
 	{
-			MouseListener listener = new MouseListener() {
+		MouseListener listener = new MouseListener() {
 
 			public void mouseReleased(MouseEvent e)
 			{
@@ -153,20 +154,40 @@ public class SearchPanel extends JDialog {
 	 * acts accordingly.
 	 * @param sourceButton
 	 */
-	protected void executeCommand(JButton sourceButton)
+	public void executeCommand(JButton sourceButton)
 	{
 		//button to add brain region was clicked.
 		if ( sourceButton == btnOK)
 		{
-			//showSearch();
+			setSetElement(strictComboBox.getSelectedItem());
+			this.dispose();
 		}
 		//button to clear the graph was clicked.
 		else if ( sourceButton == btnCancel)
 		{
-			System.out.println("Close box.");
-
+			System.out.println("Closing combo box.");
+			this.dispose();
 		}
+	}
 
+	/**
+	 * Method sets the variable that stores the selected item from
+	 * the combo box.
+	 * @param selectedItem
+	 */
+	private void setSetElement(Object selectedItem) {
+		currentElement = (String)selectedItem;
+
+	}
+
+	/**
+	 * Method returns the current selected brain region name.
+	 * @return currentElement - the name of the brain region
+	 * 							selected by the user in the
+	 * 							combo box.
+	 */
+	public static String getSelectedItem(){
+		return currentElement;
 	}
 	/**
 	 * Method gets the brain region names form the master list and
@@ -179,7 +200,7 @@ public class SearchPanel extends JDialog {
 
 			//put the brain region names in an array.
 			names = new ArrayList<String>(namesMap.keySet());
-
+			names.add("");
 			//sort the brain region names by name.
 			Collections.sort(names);
 		} catch (IOException e) {
