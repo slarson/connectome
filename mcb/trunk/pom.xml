@@ -8,8 +8,8 @@
 	<description>The goal of the Multi-Scale Connectome Browser or MCB(mcb) is to construct a software system that generates interactive diagrams of brain networks at multiple levels of analysis</description>
 	<url>http://connectomebrowser.org</url>
 	<scm>
-		<connection>scm:svn:http://connectome.googlecode.com/svn/mcb/trunk</connection>
-		<developerConnection>scm:svn:https://connectome.googlecode.com/svn/mcb/trunk</developerConnection>
+		<connection>scm:hg:http://connectome.googlecode.com/hg/mcb/trunk</connection>
+		<developerConnection>scm:hg:https://connectome.googlecode.com/hg/mcb/trunk</developerConnection>
 		<url>http://code.google.com/p/connectome/source/checkout</url>
 	</scm>
 	<build>
@@ -91,13 +91,12 @@
 		<site>
 			<id>google.download</id>
 			<name>wholebrain googlecode scm</name>
-			<url>scm:svn:https://connectome.googlecode.com/svn/site/mcb
-			</url>
+			<url>scm:svn:https://connectome.googlecode.com/hg/site/mcb</url>
 		</site>
 		<repository>
 			<id>google.code</id>
 			<name>Google code</name>
-			<url>https://connectome.googlecode.com/svn/mcb/</url>
+			<url>https://connectome.googlecode.com/hg/mcb/</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
