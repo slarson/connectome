@@ -105,8 +105,9 @@ public class ToolBar extends JToolBar
 		pnlSearch.setVisible(true);
 
 		currentBrainRegion = SearchPanel.getSelectedItem();
+
 		//make sure the user selected a brain region name from the list.
-		if(currentBrainRegion != null){
+		if(currentBrainRegion != null && !currentBrainRegion.isEmpty()){
 
 			//set the global variable that stores the selected brain
 			//region name.
