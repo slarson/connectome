@@ -37,6 +37,7 @@ import org.apache.commons.collections15.ListUtils;
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
 import org.wholebrainproject.mcb.graph.Edge;
+import org.wholebrainproject.mcb.graph.GraphManager;
 import org.wholebrainproject.mcb.graph.Node;
 import org.wholebrainproject.mcb.util.BrainRegionNameShortener;
 import org.wholebrainproject.mcb.util.SparqlQuery;
@@ -933,6 +934,7 @@ public class BuildConnections {
 	 * 						the new node about to be created.
 	 */
 	public void addNewNode(String newNodeName){
-
+		Node n = new Node("http://brancusi1.usc.edu/brain_parts/"+newNodeName+"/",newNodeName);
+		GraphManager.getInstance().addNodeAndAnyConnectionEdges(n);
 	}
 }
