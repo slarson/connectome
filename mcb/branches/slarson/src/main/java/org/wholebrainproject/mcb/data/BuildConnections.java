@@ -337,7 +337,7 @@ public class BuildConnections {
 		MultiHashMap<String,String> returnedMap = new MultiHashMap<String,String>();
 		for(String key: results.keySet()){
 			for(String value: results.get(key))
-			   returnedMap.put(key, value);
+				returnedMap.put(key, value);
 		}
 
 		for(String key: results.keySet()){
@@ -934,7 +934,12 @@ public class BuildConnections {
 	 * 						the new node about to be created.
 	 */
 	public void addNewNode(String newNodeName){
-		Node n = new Node("http://brancusi1.usc.edu/brain_parts/"+newNodeName+"/",newNodeName);
-		GraphManager.getInstance().addNodeAndAnyConnectionEdges(n);
+		Node n;
+		if(!GraphManager.getInstance().containsNodeWithName(newNodeName)){
+			n = new Node("http://brancusi1.usc.edu/brain_parts/"+newNodeName+"/",newNodeName);
+			//newNodeName = newNodeName.toUpperCase().substring(0, 1).concat(newNodeName.substring(1));
+			System.out.println("http://brancusi1.usc.edu/brain_parts/"+newNodeName.replace(" ", "-")+"/");
+			GraphManager.getInstance().addNodeAndAnyConnectionEdges(n);
+		}
 	}
 }
