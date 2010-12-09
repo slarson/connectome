@@ -72,7 +72,7 @@ import edu.uci.ics.jung.visualization.util.PredicatedParallelEdgeIndexFunction;
  * The GraphManager holds the graph model, handles layout, and handles
  * modifications to the graph that occur via user interaction with the GUI. It
  * follows the singleton pattern.
- * 
+ *
  */
 public class GraphManager {
 
@@ -115,7 +115,7 @@ public class GraphManager {
 	LensSupport modelSupport;
 	LensSupport magnifyLayoutSupport;
 	LensSupport magnifyViewSupport;
-	
+
 	GraphZoomScrollPane gzsp = null;
 
 	/**
@@ -141,7 +141,7 @@ public class GraphManager {
 		// load the data on to the graph
 		BuildConnections.getInstance().getDataAndCreateGraphBetter(graph);
 
-		AggregateLayout<Node,Edge> layout = 
+		AggregateLayout<Node,Edge> layout =
 			new AggregateLayout<Node, Edge>(new CircleLayout<Node, Edge>(graph));
 		// initialize the visualization viewer, which will make the graph look
 		// the way we want
@@ -151,7 +151,7 @@ public class GraphManager {
 
 		// configure the look and feel of the graph
 		configureVisViewer(vv);
-		
+
 
 		collapser = new CustomGraphCollapser(graph, layout, vv, exclusions);
 		// collapser = CustomGraphCollapser.getInstance();
@@ -172,7 +172,7 @@ public class GraphManager {
 	/**
 	 * Add this node to the graph. If it has any connections to any other nodes
 	 * on the graph, add an edge.
-	 * 
+	 *
 	 * @param n
 	 */
 	public void addNodeAndAnyConnectionEdges(Node n) {
@@ -224,7 +224,7 @@ public class GraphManager {
 	 * A refresh command to update the screen relative to the state of the graph
 	 */
 	public void refreshScreen() {
-		AggregateLayout layout = 
+		AggregateLayout layout =
 			new AggregateLayout<Node, Edge>(new CircleLayout<Node, Edge>(graph));
 		vv = initializeVisViewer(layout);
 		setGraphMouse();
@@ -245,7 +245,7 @@ public class GraphManager {
 	 * look and react the way we want it to.
 	 */
 	private void configureVisViewer(VisualizationViewer<Node,Edge> vv) {
-		VertexLabelAsShapeRenderer vlasr = 
+		VertexLabelAsShapeRenderer vlasr =
 			new VertexLabelAsShapeRenderer(vv.getRenderContext());
 
 		vv.getRenderContext().setVertexShapeTransformer(vlasr);
@@ -318,7 +318,7 @@ public class GraphManager {
 					/**
 					 * Transforms the input by ignoring it and returning the
 					 * stored constant instead.
-					 * 
+					 *
 					 * @param input
 					 *            the input object which is ignored
 					 * @return the stored constant
@@ -366,15 +366,15 @@ public class GraphManager {
 	 * edges will look and react.
 	 */
 	private VisualizationViewer initializeVisViewer(Layout layout) {
-		
+
 
 		Dimension preferredSize = new Dimension(
 				MultiScaleConnectomeBrowser.width,
 				MultiScaleConnectomeBrowser.height);
-	    VisualizationModel<Node, Edge> visualizationModel = 
+	    VisualizationModel<Node, Edge> visualizationModel =
 	    	//new DefaultVisualizationModel<Node,Edge>(new StaticLayout<Node,Edge>(graph));
 	    	new DefaultVisualizationModel<Node, Edge>(layout, preferredSize);
-		VisualizationViewer<Node,Edge> vv = 
+		VisualizationViewer<Node,Edge> vv =
 			new VisualizationViewer<Node, Edge>(visualizationModel,
 				preferredSize) {
 			// Override create tool tip method to use HyperLinkTooltip
@@ -389,7 +389,7 @@ public class GraphManager {
 
 	/**
 	 * Render connection arcs differently based on their projection strengths
-	 * 
+	 *
 	 * @param showProjectionStrengths
 	 */
 	public void setShowProjectionStrength(boolean showProjectionStrengths) {
@@ -406,13 +406,13 @@ public class GraphManager {
 		 * //the regular graph mouse for the normal view final
 		 * DefaultModalGraphMouse<Node,Edge> graphMouse = new
 		 * DefaultModalGraphMouse<Node,Edge>();
-		 * 
+		 *
 		 * vv.setGraphMouse(graphMouse); this.viewSupport = new
 		 * MagnifyImageLensSupport<Node,Edge>(vv); this.modelSupport = new
 		 * LayoutLensSupport<Node,Edge>(vv);
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * graphMouse.addItemListener(modelSupport.getGraphMouse().getModeListener
 		 * ());
 		 * graphMouse.addItemListener(viewSupport.getGraphMouse().getModeListener
@@ -582,7 +582,7 @@ public class GraphManager {
 
 	/**
 	 * Collapse a specific node
-	 * 
+	 *
 	 * @param node
 	 *            - node to collapse
 	 */
@@ -617,6 +617,23 @@ public class GraphManager {
 
 	private void test() {
 		collapser.test();
+	}
+
+	/**
+	 * Method takes a string and checks if the string matches the
+	 * name of any of the nodes in the current graph.
+	 * @param nodeNameToCheck - The string to compare the node names
+	 * 							too.
+	 * @return 				  - true if the string matches any of the
+	 * 							graph's nodes name, else return false.
+	 */
+	public boolean containsNodeWithName(String nodeNameToCheck){
+		for(Node currentNode:graph.getVertices()){
+			if(currentNode.getName().toLowerCase().equalsIgnoreCase(nodeNameToCheck))
+				return true;
+		}
+		return false;
+
 	}
 
 }
