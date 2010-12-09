@@ -156,16 +156,27 @@ public class SearchPanel extends JDialog {
 	 */
 	public void executeCommand(JButton sourceButton)
 	{
+		String selectedBrainRegionName;
 		//button to add brain region was clicked.
 		if ( sourceButton == btnOK)
 		{
-			setSetElement(strictComboBox.getSelectedItem());
+			selectedBrainRegionName = (String)strictComboBox.getSelectedItem();
+			setSetElement(selectedBrainRegionName);
+
+			//reset the combo box to it's original form.
+			strictComboBox.setSelectedItem("");
+
+			//close the combo box.
 			this.dispose();
 		}
 		//button to clear the graph was clicked.
 		else if ( sourceButton == btnCancel)
 		{
 			System.out.println("Closing combo box.");
+			//reset the combo box to it's original form.
+			strictComboBox.setSelectedItem("");
+
+			//reset the combo box.
 			this.dispose();
 		}
 	}
