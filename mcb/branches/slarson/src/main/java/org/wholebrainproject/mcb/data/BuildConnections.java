@@ -13,7 +13,7 @@ package org.wholebrainproject.mcb.data;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * The class is used to create the edges for the graph.  This class is implemented 
+ * The class is used to create the edges for the graph.  This class is implemented
  * by Multi-Scale Connectome Browser.
  * @date    March 1, 2010
  * @author  Ruggero Carloz
@@ -21,7 +21,6 @@ package org.wholebrainproject.mcb.data;
  */
 
 
-import java.awt.Component;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,20 +46,18 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 
 /**
- * Responsible for accessing the server, querying data, and turning those
+ * Responsible for accessing the server, querying data, and turning the
  * data into nodes and edges for the graph.
- * @author Ruggero Carloz - adaptation 
- * 
+ * @author Ruggero Carloz - adaptation
+ *
  */
-@SuppressWarnings("serial")
-
 public class BuildConnections {
 
 	//the names in BAMS of the initial set of brain regions
 	private String[] initialBamsNames = null;
 	//the uris in BAMS of the initial set of brain regions
 	private static List<String> initialBamsURIs = new ArrayList<String>();
-	private static MultiHashMap<String, BAMSToNeurolexData> masterList; 
+	private static MultiHashMap<String, BAMSToNeurolexData> masterList;
 	private static HashMap<String,BAMSProjectionData> projectionList;
 	private static MultiHashMap<String, BAMSToNeurolexData> BAMSToNeurolexHashMap;
 	private static BuildConnections instance = null;
@@ -87,18 +84,18 @@ public class BuildConnections {
 		setInitialBrainRegions();
 
 		//do a query to get a map with brain regions and their parts
-		MultiHashMap<String,String> brainRegionToChildBrainRegion = 
+		MultiHashMap<String,String> brainRegionToChildBrainRegion =
 			getBAMSPartOfResults(initialBamsNames);
-		
+
 		//Filter out brain regions that are not in our master connection list.
-		brainRegionToChildBrainRegion = 
+		brainRegionToChildBrainRegion =
 			eliminateDataNotPresentInIntersection(brainRegionToChildBrainRegion);
-		
+
 		//turn the map of brain regions into a set of nodes
-		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames, 
+		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames,
 				brainRegionToChildBrainRegion);
 
-		//take current list of nodes and find children one more level down 
+		//take current list of nodes and find children one more level down
 		//from those nodes that do not have children
 		Node[] deeperNodes = getMoreChildNodes(nodes);
 
@@ -137,11 +134,11 @@ public class BuildConnections {
 			Node receiving = edge.getReceivingNode();
 			Node receivingParent = receiving.getParent();
 
-			boolean sendingParentContains = sendingParent != null && 
+			boolean sendingParentContains = sendingParent != null &&
 			initialBamsURIs.contains(sendingParent.getUri());
 
 
-			boolean receivingParentContains = receivingParent != null && 
+			boolean receivingParentContains = receivingParent != null &&
 			initialBamsURIs.contains(receivingParent.getUri());
 
 			if (initialBamsURIs.contains(sending.getUri()) || initialBamsURIs.contains(receiving.getUri())
@@ -177,13 +174,13 @@ public class BuildConnections {
 			partialNodeChunk.add(nodeList.get(i));
 			if (i % 10 == 0 || i == nodeList.size() -1) {
 
-				MultiHashMap<String,String> connResults = 
+				MultiHashMap<String,String> connResults =
 					getConnectionsResults(partialNodeChunk);
 				//eliminate connection results that contain brain regions that are not present in
 				//master list.
 				connResults = eliminateDataNotNeeded(connResults);
 
-				List<ConnectionEdge> partialEdges = 
+				List<ConnectionEdge> partialEdges =
 					convertConnectionResultsIntoEdges(connResults, partialNodeChunk);
 				//System.out.println("partialEdges: "+partialEdges.size());
 				edges.addAll(partialEdges);
@@ -249,7 +246,7 @@ public class BuildConnections {
 	 * Method finds the elements that are not present in the file
 	 * BAMSBrainRegionsMatchedWithNeurolex.
 	 * @param results
-	 * @return MultiHashMap - a filtered map containing only brain regions 
+	 * @return MultiHashMap - a filtered map containing only brain regions
 	 * 						  present in the master list.
 	 */
 	private MultiHashMap<String, String> eliminateDataNotNeeded(
@@ -262,7 +259,7 @@ public class BuildConnections {
 				if(sendingStructure(key)){
 					if(!isStructureInList(value))
 						sendingStruc.put(key,value);
-				}	
+				}
 				else if(receivingStructure(key)){
 					if(!isStructureInList(value))
 						receivingStruc.put(key,value);
@@ -341,7 +338,7 @@ public class BuildConnections {
 			for(String value: results.get(key))
 			   returnedMap.put(key, value);
 		}
-		
+
 		for(String key: results.keySet()){
 			keyValue = getVarKey(key);
 			/**if(key.equalsIgnoreCase(keyValue+"_child_uri"))
@@ -381,8 +378,8 @@ public class BuildConnections {
 		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("send")){
 			//System.out.println("is uri: "+key.substring(key.indexOf('_')+1)+"       key: "+key   );
 			return true;
-		} 
-		return false;	
+		}
+		return false;
 	}
 
 	private boolean receivingStructure(String key) {
@@ -390,8 +387,8 @@ public class BuildConnections {
 		if(key.substring(key.indexOf('_')+1).equalsIgnoreCase("rec")){
 			//System.out.println("is uri: "+key.substring(key.indexOf('_')+1)+"       key: "+key   );
 			return true;
-		}  
-		return false;	
+		}
+		return false;
 	}
 	private String getVarName(String key) {
 		return key.substring(0, key.indexOf("_"));
@@ -399,9 +396,9 @@ public class BuildConnections {
 	}
 
 	/**
-	 * Get BAMS "part of" results.  Use the BAMS "part of" graph to get a list 
+	 * Get BAMS "part of" results.  Use the BAMS "part of" graph to get a list
 	 * of brain regions that are a part of the parameter list of brain regions.
-	 * @param initialBamsNames - a list of brain regions names known 
+	 * @param initialBamsNames - a list of brain regions names known
 	 * 							to be in the BAMS system.
 	 * @return - a multi hash map with key: [brain region name]_name
 	 * 			 and value: set of (brain region URIs), where each brain region
@@ -457,7 +454,7 @@ public class BuildConnections {
 	 * @param results
 	 * @return
 	 */
-	public Node[] convertPartOfResultsIntoNodes(String[] initialBamsNames, 
+	public Node[] convertPartOfResultsIntoNodes(String[] initialBamsNames,
 			MultiHashMap<String,String> results) {
 		List<Node> nodes = new ArrayList<Node>();
 		String brainRegionPrettyName;
@@ -585,12 +582,12 @@ public class BuildConnections {
 					ArrayList<Node> childrenNodes = new ArrayList<Node>();
 
 					if(urisIt != null && namesIt != null){
-						for (int i = 0; i < childUris.size(); i++) { 
+						for (int i = 0; i < childUris.size(); i++) {
 							String childURI = urisIt.next();
 							String childName = namesIt.next();
 							try {
 								//need to consider this line of code.  By filtering the brain regions that only appear in the list
-								//we are reducing the number of parts per parent node.                                          
+								//we are reducing the number of parts per parent node.
 								if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(childURI)){
 									Node child = new Node(childURI, childName);
 									child.setParent(n);
@@ -638,7 +635,7 @@ public class BuildConnections {
 			String strengthSendingVar = "$" + var + "_str_send";
 			String sendingVar = "$" + var + "_send";
 
-			q.addQueryTriplet(uriVar + 
+			q.addQueryTriplet(uriVar +
 					" nif_cnxn:sending_structure  \"" + brainRegionName+"\"");
 			q.addQueryTriplet(uriVar + " nif_cnxn:projection_strength "+ strengthReceivingVar);
 			q.addQueryTriplet(uriVar + " nif_cnxn:receiving_structure " + receivingVar);
@@ -646,7 +643,7 @@ public class BuildConnections {
 
 			q.addQueryTriplet(SparqlQuery.UNION);
 
-			q.addQueryTriplet(uriVar + 
+			q.addQueryTriplet(uriVar +
 					" nif_cnxn:receiving_structure  \"" + brainRegionName+"\"");
 			q.addQueryTriplet(uriVar + " nif_cnxn:projection_strength "+ strengthSendingVar);
 			q.addQueryTriplet(uriVar + " nif_cnxn:sending_structure " + sendingVar);
@@ -813,7 +810,7 @@ public class BuildConnections {
 		return q.runSelectQuery();
 	}
 
-	private List<Node> convertMissingNodesResultsIntoNodes(MultiHashMap<String,String> results, 
+	private List<Node> convertMissingNodesResultsIntoNodes(MultiHashMap<String,String> results,
 			List<String> partialNameChunk) {
 		List<Node> nodes = new ArrayList<Node>();
 
@@ -847,7 +844,7 @@ public class BuildConnections {
 				}
 
 				n.setPartOfNodes(childrenNodes);
-			} 
+			}
 		}
 
 		return nodes;
@@ -860,7 +857,7 @@ public class BuildConnections {
 		//test to see if there is already an existing edge between these two nodes
 		Set<Edge> a = new HashSet<Edge>();
 		Collection<Edge> e = graph.getIncidentEdges(x);
-		if (e != null) 
+		if (e != null)
 			a.addAll(e);
 		Collection<Edge> f = graph.getIncidentEdges(y);
 		//leaves a with the intersection of the edges that are incident to x & y
@@ -887,7 +884,7 @@ public class BuildConnections {
 					if(!repeats.contains(partOf)){
 						node[i].addPartOfNodes(graph);
 						repeats.add(partOf);
-					}       
+					}
 				}
 			}
 		}
@@ -926,5 +923,16 @@ public class BuildConnections {
 
 	public List<String> getInitialBamsURIs() {
 		return initialBamsURIs;
+	}
+
+	/**
+	 * Method adds new node to the graph.  If there is no graph
+	 * it will create a new one.  If there is a graph present
+	 * it will add the node as needed.
+	 * @param newNodeName - the name of the brain region for
+	 * 						the new node about to be created.
+	 */
+	public void addNewNode(String newNodeName){
+
 	}
 }

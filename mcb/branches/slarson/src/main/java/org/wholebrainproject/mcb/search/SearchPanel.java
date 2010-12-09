@@ -21,9 +21,7 @@ import javax.swing.JLabel;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
-import org.wholebrainproject.mcb.ToolBar.ToolBarButton;
 import org.wholebrainproject.mcb.data.BAMSToNeurolexMap;
-import org.wholebrainproject.mcb.graph.GraphManager;
 
 /**
  * A panel to pick from a list of brain regions that are available to put on the
