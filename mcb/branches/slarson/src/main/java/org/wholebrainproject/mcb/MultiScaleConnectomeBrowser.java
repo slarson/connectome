@@ -6,30 +6,30 @@ import java.net.URL;
 import java.util.Properties;
 
 import javax.swing.JApplet;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.UIManager;
 
 /**
  * Main entrance point to the application.
  *
  */
 public class MultiScaleConnectomeBrowser extends JApplet{
-	
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * the gui frame
 	 **/
 	static JFrame mainFrame;
-	
+
 	public static int width = 700;
 	public static int height = 600;
-	
+
 	public MultiScaleConnectomeBrowser() {
 		try {
 			View v = new View();
 			getContentPane().add(v.getMainPanel(), BorderLayout.CENTER);
 			getContentPane().add(new ToolBar(), BorderLayout.NORTH);
-			
+
 			getContentPane().setPreferredSize(new Dimension(width,height));
 			this.setJMenuBar(v.getMainMenuBar());
 			//v.launchInstructionPopup();
@@ -39,7 +39,7 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 			System.exit(1);
 		}
 	}
-	
+
 	public static Properties getProperties() {
 		try {
 			Properties mcbProps = new Properties();
@@ -52,32 +52,32 @@ public class MultiScaleConnectomeBrowser extends JApplet{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Driver for application
-	 * @throws Exception 
+	 * @throws Exception
 	 **/
 	public static void main(String[] args) {
 
 		try {
-			
-			
+
+
 			MultiScaleConnectomeBrowser app = new MultiScaleConnectomeBrowser();
-			
-			
+
+
 			//ReadProjectionData.getInstance();
 			//BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
 			Properties p = getProperties();
 			mainFrame = new JFrame(
-					 p.getProperty("application.name") + " version " + 
+					 p.getProperty("application.name") + " version " +
 					 p.getProperty("application.version"));
 			mainFrame.setSize(width, height);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
+
 			mainFrame.add(app);
 			mainFrame.pack();
 			mainFrame.setVisible(true);
-			
+
 		} catch (Exception e) {
 			System.out.println("Unrecoverable error!");
 			e.printStackTrace();

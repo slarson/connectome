@@ -89,22 +89,29 @@ public class ToolBar extends JToolBar
 	 */
 	private void showSearch()
 	{
-
-		System.out.println("Show search: ");
+		String currentBrainRegion;
 		/*
 		Dimension size = new Dimension(500, 70);
 		JFrame frame = new JFrame("Search Panel");
 		frame.add(pnlSearch);
-
 		frame.setPreferredSize(size);
 		frame.setMinimumSize(size);
 		frame.setSize(size);
 		frame.pack();
 		frame.setVisible(true);
+		*/
 
-		 */
 		pnlSearch.setVisible(true);
-		currentSelectedBrainRegion = SearchPanel.getSelectedItem();
+
+		currentBrainRegion = SearchPanel.getSelectedItem();
+		//make sure the user selected a brain region name from the list.
+		if(currentBrainRegion != null){
+
+			//set the global variable that stores the selected brain
+			//region name.
+			currentSelectedBrainRegion = currentBrainRegion;
+		}
+
 		System.out.println(currentSelectedBrainRegion);
 	}
 
