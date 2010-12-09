@@ -7,6 +7,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import org.wholebrainproject.mcb.data.BuildConnections;
 import org.wholebrainproject.mcb.graph.GraphManager;
 import org.wholebrainproject.mcb.search.SearchPanel;
 
@@ -16,7 +17,7 @@ public class ToolBar extends JToolBar
 
 	private MouseListener toolBarListener = null;
 
-	private static String currentSelectedBrainRegion;
+	private static String currentSelectedBrainRegion = null;
 	ToolBarButton btnClear = new ToolBarButton(null, "Clear Regions");
 	ToolBarButton btnAdd = new ToolBarButton(null, "Add Region");
 	SearchPanel pnlSearch = null;
@@ -110,6 +111,9 @@ public class ToolBar extends JToolBar
 			//set the global variable that stores the selected brain
 			//region name.
 			currentSelectedBrainRegion = currentBrainRegion;
+
+			//the name of the new node to be created.
+			BuildConnections.getInstance().addNewNode(currentBrainRegion);
 		}
 
 		System.out.println(currentSelectedBrainRegion);
