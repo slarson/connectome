@@ -63,6 +63,10 @@ public class BuildConnections {
 	private static MultiHashMap<String, BAMSToNeurolexData> BAMSToNeurolexHashMap;
 	private static BuildConnections instance = null;
 
+	/**
+	 * Constructor takes care of instantiating the master list and the
+	 * projection list.
+	 */
 	private BuildConnections() {
 		try {
 			masterList = BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
@@ -209,13 +213,11 @@ public class BuildConnections {
 		return convertDeeperResultsIntoNodes(childlessNodes, deeperResults);
 	}
 
+	/**
+	 * Method creates a list of brain regions to instantiate the graph with when the
+	 * user starts the application.
+	 */
 	private void setInitialBrainRegions() {
-		/**try {
-		        BAMSToNeurolexHashMap = BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap();
-		} catch (IOException e) {
-		        // TODO Auto-generated catch block
-		        e.printStackTrace();
-		}**/
 		String[] initialBamsNamesTemp = {"brainstem","basal-ganglia","cerebral-cortex","thalamus","striatum",
 				"substantia-nigra-pars-compacta","ventral-tegmental-area","septofimbrial-nucleus",
 				"caudoputamen","cuneiform-nucleus"};//,"hippocampal-region"};
@@ -432,7 +434,8 @@ public class BuildConnections {
 			q.addQueryTriplet(uriVar + " bams_rdf:class1 " + "<" + uri + ">");
 			//bind the child URI variable to those URIs that are the children
 			//of the brain region in the URI variable
-			q.addQueryTriplet(uriVar + " bams_rdf:class2 " + childUriVar);
+			q.addQueryTriplet(uriVar + " bams_rdf:class2 " + childUriVar +
+					"FILTER regex(str($b0_child_uri),\"^?[a-z]/$\")");
 			//bind the child name variable to the name given for the URI
 			//stored in the child URI variable.
 			q.addQueryTriplet(childUriVar + " bams_rdf:name " + childNameVar);
@@ -937,8 +940,7 @@ public class BuildConnections {
 		Node n;
 		if(!GraphManager.getInstance().containsNodeWithName(newNodeName)){
 			n = new Node("http://brancusi1.usc.edu/brain_parts/"+newNodeName+"/",newNodeName);
-			//newNodeName = newNodeName.toUpperCase().substring(0, 1).concat(newNodeName.substring(1));
-			System.out.println("http://brancusi1.usc.edu/brain_parts/"+newNodeName.replace(" ", "-")+"/");
+			//add the newly created node to the graph.
 			GraphManager.getInstance().addNodeAndAnyConnectionEdges(n);
 		}
 	}
