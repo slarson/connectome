@@ -435,7 +435,7 @@ public class BuildConnections {
 			//bind the child URI variable to those URIs that are the children
 			//of the brain region in the URI variable
 			q.addQueryTriplet(uriVar + " bams_rdf:class2 " + childUriVar +
-					"FILTER regex(str($b0_child_uri),\"^?[a-z]/$\")");
+					" FILTER regex(str($b0_child_uri),\"^?[a-z]/$\")");
 			//bind the child name variable to the name given for the URI
 			//stored in the child URI variable.
 			q.addQueryTriplet(childUriVar + " bams_rdf:name " + childNameVar);
