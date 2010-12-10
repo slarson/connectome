@@ -91,7 +91,7 @@ public class BuildConnections {
 		//do a query to get a map with brain regions and their parts
 		MultiHashMap<String,String> brainRegionToChildBrainRegion =
 			getBAMSPartOfResults(initialBamsNames);
-
+		/*
 		//Filter out brain regions that are not in our master connection list.
 		brainRegionToChildBrainRegion =
 			eliminateDataNotPresentInIntersection(brainRegionToChildBrainRegion);
@@ -161,6 +161,8 @@ public class BuildConnections {
 			}
 		}
 		//CustomGraphCollapser.getInstance().collapse();
+
+		 */
 	}
 
 	/**
