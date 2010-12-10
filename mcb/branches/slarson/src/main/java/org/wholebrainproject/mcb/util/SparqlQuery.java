@@ -318,9 +318,6 @@ public class SparqlQuery
 				break;
 			}
 		}
-		for(String str: resultMap.values()){
-			System.out.println("value saved: "+str);
-		}
 		System.out.println("Data processing finalized.");
 		queryResult.close();
 

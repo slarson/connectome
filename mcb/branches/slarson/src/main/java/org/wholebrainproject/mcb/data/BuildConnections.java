@@ -92,6 +92,12 @@ public class BuildConnections {
 		MultiHashMap<String,String> brainRegionToChildBrainRegion =
 			getBAMSPartOfResults(initialBamsNames);
 		/*
+		for(String key: brainRegionToChildBrainRegion.keySet()){
+			for(String value: brainRegionToChildBrainRegion.get(key)){
+				System.out.println("key: "+key+"  value: "+value);
+			}
+		}
+		 */
 		//Filter out brain regions that are not in our master connection list.
 		brainRegionToChildBrainRegion =
 			eliminateDataNotPresentInIntersection(brainRegionToChildBrainRegion);
@@ -99,6 +105,9 @@ public class BuildConnections {
 		//turn the map of brain regions into a set of nodes
 		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames,
 				brainRegionToChildBrainRegion);
+
+		for(Node node: nodes)
+			System.out.println("node: "+node.getName());
 
 		//take current list of nodes and find children one more level down
 		//from those nodes that do not have children
@@ -162,7 +171,6 @@ public class BuildConnections {
 		}
 		//CustomGraphCollapser.getInstance().collapse();
 
-		 */
 	}
 
 	/**
@@ -331,40 +339,45 @@ public class BuildConnections {
 	/**
 	 * Method removes the elements that are not present in the file
 	 * BAMSBrainRegionsMatchedWithNeurolex.
-	 * @param results- The list to be filtered.
-	 * @return returnedMap - The multi has map containing only elements present in
+	 * @param results	   - The list to be filtered.
+	 * @return returnedMap - The multi hash map containing only elements present in
 	 * 						 master list.
 	 */
 	private MultiHashMap<String, String> eliminateDataNotPresentInIntersection(
 			MultiHashMap<String, String> results) {
+
 		String keyValue;
+		Collection<String> childURIs;
 		MultiHashMap<String,String> returnedMap = new MultiHashMap<String,String>();
+
+		//make a copy of the original list in order to iterate through the list
+		//and modify the copy.
 		for(String key: results.keySet()){
 			for(String value: results.get(key))
 				returnedMap.put(key, value);
 		}
 
+		//iterate through the original list and modify the copy if the
+		//child uri is not present in the master list.
 		for(String key: results.keySet()){
 			keyValue = getVarKey(key);
-			/**if(key.equalsIgnoreCase(keyValue+"_child_uri"))
-			    System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_child_uri"));
-			else if(key.equalsIgnoreCase(keyValue+"_child_name"))
-				System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_child_name"));
-			else if(key.equalsIgnoreCase(keyValue+"_name"))
-				System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_name"));
-			else if(key.equalsIgnoreCase(keyValue+"_uri"))
-				System.out.println("key: "+key+"    keyValue:"+keyValue+"       "+results.get(keyValue+"_uri"));**/
-			if(!masterList.containsKey(keyValue+"_child_uri")){
-				System.out.println("filtering");
-				//returnedMap.remove(keyValue+"_name");
-				returnedMap.remove(keyValue+"_child_uri");
-				returnedMap.remove(keyValue+"_child_name");
+			childURIs = results.get(keyValue+"_child_uri");
+
+			for(String childURI: childURIs){
+				if(!masterList.containsKey(childURI)){
+					returnedMap.remove(keyValue+"_child_uri");
+					returnedMap.remove(keyValue+"_child_name");
+				}
 			}
 		}
-		//System.out.println(returnedMap.size());
 		return returnedMap;
 	}
 
+	/**
+	 * Method obtains the unique variable name for the given key.
+	 * @param key  - the key to extract the unique variable from.
+	 * @return	   - return the unique variable name.
+	 */
 	private String getVarKey(String key){
 		return key.substring(0,key.indexOf("_"));
 	}
@@ -437,7 +450,7 @@ public class BuildConnections {
 			//bind the child URI variable to those URIs that are the children
 			//of the brain region in the URI variable
 			q.addQueryTriplet(uriVar + " bams_rdf:class2 " + childUriVar +
-					" FILTER regex(str($b0_child_uri),\"^?[a-z]/$\")");
+			" FILTER regex(str($b0_child_uri),\"^?[a-z]/$\")");
 			//bind the child name variable to the name given for the URI
 			//stored in the child URI variable.
 			q.addQueryTriplet(childUriVar + " bams_rdf:name " + childNameVar);
@@ -464,7 +477,7 @@ public class BuildConnections {
 			MultiHashMap<String,String> results) {
 		List<Node> nodes = new ArrayList<Node>();
 		String brainRegionPrettyName;
-		Node n;
+		Node n = null;
 		for (String brainRegion: initialBamsNames) {
 
 			String uri = "http://brancusi1.usc.edu/brain_parts/" + brainRegion + "/";
@@ -474,14 +487,15 @@ public class BuildConnections {
 			String childUriVar = "$" + var + "_child_uri";
 			String childNameVar = "$" + var + "_child_name";
 
-			brainRegionPrettyName = results.get(nameVar).iterator().next();
+			if(results.containsKey(nameVar)){
+				brainRegionPrettyName = results.get(nameVar).iterator().next();
 
-			if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
-				n = new Node(uri, brainRegionPrettyName.toLowerCase());
-			else{
-				n = new Node(uri,brainRegionPrettyName);
+				if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
+					n = new Node(uri, brainRegionPrettyName.toLowerCase());
+				else{
+					n = new Node(uri,brainRegionPrettyName);
+				}
 			}
-
 			if(n!= null){
 				nodes.add(n);
 
