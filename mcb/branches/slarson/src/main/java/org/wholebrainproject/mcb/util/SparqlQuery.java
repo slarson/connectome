@@ -36,9 +36,9 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 /**
  * Executes a SPARQL query against a specified end point.  Can't be reused, so
  * throw it away after you get your query results out of it.
- * 
+ *
  * Provides abstractions to automate query construction.
- * 
+ *
  * @author Stephen D. Larson (slarson@ncmir.ucsd.edu)
  *
  */
@@ -50,22 +50,22 @@ public class SparqlQuery
 	 * The URL of the sparql end point that will be queries.
 	 */
 	private String sparqlEndPointURL = null;
-	
+
 	/**
 	 * The list of triplets that will be used to query.
 	 */
 	private List<String> queryTriplets = null;
-	
+
 	/**
 	 * The list of variables to select with.
 	 */
 	private List<String> variableList = null;
-	
+
 	/**
 	 * A map of RDF prefixes mapped to their URIs.
 	 */
 	private Map<String,String> prefixMap = null;
-	
+
 	/**
 	 * Constructor for SparqlQuery
 	 * @param sparqlEndPoint - the URL of the SPARQL
@@ -80,18 +80,18 @@ public class SparqlQuery
 
 	/**
 	 * Adds one triplet line to a SPARQL query.  Variables
-	 * that are used here will need to be included as 
-	 * an argument to {@link #runSelectQuery(String)} when 
+	 * that are used here will need to be included as
+	 * an argument to {@link #runSelectQuery(String)} when
 	 * executed.
 	 * @param queryTriplet - a triplet separated by spaces that
-	 *  is part of a SPARQL query, 
+	 *  is part of a SPARQL query,
 	 *  such as $s <http://someurl/property> $y. NOTE:
 	 * you can include "} UNION {" between sets of queryTriplets.
 	 */
 	public void addQueryTriplet(String queryTriplet) {
 		queryTriplets.add(queryTriplet);
-	} 
-	
+	}
+
 	/**
 	 * Get the string of the URL of the SPARQL endpoint
 	 * that is being used.
@@ -100,7 +100,7 @@ public class SparqlQuery
 	public String getSparqlEndPoint() {
 		return this.sparqlEndPointURL;
 	}
-	
+
 	/**
 	 * Add a variable to select output from.
 	 * @param selectVariable
@@ -108,7 +108,7 @@ public class SparqlQuery
 	public void addSelectVariable(String selectVariable) {
 		variableList.add(selectVariable);
 	}
-	
+
 	/**
 	 * Add prefix mapping to the SPARQL query.  The prefix can then be used
 	 * in {@link #addQueryTriplet(String)}.
@@ -121,9 +121,9 @@ public class SparqlQuery
 		}
 		prefixMap.put(prefix, uri);
 	}
-	
+
 	/**
-	 * Put the queryTriplet list together into a SPARQL query 
+	 * Put the queryTriplet list together into a SPARQL query
 	 * @return - a string containing a SPARQL query
 	 * @see #addQueryTriplet(String)
 	 * @see #addSelectVariable(String)
@@ -138,12 +138,12 @@ public class SparqlQuery
 		String variables = "";
 		// SPARQL query
 		String queryString = "";
-		
-		// append variables 
+
+		// append variables
 		for(String var : this.variableList ) {
 			variables+=" "+var;
-		}	
-		
+		}
+
 		//cheesy mechanism to allow UNION statements to parse correctly
 		String startBracket = " {";
 		String endBracket = "} ";
@@ -153,33 +153,33 @@ public class SparqlQuery
 				endBracket = " }}";
 			}
 		}
-		
+
 		//add prefixes into the query statement if they have been added.
 		if (prefixMap.keySet().isEmpty() == false ) {
 			for (String prefix : prefixMap.keySet()) {
-				queryString += "PREFIX " + prefix + ": " + 
+				queryString += "PREFIX " + prefix + ": " +
 				prefixMap.get(prefix) + " ";
 			}
 		}
-		
+
 		// make sure we have some variables
 		if(variables != "")
 			queryString += "select DISTINCT" + variables + startBracket;
-		
+
 		// wrap up query string from queryTripletList
 		for (String queryTriplet : queryTriplets) {
-			queryString += queryTriplet;	
-			if (queryTriplet.contains("UNION") == false && 
+			queryString += queryTriplet;
+			if (queryTriplet.contains("UNION") == false &&
 					queryTriplet.contains("FILTER") == false)
 				queryString += " . ";
-			
+
 		}
-		
+
 		queryString += endBracket;
 		System.out.println(queryString);
 		return queryString;
 	}
-	
+
 	/**
 	 * Get the number of triplets added;
 	 * @return - number of triplets
@@ -187,7 +187,7 @@ public class SparqlQuery
 	public int getTripletCount() {
 		return queryTriplets.size();
 	}
-	
+
 	/**
 	 * Execute a SPARQL query built up from a set of query triplets.
 	 * @see #addQueryTriplet(String)
@@ -196,49 +196,56 @@ public class SparqlQuery
 	 */
 	public MultiHashMap<String, String> runSelectQuery() {
 		String queryString = getComposedQuery();
-		
+
 		try {
 			// URL encode query string
 			queryString = URLEncoder.encode(queryString, "UTF-8");
 
 			// compose the final URL
-			URL sparqlConnection = new URL(this.sparqlEndPointURL + 
+			URL sparqlConnection = new URL(this.sparqlEndPointURL +
 					"?query=" + queryString);
 
 			//System.out.println(sparqlConnection.toString());
-			
-			
+
+
 			HttpURLConnection httpConnection = (HttpURLConnection)sparqlConnection.openConnection();
 			httpConnection.setRequestProperty("accept", "application/sparql-results+xml");
 			InputStream queryResult = httpConnection.getInputStream();
-			
+
 			return parseSPARQLResult(queryResult);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @param queryResult - an input stream that contains a SPARQL result XML
 	 * @return a Map with one key per $variable and a list of results as the value
 	 * @see MultiHashMap
 	 * @throws Exception
 	 */
-	private MultiHashMap<String, String> parseSPARQLResult(InputStream queryResult) 
+	private MultiHashMap<String, String> parseSPARQLResult(InputStream queryResult)
 					throws Exception {
 
-		MultiHashMap<String, String> resultMap = 
+		MultiHashMap<String, String> resultMap =
 			new MultiHashMap<String,String>();
-		
+		String currentVariable = null;
+		String selectedName = null;
+		String selectedChildURI = null;
+		String selectedChildName = null;
+		String nameVariable = null;
+		String childURIVariable = null;
+		String childNameVariable = null;
+
 		//create a parser for the XML that we will be getting
 		XMLInputFactory factory = XMLInputFactory.newInstance();
-		XMLStreamReader parser = 
+		XMLStreamReader parser =
 			factory.createXMLStreamReader(new BufferedInputStream(queryResult));
-		
+
 		while (true) {
 
 			int event = parser.next();
@@ -264,9 +271,45 @@ public class SparqlQuery
 							event = parser.next();
 						}
 
-						String elementText = parser.getElementText();
-						elementText = elementText.replaceAll("[ \t]+", " ");
-						resultMap.put(selectedVariable, elementText);
+						//get the unique variable name for a particular brain region
+						//date.
+						currentVariable = getElementVariableName(selectedVariable);
+
+						// variable pretends to the variable name.
+						if(selectedVariable.equalsIgnoreCase(currentVariable+"_name")){
+							nameVariable= selectedVariable;
+							selectedName = parser.getElementText();
+							selectedName = selectedName.replaceAll("[ \t]+", " ");
+
+						}
+						//variable pretends to the child's uri.
+						else if(selectedVariable.equalsIgnoreCase(currentVariable+"_child_uri")){
+							childURIVariable = selectedVariable;
+							selectedChildURI = parser.getElementText();
+							selectedChildURI = selectedChildURI.replaceAll("[ \t]+", " ");
+						}
+						//variable pretends to the child's name.
+						else if(selectedVariable.equalsIgnoreCase(currentVariable+"_child_name")){
+							childNameVariable = selectedVariable;
+							selectedChildName = parser.getElementText();
+							selectedChildName = selectedChildName.replaceAll("[ \t]+", " ");
+						}
+
+						//once a set of data is completed store the complete set in
+						//the data structure.
+						if(nameVariable != null && childURIVariable != null &&
+								childNameVariable != null){
+
+							resultMap.put(nameVariable, selectedName);
+							resultMap.put(childURIVariable, selectedChildURI);
+							resultMap.put(childNameVariable, selectedChildName);
+
+							//reset the variables for the data set in order to
+							//otain the next set of data.
+							nameVariable = null;
+							childURIVariable = null;
+							childNameVariable = null;
+						}
 					}
 				}
 			}
@@ -275,10 +318,23 @@ public class SparqlQuery
 				break;
 			}
 		}
-		System.out.println("Data processing finalized.");	
+		for(String str: resultMap.values()){
+			System.out.println("value saved: "+str);
+		}
+		System.out.println("Data processing finalized.");
 		queryResult.close();
-		
+
 		return resultMap;
 	}
-	
+
+	/**
+	 * Method returns the first two characters of the variable.  This two
+	 * characters are unique to a brain region and are necessary to identify
+	 * data that pretends to a given brain region.
+	 * @param nameVariable - string from which to extract the unique variable.
+	 * @return 			   - return the unique variable name.
+	 */
+	public String getElementVariableName(String nameVariable){
+		return nameVariable.substring(0,nameVariable.indexOf("_"));
+	}
 }
