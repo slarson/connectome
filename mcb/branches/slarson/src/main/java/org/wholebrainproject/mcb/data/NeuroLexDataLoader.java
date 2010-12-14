@@ -102,7 +102,7 @@ public class NeuroLexDataLoader {
 
 					}
 
-					//System.out.println(RegionName.getMoreDetailURL());
+					System.out.println(RegionName.getMoreDetailURL());
 
 					query.addQueryTriplet("$"+brainRegionSufixName+cells_suffix +
 							" nlx_prop:Located_in $" +
@@ -155,7 +155,7 @@ public class NeuroLexDataLoader {
 				e.printStackTrace();
 			}
 		}
-		return query.runSelectQuery();
+		return query.runSelectQueryForNeurolexData();
 	}
 
 
