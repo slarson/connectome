@@ -91,33 +91,45 @@ public class BuildConnections {
 		//do a query to get a map with brain regions and their parts
 		MultiHashMap<String,String> brainRegionToChildBrainRegion =
 			getBAMSPartOfResults(initialBamsNames);
-		/*
-		for(String key: brainRegionToChildBrainRegion.keySet()){
-			for(String value: brainRegionToChildBrainRegion.get(key)){
-				System.out.println("key: "+key+"  value: "+value);
-			}
-		}
-		 */
+
+
+
 		//Filter out brain regions that are not in our master connection list.
 		brainRegionToChildBrainRegion =
 			eliminateDataNotPresentInIntersection(brainRegionToChildBrainRegion);
+
+		/*
+		for(String key: brainRegionToChildBrainRegion.keySet()){
+			for(String value: brainRegionToChildBrainRegion.get(key)){
+				System.out.println("key: "+key+"   value: "+value);
+			}
+		}*/
 
 		//turn the map of brain regions into a set of nodes
 		Node[] nodes = convertPartOfResultsIntoNodes(initialBamsNames,
 				brainRegionToChildBrainRegion);
 
-		for(Node node: nodes)
-			System.out.println("node: "+node.getName());
-
 		//take current list of nodes and find children one more level down
 		//from those nodes that do not have children
 		Node[] deeperNodes = getMoreChildNodes(nodes);
 
+		for(Node node: deeperNodes){
+			System.out.println("node: "+node.getName()+" node.parent: "+node.getParent());
+		}
+
+
+
 		Set<Node> nodeList = mergeNodes(deeperNodes, nodes);
+
 
 		//populate the nodes with the cell data.
 		MultiHashMap<String,String> cellResults = NeuroLexDataLoader.populate(nodes);
 
+		for(String key:cellResults.keySet()){
+			for(String value: cellResults.get(key)){
+				System.out.println("key: "+key+"  value: "+value);
+			}
+		}
 		NeuroLexDataLoader.storeData(nodes, cellResults);
 
 		//create the edges based on the list.
@@ -170,6 +182,7 @@ public class BuildConnections {
 			}
 		}
 		//CustomGraphCollapser.getInstance().collapse();
+		/**/
 
 	}
 
@@ -218,11 +231,29 @@ public class BuildConnections {
 
 		MultiHashMap<String,String> deeperResults = increaseDepthOfPartOfResults(childlessNodes);
 		deeperResults = eliminateDataNotPresentInIntersection(deeperResults);
-
+		eliminateRepeats(nodes,deeperResults);
 		//***Some filtering being done here
 		return convertDeeperResultsIntoNodes(childlessNodes, deeperResults);
 	}
 
+	private MultiHashMap<String,String> eliminateRepeats(Node[] nodes,MultiHashMap<String,String> results){
+
+		MultiHashMap<String,String> returnMap = new MultiHashMap<String,String>();
+
+		for(String key: results.keySet()){
+			key = getVarKey(key);
+			for(String value:results.get(key+"_child_name")){
+				for(Node currentNode: nodes){
+					if(!currentNode.getName().equalsIgnoreCase(value)){
+						returnMap.put(key+"_child_name",value);
+						returnMap.put(key+"_child_uri","http://brancusi1.usc.edu/brain_parts/"+
+								value.toLowerCase().replace(' ', '-')+"/");
+					}
+				}
+			}
+		}
+		return returnMap;
+	}
 	/**
 	 * Method creates a list of brain regions to instantiate the graph with when the
 	 * user starts the application.
@@ -362,12 +393,17 @@ public class BuildConnections {
 		for(String key: results.keySet()){
 			keyValue = getVarKey(key);
 			childURIs = results.get(keyValue+"_child_uri");
-
-			for(String childURI: childURIs){
-				if(!masterList.containsKey(childURI)){
-					returnedMap.remove(keyValue+"_child_uri");
-					returnedMap.remove(keyValue+"_child_name");
+			if(childURIs != null){
+				for(String childURI: childURIs){
+					if(!masterList.containsKey(childURI)){
+						returnedMap.remove(keyValue+"_child_uri");
+						returnedMap.remove(keyValue+"_child_name");
+					}
 				}
+			}
+			else if(childURIs == null){
+				returnedMap.remove(keyValue+"_child_uri");
+				returnedMap.remove(keyValue+"_child_name");
 			}
 		}
 		return returnedMap;
@@ -450,7 +486,7 @@ public class BuildConnections {
 			//bind the child URI variable to those URIs that are the children
 			//of the brain region in the URI variable
 			q.addQueryTriplet(uriVar + " bams_rdf:class2 " + childUriVar +
-			" FILTER regex(str("+childUriVar+"),\"^?[a-z]/$\") ");
+					" FILTER regex(str("+childUriVar+"),\"^?[a-z]/$\") ");
 			//bind the child name variable to the name given for the URI
 			//stored in the child URI variable.
 			q.addQueryTriplet(childUriVar + " bams_rdf:name " + childNameVar);
@@ -492,7 +528,7 @@ public class BuildConnections {
 
 				if(brainRegionPrettyName.equalsIgnoreCase("midbrain-hindbrain, motor, extrapyramidal"))
 					n = new Node(uri, brainRegionPrettyName.toLowerCase());
-				else{
+				else if(!containsNode(nodes,brainRegionPrettyName)){
 					n = new Node(uri,brainRegionPrettyName);
 				}
 			}
@@ -514,8 +550,6 @@ public class BuildConnections {
 
 						try {
 							if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(currentUri)){
-								//System.out.println("currentURI: "+currentUri);
-								//System.out.println("current child name: "+currentName);
 								Node child = new Node(currentUri,currentName);
 								child.setParent(n);
 								childrenNodes.add(child);
@@ -536,6 +570,26 @@ public class BuildConnections {
 		return (Node[]) nodes.toArray(out);
 	}
 
+	/**
+	 * Method checks if a list of nodes contains a node with the given
+	 * name.  This takes care of duplicates.
+	 * @param nodes				- the list of nodes.
+	 * @param brainRegionName	- the name of the node to look for.
+	 * @return					- true if node is found and false otherwise.
+	 */
+	private boolean containsNode(List<Node> nodes, String brainRegionName){
+		if(nodes.isEmpty())
+			return false;
+		else{
+			for(Node currentNode: nodes){
+				if(currentNode.getName().equalsIgnoreCase(brainRegionName)){
+					System.out.println("match found: "+currentNode.getName()+"  string: "+brainRegionName);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	private MultiHashMap<String,String> increaseDepthOfPartOfResults(Node[] nodes) {
 		String sparqlNif = "http://api.talis.com/stores/neurolex/services/sparql";
@@ -579,7 +633,7 @@ public class BuildConnections {
 		for (Node n : nodes) {
 			try {
 				if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(n.getUri())){
-					//System.out.println("Current node:"+n.toString());
+
 					nodesOut.add(n);
 					String brainRegion = n.getName();
 
@@ -590,6 +644,7 @@ public class BuildConnections {
 
 					Collection<String> childUris = results.get(childUriVar);
 					Collection<String> childNames = results.get(childNameVar);
+
 					//System.out.println("results.size(): "+results.size());
 					if(childUris != null){
 						urisIt = childUris.iterator();
