@@ -113,9 +113,9 @@ public class BuildConnections {
 		//from those nodes that do not have children
 		Node[] deeperNodes = getMoreChildNodes(nodes);
 
-		for(Node node: deeperNodes){
+		/*for(Node node: deeperNodes){
 			System.out.println("node: "+node.getName()+" node.parent: "+node.getParent());
-		}
+		}*/
 
 
 
@@ -130,6 +130,7 @@ public class BuildConnections {
 				System.out.println("key: "+key+"  value: "+value);
 			}
 		}
+		/*
 		NeuroLexDataLoader.storeData(nodes, cellResults);
 
 		//create the edges based on the list.
@@ -182,7 +183,7 @@ public class BuildConnections {
 			}
 		}
 		//CustomGraphCollapser.getInstance().collapse();
-		/**/
+		*/
 
 	}
 
