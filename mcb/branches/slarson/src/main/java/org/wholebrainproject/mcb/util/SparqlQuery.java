@@ -280,6 +280,7 @@ public class SparqlQuery
 							nameVariable= selectedVariable;
 							selectedName = parser.getElementText();
 							selectedName = selectedName.replaceAll("[ \t]+", " ");
+							resultMap.put(nameVariable, selectedName);
 
 						}
 						//variable pretends to the child's uri.
@@ -297,16 +298,15 @@ public class SparqlQuery
 
 						//once a set of data is completed store the complete set in
 						//the data structure.
-						if(nameVariable != null && childURIVariable != null &&
+						if(childURIVariable != null &&
 								childNameVariable != null){
 
-							resultMap.put(nameVariable, selectedName);
 							resultMap.put(childURIVariable, selectedChildURI);
 							resultMap.put(childNameVariable, selectedChildName);
 
 							//reset the variables for the data set in order to
 							//otain the next set of data.
-							nameVariable = null;
+							//nameVariable = null;
 							childURIVariable = null;
 							childNameVariable = null;
 						}
