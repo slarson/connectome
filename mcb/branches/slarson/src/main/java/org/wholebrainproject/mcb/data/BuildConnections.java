@@ -231,28 +231,25 @@ public class BuildConnections {
 
 		MultiHashMap<String,String> deeperResults = increaseDepthOfPartOfResults(childlessNodes);
 		deeperResults = eliminateDataNotPresentInIntersection(deeperResults);
-		eliminateRepeats(nodes,deeperResults);
+		//deeperResults = eliminateRepeats(nodes,deeperResults);
 		//***Some filtering being done here
-		return convertDeeperResultsIntoNodes(childlessNodes, deeperResults);
+		return convertDeeperResultsIntoNodes(nodes,childlessNodes, deeperResults);
 	}
 
-	private MultiHashMap<String,String> eliminateRepeats(Node[] nodes,MultiHashMap<String,String> results){
+	/**
+	 * Method finds if a given brain region is present in node list.
+	 * @param nodes 		    - array of nodes.
+	 * @param brainRegionName   -  brain region name to look for.
+	 * @return
+	 */
+	private boolean findElement(Node[] nodes, String brainRegionName){
 
-		MultiHashMap<String,String> returnMap = new MultiHashMap<String,String>();
-
-		for(String key: results.keySet()){
-			key = getVarKey(key);
-			for(String value:results.get(key+"_child_name")){
-				for(Node currentNode: nodes){
-					if(!currentNode.getName().equalsIgnoreCase(value)){
-						returnMap.put(key+"_child_name",value);
-						returnMap.put(key+"_child_uri","http://brancusi1.usc.edu/brain_parts/"+
-								value.toLowerCase().replace(' ', '-')+"/");
-					}
-				}
+		for(Node currentNode: nodes){
+			if(currentNode.getName().equalsIgnoreCase(brainRegionName)){
+				return true;
 			}
 		}
-		return returnMap;
+		return false;
 	}
 	/**
 	 * Method creates a list of brain regions to instantiate the graph with when the
@@ -624,7 +621,7 @@ public class BuildConnections {
 		return q.runSelectQuery();
 	}
 
-	private Node[] convertDeeperResultsIntoNodes(Node[] nodes, MultiHashMap<String,String> results) {
+	private Node[] convertDeeperResultsIntoNodes(Node[] allNodes,Node[] nodes, MultiHashMap<String,String> results) {
 		List<Node> nodesOut = new ArrayList<Node>();
 		//System.out.println("Number of nodes: "+nodes.length);
 		Iterator<String> namesIt = null;
@@ -664,10 +661,12 @@ public class BuildConnections {
 								//need to consider this line of code.  By filtering the brain regions that only appear in the list
 								//we are reducing the number of parts per parent node.
 								if(BAMSToNeurolexMap.getInstance().getBAMSToNeurolexMap().containsKey(childURI)){
-									Node child = new Node(childURI, childName);
-									child.setParent(n);
-									childrenNodes.add(child);
-									nodesOut.add(child);
+									if(!findElement(allNodes,childName)){
+										Node child = new Node(childURI, childName);
+										child.setParent(n);
+										childrenNodes.add(child);
+										nodesOut.add(child);
+									}
 								}
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
