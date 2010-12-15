@@ -155,7 +155,7 @@ public class NeuroLexDataLoader {
 				e.printStackTrace();
 			}
 		}
-		return query.runSelectQueryForNeurolexData();
+		return query.runSelectQuery();
 	}
 
 
