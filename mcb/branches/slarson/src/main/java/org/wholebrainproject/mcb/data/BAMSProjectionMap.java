@@ -1,22 +1,24 @@
 package org.wholebrainproject.mcb.data;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
 import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.graph.Node;
 /**
- * Class takes care of managing the data map that pretends to 
+ * Class takes care of managing the data map that pretends to
  * the BAMS projection data.
  * @author ruggero carloz
  *
  */
 public class BAMSProjectionMap {
 
-	
+
 	public static HashMap<String, BAMSProjectionData> dataMap;
 	private static BAMSProjectionMap instance;
 
@@ -26,15 +28,15 @@ public class BAMSProjectionMap {
 	 */
 	private BAMSProjectionMap() throws IOException {
 		dataMap = ReadProjectionDataFile.getInstance().getMap();
-		
+
 	}
-	
+
 	public static BAMSProjectionMap  getInstance() throws IOException {
 		if(instance == null)
 			instance = new BAMSProjectionMap();
 		return instance;
 	}
-	
+
 	/**
 	 * Method returns the hash map containing the projection data
 	 * from BAMS.
@@ -68,20 +70,22 @@ public class BAMSProjectionMap {
 		}
 		return nodesToEdges;
 	}
-	
+
 	/**
 	 * Find a connection edge between two nodes
 	 * @param n - sending node
 	 * @param no - receiving node
-	 * @return - null if no edge exists, a connection edge appropriately initialized if 
+	 * @return - null if no edge exists, a connection edge appropriately initialized if
 	 *           it does exists
 	 */
 	private ConnectionEdge findConnectionEdgeBetween(Node n, Node no) {
+		System.out.println("no.getName(): "+no.getName()+"  n.getName(): "+n.getName());
 		BAMSProjectionData project = getBAMSProjectionMap().get(no.getName());
 		if (project != null) {
 			//look over projections to see if Node n is present!
 			for (String name : project.getProjections()) {
-				if (n.getName().equals(name)) {
+				System.out.println("Projection name: "+name);
+				if (n.getName().toLowerCase().equals(name.toLowerCase())) {
 					return createConnectionEdge(no, n, project);
 				}
 			}
@@ -89,10 +93,13 @@ public class BAMSProjectionMap {
 		return null;
 	}
 
-	
+
 	private ConnectionEdge createConnectionEdge(Node no, Node n,
 			BAMSProjectionData project) {
 		//FIXME: need to replace empty strings with real values
+		List<Node> nodeList = new ArrayList<Node>();
+		nodeList.add(no);
+		nodeList.add(n);
 		return new ConnectionEdge("", "", no, n);
 	}
 }

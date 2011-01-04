@@ -306,6 +306,8 @@ public class SparqlQuery
 						//date.
 						currentVariable = getElementVariableName(selectedVariable);
 
+						System.out.println("Current variable: "+selectedVariable+ "  selected variable: "+
+								currentVariable);
 						// variable pretends to the variable name.
 						if(selectedVariable.equalsIgnoreCase(currentVariable+"_name")){
 							nameVariable= selectedVariable;
