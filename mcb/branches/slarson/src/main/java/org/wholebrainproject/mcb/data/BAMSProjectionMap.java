@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.wholebrainproject.mcb.graph.ConnectionEdge;
 import org.wholebrainproject.mcb.graph.Edge;
 import org.wholebrainproject.mcb.graph.Node;
@@ -65,7 +66,7 @@ public class BAMSProjectionMap {
 			}
 			ConnectionEdge c2 = findConnectionEdgeBetween(n, no);
 			if (c2 != null) {
-				nodesToEdges.put(no, c);
+				nodesToEdges.put(no, c2);
 			}
 		}
 		return nodesToEdges;
@@ -79,7 +80,7 @@ public class BAMSProjectionMap {
 	 *           it does exists
 	 */
 	private ConnectionEdge findConnectionEdgeBetween(Node n, Node no) {
-		System.out.println("no.getName(): "+no.getName()+"  n.getName(): "+n.getName());
+		//System.out.println("no.getName(): "+no.getName()+"  n.getName(): "+n.getName());
 		BAMSProjectionData project = getBAMSProjectionMap().get(no.getName());
 		if (project != null) {
 			//look over projections to see if Node n is present!
@@ -97,9 +98,42 @@ public class BAMSProjectionMap {
 	private ConnectionEdge createConnectionEdge(Node no, Node n,
 			BAMSProjectionData project) {
 		//FIXME: need to replace empty strings with real values
+		System.out.println("no.getName(): "+no.getName()+"  n.getName(): "+n.getName());
 		List<Node> nodeList = new ArrayList<Node>();
-		nodeList.add(no);
-		nodeList.add(n);
+
+		if(!no.getName().equalsIgnoreCase(n.getName())){
+			nodeList.add(no);
+			nodeList.add(n);
+		}
+		else{
+			nodeList.add(no);
+		}
+
+		MultiHashMap<String,String> connResults =
+			BuildConnections.getInstance().getConnectionsResults(nodeList);
+
+		List<ConnectionEdge> partialEdges =
+			BuildConnections.getInstance().convertConnectionResultsIntoEdges(connResults,nodeList);
+
+		for(ConnectionEdge edge: partialEdges){
+			System.out.println("edge info- "+" sendingNode: "+edge.getSendingNodeString()
+					+"  receivingNode: "+edge.getReceivingNodeString()+" strength: "+edge.getStrength());
+			if(edge.getReceivingNodeString().equalsIgnoreCase(n.getName())){
+				return new ConnectionEdge(edge.getStrength().toString(), edge.getReference().toString(), no, n);
+			}
+			else if(edge.getReceivingNodeString().equalsIgnoreCase(n.getName())){
+				return new ConnectionEdge(edge.getStrength().toString(), edge.getReference().toString(), no, n);
+			}
+			else if(edge.getReceivingNodeString().equalsIgnoreCase(no.getName())){
+				return new ConnectionEdge(edge.getStrength().toString(), edge.getReference().toString(), n,no);
+			}
+			else if(edge.getReceivingNodeString().equalsIgnoreCase(no.getName())){
+				return new ConnectionEdge(edge.getStrength().toString(), edge.getReference().toString(), n, no);
+			}
+		}
+
+		System.out.println("connResults: "+connResults.size());
+
 		return new ConnectionEdge("", "", no, n);
 	}
 }
