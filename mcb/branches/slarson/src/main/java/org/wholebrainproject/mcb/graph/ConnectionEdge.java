@@ -23,7 +23,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * The class is used to create the edges for the graph.  This class is implemented 
+ * The class is used to create the edges for the graph.  This class is implemented
  * by Multi-Scale Connectome Browser.
  * @date    December 10, 2009
  * @author  Ruggero Carloz
@@ -34,7 +34,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * regions.
  */
 public class ConnectionEdge implements Edge{
-	
+
 	public enum STRENGTH {
 		NOT_PRESENT("not present"),
 		NOT_CLEAR("not clear"),
@@ -44,17 +44,17 @@ public class ConnectionEdge implements Edge{
 		MODERATE("moderate"),
 		STRONG_MODERATE("moderate/strong"),
 		STRONG("strong");
-		
-		String text; 
-        
+
+		String text;
+
         STRENGTH(String msg) {
                 this.text = msg;
         }
-        
+
         public String toString() {
                 return this.text;
         }
-        
+
         public static STRENGTH myValueOf(Object s) {
                 //return MENU_STRING based on its toString() value
                 for (STRENGTH ms : EnumSet.allOf(STRENGTH.class)) {
@@ -65,7 +65,7 @@ public class ConnectionEdge implements Edge{
                 return null;
         }
 	}
-	
+
 	/**
 	 * Strength of the connection
 	 */
@@ -75,22 +75,22 @@ public class ConnectionEdge implements Edge{
 	 * A string representing the reference of this connection.
 	 */
 	private String reference;
-	
+
 	/**
 	 * A string representation of the structure that receives this connection.
 	 */
 	private String receivingStructureString;
-	
+
 	/**
 	 * A string representation of the structure that sends this connection.
 	 */
 	private String sendingStructureString;
-	
+
 	/**
 	 * A node representation of the structure that receives this connection.
 	 */
 	private Node sendingNode;
-	
+
 	/**
 	 * A node representation of the structure that receives this connection.
 	 */
@@ -103,7 +103,7 @@ public class ConnectionEdge implements Edge{
 		this.strength = STRENGTH.myValueOf(strength);
 		this.reference = reference;
 	}
-	
+
 	/**
 	 * Makes a new ConnectionEdge with partial information about the receiving
 	 * structure
@@ -118,14 +118,14 @@ public class ConnectionEdge implements Edge{
 		this.sendingNode = sending;
 		this.receivingStructureString = receiving;
 	}
-	
-	public ConnectionEdge(String strength, String reference, Node sending, 
+
+	public ConnectionEdge(String strength, String reference, Node sending,
 			Node receiving) {
 		this(strength, reference);
 		this.sendingNode = sending;
 		this.receivingNode = receiving;
 	}
-	
+
 
 	public ConnectionEdge(String strength, String reference, String sending,
 			Node receiving) {
@@ -137,13 +137,13 @@ public class ConnectionEdge implements Edge{
 	public STRENGTH getStrength() {
 		return this.strength;
 	}
-	
+
 	public String getReference(){
 		return this.reference;
 	}
-	
+
 	private Node getProjectingNode() {
-		Pair<Node> endpoints = 
+		Pair<Node> endpoints =
 			GraphManager.getInstance().getGraph().getEndpoints(this);
 		if (endpoints == null) {
 			GraphManager.getInstance().getGraph().removeEdge(this);
@@ -151,7 +151,7 @@ public class ConnectionEdge implements Edge{
 		}
 		return endpoints.getFirst();
 	}
-	
+
 	public String getLabel() {
 		String s = "";
 		if (getProjectingNode() != null) {
@@ -160,20 +160,20 @@ public class ConnectionEdge implements Edge{
 		}
 		return s;
 	}
-	
+
 	public String getMoreDetailsURL() {
 		return "http://" + reference;
 	}
-	
+
 	public String getToolTipLabel() {
 		System.out.println("Calling getToolTipLabel in "+this.getClass().toString());
 		String out = "";
 		String reference = getReference();
 		out += "<html>Projection strength: " + getStrength() + "<br>";
 		System.out.println("getProjectingNode(). "+getProjectingNode());
-		
+
 		/**if (" ".equals(getProjectingNode().getProjectingCellsRoleString()) == false) {
-			
+
 			out += "This projection is inferred to be "
 					+ getProjectingNode().getProjectingCellsRoleString()
 					+ "<br>";
@@ -184,20 +184,20 @@ public class ConnectionEdge implements Edge{
 		System.out.println("Edge's printed reference is "+out);
 		return out;
 	}
-	
+
 	public Font getFont() {
 		int style = Font.BOLD | Font.ITALIC;
 
 		Font font = new Font ("Arial", style , 15);
-		
+
 		return font;
 	}
-	
+
 	public BasicStroke getStroke() {
 		float dash[] = {10.0f};
 		switch (getStrength()) {
 		case EXISTS:
-			return new BasicStroke(0.5f, BasicStroke.CAP_BUTT, 
+			return new BasicStroke(0.5f, BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
 		case VERY_LIGHT:
 			return new BasicStroke(1f);
@@ -208,68 +208,68 @@ public class ConnectionEdge implements Edge{
 		}
 		return new BasicStroke(2.5f);
 	}
-	
+
 	public Number getCloseness() {
 		return 0.9f;
 	}
-	
+
 	private String getTitleFromReference() {
 		String reference = getReference();
 		int startIndex = reference.indexOf(": ");
 		int endIndex = reference.indexOf("..");
 		int endIndex2 = reference.indexOf("(");
-		if ((endIndex2 > 0) && (endIndex > endIndex2)) endIndex = endIndex2; 
+		if ((endIndex2 > 0) && (endIndex > endIndex2)) endIndex = endIndex2;
 		return reference.substring(startIndex+2, endIndex);
 	}
-	
+
 	public String getReferenceURL() {
 		SparqlQuery test = new SparqlQuery("http://api.talis.com/stores/neurolex/services/sparql");
 		/*
-		 * select ?d where {?a <http://brancusi1.usc.edu/RDF/title> ?c . 
-		 * ?a <http://brancusi1.usc.edu/RDF/url> ?d 
+		 * select ?d where {?a <http://brancusi1.usc.edu/RDF/title> ?c .
+		 * ?a <http://brancusi1.usc.edu/RDF/url> ?d
 		 * FILTER regex(?c, "The neocortical projection to the inferior colliculus in the albino rat")}
 		 */
-		test.addQueryTriplet("?a <http://brancusi1.usc.edu/RDF/title> ?c");
-		test.addQueryTriplet("?a <http://brancusi1.usc.edu/RDF/url> ?d");
-		test.addQueryTriplet("FILTER regex(?c, \"" + getTitleFromReference() + 
+		test.addQueryTriplet("$a <http://brancusi1.usc.edu/RDF/title> $c");
+		test.addQueryTriplet("$a <http://brancusi1.usc.edu/RDF/url> $d");
+		test.addQueryTriplet("FILTER regex($c, \"" + getTitleFromReference() +
 				"\")");
-		test.addSelectVariable("?d");
-		MultiHashMap<String, String> results = test.runSelectQuery();
-		if (results.get("?d") != null) {
-			String initialResults = results.get("?d").iterator().next();
-			initialResults = initialResults.replace("http://www.ncbi.nmm.nih.gov", 
+		test.addSelectVariable("$d");
+		MultiHashMap<String, String> results = test.runSelectQuery1();
+		if (results.get("$d") != null) {
+			String initialResults = results.get("$d").iterator().next();
+			initialResults = initialResults.replace("http://www.ncbi.nmm.nih.gov",
 					"http://www.ncbi.nlm.nih.gov");
 			return initialResults;
 		}
 		return "http://brancusi1.usc.edu/";
 	}
-	
+
 	public boolean hasInferenceChain() {
 		return getProjectingNode().getCellCount() > 0;
 	}
-	
+
 	public String getInferenceChain() {
-		String out = "<html><h1>Why is this an " + 
-		getProjectingNode().getProjectingCellsRoleString() + 
+		String out = "<html><h1>Why is this an " +
+		getProjectingNode().getProjectingCellsRoleString() +
 		" projection?<h1>" +
-		"<ul><li>This projection comes from " + getProjectingNode().getName() + 
-		"</li><li>" + getProjectingNode().getName() + " has <a href=\""+ 
-		getProjectingNode().getMoreDetailURL() + "\">" + 
-		getProjectingNode().getUniqueCellCount() + " projection cell(s)</a>" + 
+		"<ul><li>This projection comes from " + getProjectingNode().getName() +
+		"</li><li>" + getProjectingNode().getName() + " has <a href=\""+
+		getProjectingNode().getMoreDetailURL() + "\">" +
+		getProjectingNode().getUniqueCellCount() + " projection cell(s)</a>" +
 		"<ul>";
 		for (int i = 0; i < getProjectingNode().getCellCount(); i++) {
-			out += "<li><a href=\"" + getProjectingNode().getCellUrl(i) + "\">" 
+			out += "<li><a href=\"" + getProjectingNode().getCellUrl(i) + "\">"
 			+ getProjectingNode().getCellName(i) + "</a>";
-			out += "<ul><li>This cell has " + 
+			out += "<ul><li>This cell has " +
 			getProjectingNode().getNeurotransmitter(i) + " as its neurotransmitter.";
 			out += "<li>" + getProjectingNode().getNeurotransmitter(i) +" is an " +
 			getProjectingNode().getRole(i);
 			out += "</ul>";
 		}
 		out += "</ul>";
-		
+
 		out += "</ul></html>";
-		
+
 		return out;
 	}
 
@@ -292,9 +292,9 @@ public class ConnectionEdge implements Edge{
 	public void setReceivingNode(Node node) {
 		this.receivingNode = node;
 	}
-	
+
 	public void setSendingNode(Node node) {
 		this.sendingNode = node;
 	}
-	
+
 }
