@@ -368,7 +368,7 @@ public class SparqlQuery
 							resultMap.put(childNameVariable, selectedChildName);
 
 							//reset the variables for the data set in order to
-							//otain the next set of data.
+							//obtain the next set of data.
 							//nameVariable = null;
 							childURIVariable = null;
 							childNameVariable = null;
