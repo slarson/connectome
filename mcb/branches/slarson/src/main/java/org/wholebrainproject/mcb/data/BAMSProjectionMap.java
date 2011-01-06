@@ -80,13 +80,11 @@ public class BAMSProjectionMap {
 	 *           it does exists
 	 */
 	private ConnectionEdge findConnectionEdgeBetween(Node n, Node no) {
-		//System.out.println("no.getName(): "+no.getName()+"  n.getName(): "+n.getName());
 		BAMSProjectionData project = getBAMSProjectionMap().get(no.getName());
 		if (project != null) {
 			//look over projections to see if Node n is present!
 			for (String name : project.getProjections()) {
-				System.out.println("Projection name: "+name);
-				if (n.getName().toLowerCase().equals(name.toLowerCase())) {
+				if (n.getName().equalsIgnoreCase(name)) {
 					return createConnectionEdge(no, n, project);
 				}
 			}
@@ -98,7 +96,8 @@ public class BAMSProjectionMap {
 	private ConnectionEdge createConnectionEdge(Node no, Node n,
 			BAMSProjectionData project) {
 		//FIXME: need to replace empty strings with real values
-		System.out.println("no.getName(): "+no.getName()+"  n.getName(): "+n.getName());
+
+		//System.out.println("no.getName(): "+no.getName()+"  n.getName(): "+n.getName());
 		List<Node> nodeList = new ArrayList<Node>();
 
 		if(!no.getName().equalsIgnoreCase(n.getName())){
@@ -116,8 +115,8 @@ public class BAMSProjectionMap {
 			BuildConnections.getInstance().convertConnectionResultsIntoEdges(connResults,nodeList);
 
 		for(ConnectionEdge edge: partialEdges){
-			System.out.println("edge info- "+" sendingNode: "+edge.getSendingNodeString()
-					+"  receivingNode: "+edge.getReceivingNodeString()+" strength: "+edge.getStrength());
+			//System.out.println("edge info- "+" sendingNode: "+edge.getSendingNodeString()
+			//		+"  receivingNode: "+edge.getReceivingNodeString()+" strength: "+edge.getStrength());
 			if(edge.getReceivingNodeString().equalsIgnoreCase(n.getName())){
 				return new ConnectionEdge(edge.getStrength().toString(), edge.getReference().toString(), no, n);
 			}
@@ -132,7 +131,8 @@ public class BAMSProjectionMap {
 			}
 		}
 
-		System.out.println("connResults: "+connResults.size());
+		
+
 
 		return new ConnectionEdge("", "", no, n);
 	}
