@@ -162,7 +162,8 @@ public class SearchPanel extends JDialog {
 			setSetElement(selectedBrainRegionName);
 
 			//reset the combo box to it's original form.
-			strictComboBox.setSelectedItem("");
+			strictComboBox.setSelectedItem(" ");
+
 
 			//close the combo box.
 			this.dispose();
@@ -171,8 +172,10 @@ public class SearchPanel extends JDialog {
 		else if ( sourceButton == btnCancel)
 		{
 			System.out.println("Closing combo box.");
+			strictComboBox.resetKeyboardActions();
 			//reset the combo box to it's original form.
-			strictComboBox.setSelectedItem("");
+			strictComboBox.setSelectedItem(null);
+			setSetElement(null);
 
 			//reset the combo box.
 			this.dispose();

@@ -133,10 +133,10 @@ public class BuildConnections {
 
 		//create the edges based on the list.
 		List<ConnectionEdge> edges = createAndPopulateEdges(nodeList);
-		System.out.println("edges size: "+edges.size());
+		/**System.out.println("edges size: "+edges.size());
 		for(ConnectionEdge edge: edges){
 			System.out.println("edge in the list: "+edge.getSendingNodeString());
-		}
+		}**/
 
 		Set<String> missingNodeNames = findMissingNodeStrings(edges, nodeList);
 
