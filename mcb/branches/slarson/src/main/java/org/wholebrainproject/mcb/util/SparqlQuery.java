@@ -132,7 +132,7 @@ public class SparqlQuery
 
 		if (this.variableList.isEmpty()) {
 			throw new IllegalArgumentException("Can't compose a query with no " +
-					"select variables! Add some variables using addSelectVariable()!");
+			"select variables! Add some variables using addSelectVariable()!");
 		}
 		// variables that are used in the SPARQL query
 		String variables = "";
@@ -226,6 +226,38 @@ public class SparqlQuery
 	 * @return a Map with one key per $variable and a list of results as the value
 	 * @see MultiHashMap
 	 */
+	public MultiHashMap<String, String> runSelectQuery1() {
+		String queryString = getComposedQuery();
+
+		try {
+			// URL encode query string
+			queryString = URLEncoder.encode(queryString, "UTF-8");
+
+			// compose the final URL
+			URL sparqlConnection = new URL(this.sparqlEndPointURL +
+					"?query=" + queryString);
+
+			//System.out.println(sparqlConnection.toString());
+
+
+			HttpURLConnection httpConnection = (HttpURLConnection)sparqlConnection.openConnection();
+			httpConnection.setRequestProperty("accept", "application/sparql-results+xml");
+			InputStream queryResult = httpConnection.getInputStream();
+
+			return parseSPARQLResult1(queryResult);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Execute a SPARQL query built up from a set of query triplets.
+	 * @see #addQueryTriplet(String)
+	 * @return a Map with one key per $variable and a list of results as the value
+	 * @see MultiHashMap
+	 */
 	public MultiHashMap<String, String> runSelectQueryForNeurolexData() {
 		String queryString = getComposedQuery();
 
@@ -260,7 +292,7 @@ public class SparqlQuery
 	 * @throws Exception
 	 */
 	private MultiHashMap<String, String> parseSPARQLResult(InputStream queryResult)
-					throws Exception {
+	throws Exception {
 
 		MultiHashMap<String, String> resultMap =
 			new MultiHashMap<String,String>();
@@ -301,10 +333,10 @@ public class SparqlQuery
 						while (event != XMLStreamConstants.START_ELEMENT) {
 							event = parser.next();
 						}
-
 						//get the unique variable name for a particular brain region
 						//date.
-						currentVariable = getElementVariableName(selectedVariable);
+						if(selectedVariable.contains("_"))
+							currentVariable = getElementVariableName(selectedVariable);
 
 						// variable pretends to the variable name.
 						if(selectedVariable.equalsIgnoreCase(currentVariable+"_name")){
@@ -336,7 +368,7 @@ public class SparqlQuery
 							resultMap.put(childNameVariable, selectedChildName);
 
 							//reset the variables for the data set in order to
-							//otain the next set of data.
+							//obtain the next set of data.
 							//nameVariable = null;
 							childURIVariable = null;
 							childNameVariable = null;
@@ -355,65 +387,127 @@ public class SparqlQuery
 		return resultMap;
 	}
 
-	 /**
-     *
-     * @param queryResult - an input stream that contains a SPARQL result XML
-     * @return a Map with one key per $variable and a list of results as the value
-     * @see MultiHashMap
-     * @throws Exception
-     */
-    private MultiHashMap<String, String> parseSPARQLResultForNeurolexData(InputStream queryResult)
-                                    throws Exception {
+	/**
+	 * Method returns a list of web pages associated with a given variable.
+	 * The page pretends to PubMed information pretending to a connection
+	 * between brain regions.
+	 * @param queryResult - an input stream that contains a SPARQL result XML
+	 * @return a Map with one key per $variable and a list of results as the value
+	 * @see MultiHashMap
+	 * @throws Exception
+	 */
+	private MultiHashMap<String, String> parseSPARQLResult1(InputStream queryResult)
+	throws Exception {
 
-            MultiHashMap<String, String> resultMap =
-                    new MultiHashMap<String,String>();
+		MultiHashMap<String, String> resultMap =
+			new MultiHashMap<String,String>();
 
-            //create a parser for the XML that we will be getting
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            XMLStreamReader parser =
-                    factory.createXMLStreamReader(new BufferedInputStream(queryResult));
 
-            while (true) {
+		//create a parser for the XML that we will be getting
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		XMLStreamReader parser =
+			factory.createXMLStreamReader(new BufferedInputStream(queryResult));
 
-                    int event = parser.next();
+		while (true) {
 
-                    if (event == XMLStreamConstants.START_ELEMENT) {
-                            if ("binding".equals(parser.getLocalName())) {
-                                    //look through variable list to see if we have a match
-                                    String selectedVariable = null;
-                                    for (String variable : this.variableList) {
-                                            //check for matching.  search the first attribute and
-                                            //leave off the "$" of the variable.
-                                            //if there's a match, put it in the selectedVariable
-                                            if (parser.getAttributeValue(0).equals(variable.substring(1))) {
-                                                    selectedVariable = variable;
-                                    }
-                                    }
-                                    if (selectedVariable != null) {
+			int event = parser.next();
 
-                                            // skip to the URI start element
-                                            event = parser.next();
-                                            while (event != XMLStreamConstants.START_ELEMENT) {
-                                                    event = parser.next();
-                                            }
+			if (event == XMLStreamConstants.START_ELEMENT) {
+				if ("binding".equals(parser.getLocalName())) {
+					// look through variable list to see if we have a match
+					String selectedVariable = null;
+					for (String variable : this.variableList) {
+						// check for matching. search the first attribute and
+						// leave off the "$" of the variable.
+						// if there's a match, put it in the selectedVariable
+						if (parser.getAttributeValue(0).equals(
+								variable.substring(1))) {
+							selectedVariable = variable;
+						}
+					}
+					if (selectedVariable != null) {
 
-                                            String elementText =
-                                                    parser.getElementText();
-                                            elementText = elementText.replaceAll("[ \t]+", " ");
-                                            resultMap.put(selectedVariable, elementText);
-                                    }
-                            }
-                    }
-                    if (event == XMLStreamConstants.END_DOCUMENT) {
-                            parser.close();
-                            break;
-                    }
-            }
-            System.out.println("Data processing finalized.");
-            queryResult.close();
+						// skip to the URI start element
+						event = parser.next();
+						while (event != XMLStreamConstants.START_ELEMENT) {
+							event = parser.next();
+						}
 
-            return resultMap;
-    }
+						//get the unique variable name for a particular brain region
+						//date.
+						resultMap.put(selectedVariable, parser.getElementText());
+					}
+				}
+			}
+			if (event == XMLStreamConstants.END_DOCUMENT) {
+				parser.close();
+				break;
+			}
+		}
+		System.out.println("Data processing finalized.");
+		queryResult.close();
+
+		return resultMap;
+	}
+	/**
+	 *
+	 * @param queryResult - an input stream that contains a SPARQL result XML
+	 * @return a Map with one key per $variable and a list of results as the value
+	 * @see MultiHashMap
+	 * @throws Exception
+	 */
+	private MultiHashMap<String, String> parseSPARQLResultForNeurolexData(InputStream queryResult)
+	throws Exception {
+
+		MultiHashMap<String, String> resultMap =
+			new MultiHashMap<String,String>();
+
+		//create a parser for the XML that we will be getting
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		XMLStreamReader parser =
+			factory.createXMLStreamReader(new BufferedInputStream(queryResult));
+
+		while (true) {
+
+			int event = parser.next();
+
+			if (event == XMLStreamConstants.START_ELEMENT) {
+				if ("binding".equals(parser.getLocalName())) {
+					//look through variable list to see if we have a match
+					String selectedVariable = null;
+					for (String variable : this.variableList) {
+						//check for matching.  search the first attribute and
+						//leave off the "$" of the variable.
+						//if there's a match, put it in the selectedVariable
+						if (parser.getAttributeValue(0).equals(variable.substring(1))) {
+							selectedVariable = variable;
+						}
+					}
+					if (selectedVariable != null) {
+
+						// skip to the URI start element
+						event = parser.next();
+						while (event != XMLStreamConstants.START_ELEMENT) {
+							event = parser.next();
+						}
+
+						String elementText =
+							parser.getElementText();
+						elementText = elementText.replaceAll("[ \t]+", " ");
+						resultMap.put(selectedVariable, elementText);
+					}
+				}
+			}
+			if (event == XMLStreamConstants.END_DOCUMENT) {
+				parser.close();
+				break;
+			}
+		}
+		System.out.println("Data processing finalized.");
+		queryResult.close();
+
+		return resultMap;
+	}
 
 
 	/**
