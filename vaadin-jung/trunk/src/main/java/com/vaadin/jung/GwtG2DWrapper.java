@@ -43,13 +43,29 @@ import org.vaadin.gwtgraphics.client.shape.Path;
 import org.vaadin.gwtgraphics.client.shape.path.LineTo;
 
 /**
+ * This wrapper is currently still in development and has a bunch of compile errors.
  * 
- * @author Lucas Bigeardel
+ * It is in the process of being adapted from an SWT wrapper into a GWT wrapper.
+ * 
+ * In order to accomplish this, the low-level canvas drawing calls that work for
+ * SWT must be remapped onto low-level canvas drawing calls for the GWT-Graphics 
+ * library.  So all the methods should stay, but their implementations should
+ * be GWT-graphics implementations.
+ * 
+ * As of 1/2011, examples of low-level calls in the GWT-Graphics libraries can be 
+ * found <a href="http://dev.vaadin.com/svn/incubator/gwt-graphics-examples/src/com/virtuallypreinstalled/hene/gwtgraphicsexamples/client/GWTGraphicsExamples.java">here</a>
+ * 
+ * One of the differences between SWT/AWT and GWT and the library we are using is that
+ * GWT-graphics is a vector-graphics library.  Consequently concepts like "clipping"
+ * may be tricky to map.
  */
-public class AwtG2DWrapper extends Graphics2D {
+public class GwtG2DWrapper extends Graphics2D {
 	
+	//this is the "canvas" equivalent in GWT
+	//the comments for this class include an example of use
 	private DrawingArea canvas;
 	
+	//some of these are still useful to keep as holders of numbers.
 	private static Point _pt = new Point();	
 	private static Rectangle2D _awtRect = new Rectangle2D.Double();
 	private static Rectangle2D _awtLineRect = new Rectangle2D.Double();
@@ -82,7 +98,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	private static ArrayList _segLst = new ArrayList();
 	private static double[] _rectCoord = new double[8];
 
-	public AwtG2DWrapper(DrawingArea canvas) {
+	public GwtG2DWrapper(DrawingArea canvas) {
 		super();
 		this.canvas = canvas;
 	}
@@ -135,9 +151,9 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void clipRect(int x, int y, int width, int height) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect, transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getGwtRectFromAwt(_awtRect,gwtRect);
 		org.eclipse.swt.graphics.Rectangle clip = gc.getClipping();
-		clip = clip.intersection(swtRect);
+		clip = clip.intersection(gwtRect);
 		gc.setClipping(clip);
 	}
 
@@ -541,6 +557,10 @@ public class AwtG2DWrapper extends Graphics2D {
 		gc.drawText(s,(int)(_pt.getX()+_RectXYGap),(int)(_pt.getY()+_RectXYGap),flags);	
 	}
 
+	
+	/**********************************************************************
+	 * THIS HAS BEEN CONVERTED TO GWT
+	 **********************************************************************/
 	/**
 	 * @param x
 	 * @param y
@@ -1088,10 +1108,13 @@ public class AwtG2DWrapper extends Graphics2D {
 	}
 	
 	/**
-	 * @param aRect
-	 * @param sRect
+	 * Turns an AWT Rectangle into a GWT rectangle.
+	 * 
+	 * @param aRect -- the target rectangle
+	 * @param gRect -- will hold the values of aRect but as a GWT rectangle
 	 */
-	public static void getGwtRectFromAwt(Rectangle2D aRect, org.vaadin.gwtgraphics.client.shape.Rectangle gRect) {
+	public static void getGwtRectFromAwt(Rectangle2D aRect, 
+			org.vaadin.gwtgraphics.client.shape.Rectangle gRect) {
 		gRect.setX((int)(aRect.getX()));
 		gRect.setY((int)(aRect.getY()));
 		gRect.setWidth((int)(aRect.getWidth()));

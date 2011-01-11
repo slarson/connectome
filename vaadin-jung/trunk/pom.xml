@@ -76,6 +76,27 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>swt</artifactId>
+			<version>3.2.1-v3235e</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.swt.win32.win32</groupId>
+			<artifactId>x86</artifactId>
+			<version>3.2.1-v3235</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>jung</groupId>
+			<artifactId>jung</artifactId>
+			<version>1.7.6</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

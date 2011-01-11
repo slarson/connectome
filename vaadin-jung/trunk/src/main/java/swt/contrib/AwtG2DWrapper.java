@@ -155,7 +155,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void clipRect(int x, int y, int width, int height) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect, transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getSwtRectFromAwt(_awtRect,swtRect);
 		org.eclipse.swt.graphics.Rectangle clip = gc.getClipping();
 		clip = clip.intersection(swtRect);
 		gc.setClipping(clip);
@@ -167,7 +167,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void setClip(int x, int y, int width, int height) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect, transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getSwtRectFromAwt(_awtRect,swtRect);
 		gc.setClipping(swtRect);		
 	}
 
@@ -177,7 +177,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void clip(Shape s) {
 		Rectangle2D clipBds = s.getBounds2D();
 		applyAffineTransformToRect2D(clipBds, transform);
-		getGwtRectFromAwt(clipBds,swtRect);
+		getSwtRectFromAwt(clipBds,swtRect);
 
 		org.eclipse.swt.graphics.Rectangle clip = gc.getClipping();
 		clip = clip.intersection(swtRect);
@@ -194,7 +194,7 @@ public class AwtG2DWrapper extends Graphics2D {
 		} else {
 			Rectangle2D clipBds = clip.getBounds2D();
 			applyAffineTransformToRect2D(clipBds, transform);
-			getGwtRectFromAwt(clipBds,swtRect);
+			getSwtRectFromAwt(clipBds,swtRect);
 			gc.setClipping(swtRect);
 		}
 	}
@@ -575,7 +575,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void drawRect(double x, double y, double width, double height) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect,transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getSwtRectFromAwt(_awtRect,swtRect);
 		gc.setLineWidth(getTransformedLineWidth());
 		gc.drawRectangle(swtRect);
 	}
@@ -589,7 +589,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void fillRect(double x, double y, double width, double height) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect,transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getSwtRectFromAwt(_awtRect,swtRect);
 		
 		gc.fillRectangle(swtRect);
 	}
@@ -975,7 +975,7 @@ public class AwtG2DWrapper extends Graphics2D {
 		org.eclipse.swt.graphics.Rectangle bounds = image.getBounds();
 		_awtRect.setRect(x,y,bounds.width,bounds.height);
 		applyAffineTransformToRect2D(_awtRect,transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getSwtRectFromAwt(_awtRect,swtRect);
 		gc.drawImage(image,0,0,bounds.width,bounds.height,swtRect.x,swtRect.y,swtRect.width,swtRect.height);
 	}
 
@@ -993,7 +993,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void drawImage(org.eclipse.swt.graphics.Image image, int srcX, int srcY, int srcW, int srcH, double destX, double destY, double destW, double destH) {
 		_awtRect.setRect(destX,destY,destW,destH);
 		applyAffineTransformToRect2D(_awtRect,transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getSwtRectFromAwt(_awtRect,swtRect);
 		gc.drawImage(image,srcX,srcY,srcW,srcH,swtRect.x,swtRect.y,swtRect.width,swtRect.height);
 	}
 
@@ -1023,7 +1023,7 @@ public class AwtG2DWrapper extends Graphics2D {
 	public void fillGradientRectangle(double x, double y, double width, double height, boolean vertical) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect,transform);
-		getGwtRectFromAwt(_awtRect,swtRect);
+		getSwtRectFromAwt(_awtRect,swtRect);
 		gc.fillGradientRectangle(swtRect.x,swtRect.y,swtRect.width,swtRect.height,vertical);
 	}
 
