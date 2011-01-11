@@ -39,6 +39,7 @@ import org.vaadin.gwtgraphics.client.DrawingArea;
 import org.vaadin.gwtgraphics.client.Line;
 import org.vaadin.gwtgraphics.client.animation.Animate;
 import org.vaadin.gwtgraphics.client.shape.Circle;
+import org.vaadin.gwtgraphics.client.shape.Ellipse;
 import org.vaadin.gwtgraphics.client.shape.Path;
 import org.vaadin.gwtgraphics.client.shape.path.LineTo;
 
@@ -52,18 +53,26 @@ import org.vaadin.gwtgraphics.client.shape.path.LineTo;
  * library.  So all the methods should stay, but their implementations should
  * be GWT-graphics implementations.
  * 
+ * As of 1/2011, <a href="http://code.google.com/p/gwt-graphics/wiki/Manual">here</a> is the manual for GWT-graphcs.
+ * 
  * As of 1/2011, examples of low-level calls in the GWT-Graphics libraries can be 
  * found <a href="http://dev.vaadin.com/svn/incubator/gwt-graphics-examples/src/com/virtuallypreinstalled/hene/gwtgraphicsexamples/client/GWTGraphicsExamples.java">here</a>
  * 
  * One of the differences between SWT/AWT and GWT and the library we are using is that
- * GWT-graphics is a vector-graphics library.  Consequently concepts like "clipping"
+ * GWT-graphics is a vector-graphics library.  Consequently concepts like 
+ * <a href="http://www.cc.gatech.edu/grads/h/Hao-wei.Hsieh/Haowei.Hsieh/mm.html#sec1">"clipping"</a>
  * may be tricky to map.
+ * 
+ * On the other hand, the contract that these methods must obey is well specified in
+ * Java's API, which is easily google-able.
  */
 public class GwtG2DWrapper extends Graphics2D {
 	
 	//this is the "canvas" equivalent in GWT
 	//the comments for this class include an example of use
 	private DrawingArea canvas;
+	
+	private static Rectangle clip = null;
 	
 	//some of these are still useful to keep as holders of numbers.
 	private static Point _pt = new Point();	
@@ -131,30 +140,41 @@ public class GwtG2DWrapper extends Graphics2D {
 		return curBackgroundColor;
 	}
 
+	/**********************************************************************
+	 * THIS METHOD HAS BEEN CONVERTED TO GWT
+	 **********************************************************************/
 	/* (non-Javadoc)
 	 * @see java.awt.Graphics#getClipBounds()
 	 */
 	public Rectangle getClipBounds() {
-		org.eclipse.swt.graphics.Rectangle rect = gc.getClipping();
-		Rectangle aRect = new Rectangle(rect.x,rect.y,rect.width,rect.height);
+		if (clip == null) {
+			//get the clip bounds to be the entire area of the canvas.
+			//a reasonable default clipping rectangle according to:
+			//http://www.cc.gatech.edu/grads/h/Hao-wei.Hsieh/Haowei.Hsieh/mm.html#sec1
+			clip = new Rectangle(canvas.getAbsoluteLeft(),
+					canvas.getAbsoluteTop(),canvas.getWidth(),canvas.getHeight());
+		}
 		try {
-			applyAffineTransformToRect2D(aRect, transform.createInverse());
+			applyAffineTransformToRect2D(clip, transform.createInverse());
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		return aRect;
+		return clip;
 	}
 
+	/**********************************************************************
+	 * THIS METHOD HAS BEEN CONVERTED TO GWT
+	 **********************************************************************/
 	/* (non-Javadoc)
 	 * @see java.awt.Graphics#clipRect(int, int, int, int)
 	 */
 	public void clipRect(int x, int y, int width, int height) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect, transform);
-		getGwtRectFromAwt(_awtRect,gwtRect);
-		org.eclipse.swt.graphics.Rectangle clip = gc.getClipping();
-		clip = clip.intersection(gwtRect);
-		gc.setClipping(clip);
+		
+		Rectangle2D clip = getClipBounds();
+		clip = clip.createIntersection(_awtRect);
+
 	}
 
 	/* (non-Javadoc)
@@ -559,7 +579,7 @@ public class GwtG2DWrapper extends Graphics2D {
 
 	
 	/**********************************************************************
-	 * THIS HAS BEEN CONVERTED TO GWT
+	 * THIS METHOD HAS BEEN CONVERTED TO GWT
 	 **********************************************************************/
 	/**
 	 * @param x
@@ -919,6 +939,10 @@ public class GwtG2DWrapper extends Graphics2D {
 		gc.drawOval((int)(_awtRect.getX()),(int)(_awtRect.getY()),(int)(_awtRect.getWidth()),(int)(_awtRect.getHeight()));
 	}
 
+
+	/**********************************************************************
+	 * THIS METHOD HAS BEEN CONVERTED TO GWT
+	 **********************************************************************/
 	/**
 	 * @param x
 	 * @param y
@@ -928,8 +952,10 @@ public class GwtG2DWrapper extends Graphics2D {
 	public void fillOval(double x, double y, double width, double height) {
 		_awtRect.setRect(x,y,width,height);
 		applyAffineTransformToRect2D(_awtRect,transform);
-		
-		gc.fillOval((int)(_awtRect.getX()),(int)(_awtRect.getY()),(int)(_awtRect.getWidth()),(int)(_awtRect.getHeight()));
+		Ellipse e = new Ellipse((int)(_awtRect.getX()), (int)(_awtRect.getY()), 
+				(int)(_awtRect.getWidth()), (int)(_awtRect.getHeight()));
+		e.setFillColor(getColor().toString());
+		canvas.add(e);
 	}
 
 
