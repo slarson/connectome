@@ -133,9 +133,10 @@ public class BuildConnections {
 
 		//create the edges based on the list.
 		List<ConnectionEdge> edges = createAndPopulateEdges(nodeList);
+		/**System.out.println("edges size: "+edges.size());
 		for(ConnectionEdge edge: edges){
-			System.out.println("edge: "+edge.getSendingNodeString());
-		}
+			System.out.println("edge in the list: "+edge.getSendingNodeString());
+		}**/
 
 		Set<String> missingNodeNames = findMissingNodeStrings(edges, nodeList);
 
@@ -205,7 +206,7 @@ public class BuildConnections {
 	 * @param nodes
 	 * @return
 	 */
-	private List<ConnectionEdge> createAndPopulateEdges(Set<Node> nodes) {
+	public List<ConnectionEdge> createAndPopulateEdges(Set<Node> nodes) {
 		List<Node> nodeList = new ArrayList<Node>(nodes);
 		List<ConnectionEdge> edges = new ArrayList<ConnectionEdge>();
 
@@ -729,7 +730,7 @@ public class BuildConnections {
 	}
 
 
-	private MultiHashMap<String,String> getConnectionsResults(List<Node> nodes) {
+	public MultiHashMap<String,String> getConnectionsResults(List<Node> nodes) {
 		String sparql = "http://rdf.neuinfo.org/sparql";
 		SparqlQuery q = new SparqlQuery(sparql);
 
@@ -748,7 +749,7 @@ public class BuildConnections {
 			String sendingVar = "$" + var + "_send";
 
 			q.addQueryTriplet(uriVar +
-					" nif_cnxn:sending_structure  \"" + brainRegionName+"\"");
+					" nif_cnxn:sending_structure  \"" + formatName(brainRegionName)+"\"");
 			q.addQueryTriplet(uriVar + " nif_cnxn:projection_strength "+ strengthReceivingVar);
 			q.addQueryTriplet(uriVar + " nif_cnxn:receiving_structure " + receivingVar);
 			q.addQueryTriplet(uriVar + " nif_cnxn:reference "+ referenceReceivingVar);
@@ -756,7 +757,7 @@ public class BuildConnections {
 			q.addQueryTriplet(SparqlQuery.UNION);
 
 			q.addQueryTriplet(uriVar +
-					" nif_cnxn:receiving_structure  \"" + brainRegionName+"\"");
+					" nif_cnxn:receiving_structure  \"" + formatName(brainRegionName)+"\"");
 			q.addQueryTriplet(uriVar + " nif_cnxn:projection_strength "+ strengthSendingVar);
 			q.addQueryTriplet(uriVar + " nif_cnxn:sending_structure " + sendingVar);
 			q.addQueryTriplet(uriVar + " nif_cnxn:reference "+ referenceSendingVar);
@@ -777,7 +778,7 @@ public class BuildConnections {
 		return q.runSelectQueryForNeurolexData();
 	}
 
-	private List<ConnectionEdge> convertConnectionResultsIntoEdges(MultiHashMap<String,String> results, List<Node> nodes) {
+	public List<ConnectionEdge> convertConnectionResultsIntoEdges(MultiHashMap<String,String> results, List<Node> nodes) {
 		List<ConnectionEdge> edges = new ArrayList<ConnectionEdge>();
 
 		for (Node brainRegion : nodes){
@@ -1048,10 +1049,25 @@ public class BuildConnections {
 	 */
 	public void addNewNode(String newNodeName){
 		Node n;
+
 		if(!GraphManager.getInstance().containsNodeWithName(newNodeName)){
+			//System.out.println("NODE TO CREATE: "+newNodeName);
+			//String correctName = formatName(newNodeName);
 			n = new Node("http://brancusi1.usc.edu/brain_parts/"+newNodeName+"/",newNodeName);
 			//add the newly created node to the graph.
 			GraphManager.getInstance().addNodeAndAnyConnectionEdges(n);
 		}
+	}
+
+	/**
+	 * Method replaces the first letter of the string with an upper case
+	 * letter.
+	 * @param name  - the first letter of this string will be an upper
+	 * 				  case letter.
+	 * @return 		- the string the first letter being an upper case letter.
+	 */
+	public String formatName(String name){
+		String capitalName = name.toUpperCase();
+		return capitalName.substring(0, 1).concat(name.substring(1));
 	}
 }

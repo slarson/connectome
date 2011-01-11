@@ -186,7 +186,8 @@ public class GraphManager {
 				Map<Node, Edge> edgesToAdd = BAMSProjectionMap.getInstance()
 						.getEdgesBetween(n, nodes);
 				for (Node toAdd : edgesToAdd.keySet()) {
-					graph.addEdge(edgesToAdd.get(toAdd), toAdd, n);
+					if(edgesToAdd.get(toAdd) != null)
+						graph.addEdge(edgesToAdd.get(toAdd), toAdd, n);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
