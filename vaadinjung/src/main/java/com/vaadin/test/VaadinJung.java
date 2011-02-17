@@ -6,8 +6,8 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 /**
- * Vaadin application intended to be implemented by the GWT wrapper
- * in order port mcb test to the browser nativaly.
+ * Vaadin application intended to be implemented by GWT wrapper
+ * in order port mcb test to the browser natively.
  * @author ruggero
  *
  */
