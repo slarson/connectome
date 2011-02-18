@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2003, the JUNG Project and the Regents of the University of
  * California All rights reserved.
- * 
+ *
  * This software is open-source under the BSD license; see either "license.txt"
  * or http://jung.sourceforge.net/license.txt for a description.
  */
@@ -11,8 +11,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 
-import swt.contrib.AwtG2DWrapper;
-import swt.contrib.SWTArrow;
+import swt.contrib.ui.AwtG2DWrapper;
+import swt.contrib.ui.SWTArrow;
 import edu.uci.ics.jung.graph.DirectedEdge;
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.UndirectedEdge;
@@ -33,11 +33,11 @@ import edu.uci.ics.jung.graph.predicates.SelfLoopEdgePredicate;
  * The default is to paint vertices with Black foreground text and Red
  * backgrounds. Picked vertices are orange. [Whether a vertex is Picked is
  * resolved with <tt>v.getUserDatum(_VisualizationViewer.VIS_KEY);</tt>]
- * 
+ *
  * <p>
  * Note that setting a stroke width other than 1 is likely to slow down the
  * visualization noticably, as is using transparency.
- * 
+ *
  * @author danyelf
  * @author Lucas Bigeardel
  */
@@ -76,7 +76,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     protected int mLineHeight;
 
     protected static EdgePredicate self_loop = SelfLoopEdgePredicate.getInstance();
-    
+
     /**
      * This variant simply renders vertices as small empty boxes without labels.
      */
@@ -87,7 +87,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Creates a SettableRenderer that will be drawn in the "heavy" style: a box
      * around the label
-     * 
+     *
      * @param sl
      */
     public SWTSettableRenderer(StringLabeller sl) {
@@ -97,7 +97,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Creates a SettableRenderer that will label edges with the given EdgeStringer.
      * (You may want EdgeWeightLabellerStringer, which uses an EdgeWeightLabeller to
-     * label the weights.) 
+     * label the weights.)
      * @param sl
      * @param el
      */
@@ -125,7 +125,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Edges are drawn by calling <tt>EdgeColorFunction</tt> with the edge, to
      * decide how it is to be drawn.
-     * 
+     *
      * @param ecf
      */
     public void setEdgeColorFunction(EdgeColorFunction ecf) {
@@ -135,7 +135,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Forces all edges to draw with this thickness. Sets the edge thickness
      * function to null.
-     * 
+     *
      * @param i
      */
     public void setEdgeThickness(int i) {
@@ -145,7 +145,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
 
     /**
      * This version takes a function that dynamically chooses an edge thickness.
-     * 
+     *
      * @param etf
      */
     public void setEdgeThicknessFunction(EdgeThicknessFunction etf) {
@@ -156,7 +156,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Sets whether the system should draw arrows on directed edges. By default,
      * yes.
-     * 
+     *
      * @param b
      */
     public void setShouldDrawDirectedArrows(boolean b) {
@@ -166,19 +166,19 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Sets whether the system should draw arrows on directed edges. By default,
      * yes.
-     * 
+     *
      * @param b
      */
     public void setShouldDrawUndirectedArrows(boolean b) {
         this.mShouldDrawArrowsUndirected = b;
     }
-    
+
     /**
      * Sets whether the system should draw self-loops. By default, no.
      * @param b
      */
     public void setShouldDrawSelfLoops( boolean b ) {
-        this.mShouldDrawSelfLoops = b;        
+        this.mShouldDrawSelfLoops = b;
     }
 
     /**
@@ -193,13 +193,13 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
      * self-loops if needed. Note that x1, y1 always correspond to
      * e.getEndpoints.getFirst() and x2, y2 always correspond to
      * e.getEndpoints.getSecond()
-     * 
+     *
      * @see EdgeThicknessFunction EdgeThicknessFunction
      * @see EdgeColorFunction EdgeColorFunction
      */
     public void paintEdge(AwtG2DWrapper g2d, Edge e, int x1, int y1, int x2, int y2) {
         if (g2d==null || g2d.getFont()==null) return;
-        
+
         mLineHeight = g2d.getFontMetrics().getHeight();
 
         float edgeWidth;
@@ -236,7 +236,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Labels the edge at the half-way point (if undirected) or three-quarters
      * if directed or 15 pixels above the vertex if self-loop.
-     * 
+     *
      * @param g2d
      * @param e
      * @param label
@@ -252,7 +252,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
             g2d.drawString(label, x1 - 3 , y1 - 10 - mLineHeight/2);
             return;
         }
-        
+
         int distX = x2 - x1;
         int distY = y2 - y1;
         double totalLength = Math.sqrt(distX * distX + distY * distY);
@@ -288,12 +288,12 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
         if (mArrow == null) {
             mArrow = new SWTArrow(SWTArrow.CLASSIC, 7, 9);
         }
-        
+
         if (mShouldDrawSelfLoops && self_loop.evaluate(e)) {
             mArrow.drawArrow(g2d, xsource - 10, ysource - 5, xsource, ysource, 15);
             return;
         }
-        
+
         if (mDrawLightBoxes) {
             mArrow.drawArrow(g2d, xsource, ysource, xdest, ydest, 12);
         } else {
@@ -305,7 +305,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Draws the edge at the given width, then restores the previous stroke.
      * Calls drawEdgeSimple to accomplish this task.
-     * 
+     *
      * @param edgeWidth
      *            the width of the stroke.
      */
@@ -351,7 +351,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
 
     /**
      * Manually sets the color of a Vertex's foreground (i.e. its text)
-     * 
+     *
      * @param vertexColor
      */
     public void setVertexForegroundColor(Color vertexColor) {
@@ -360,7 +360,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
 
     /**
      * Manually sets the color of a picked Vertex's background (i.e. its field)
-     * 
+     *
      * @param vertexColor
      */
     public void setVertexPickedColor(Color vertexColor) {
@@ -370,7 +370,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Manually sets the color of an unpicked Vertex's background (i.e. its
      * field)
-     * 
+     *
      * @param vertexColor
      */
     public void setVertexBGColor(Color vertexColor) {
@@ -379,7 +379,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
 
     /**
      * Finds the color of a vertex with a VertexColorFunction
-     * 
+     *
      * @param vcf
      */
     public void setVertexColorFunction(VertexColorFunction vcf) {
@@ -389,7 +389,7 @@ public class SWTSettableRenderer extends SWTAbstractRenderer {
     /**
      * Simple label function returns the StringLabeller's notion of v's label.
      * It may be sometimes useful to override this.
-     * 
+     *
      * @param v
      *            a vertex
      * @return the label on the vertex.
