@@ -3,7 +3,7 @@
  *
  * com.ibm.rational.test.ct
  *
- * (c) Copyright IBM Corporation 2005. All Rights Reserved. 
+ * (c) Copyright IBM Corporation 2005. All Rights Reserved.
  * Note to U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP  Schedule Contract with IBM Corp.
  */
 package swt.visualization;
@@ -28,5 +28,5 @@ public class SWTUtils {
             color = (Color) colorMap.get(key);
         }
         return color;
-    }        
+    }
 }

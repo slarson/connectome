@@ -218,11 +218,11 @@ public class SWTPluggableRendererDemo
             }
         });
 
-    	shell.open ();
-    	while (!shell.isDisposed ()) {
-    		if (!display.readAndDispatch ()) display.sleep ();
-    	}
-    	display.dispose ();
+        shell.open ();
+        while (!shell.isDisposed ()) {
+                if (!display.readAndDispatch ()) display.sleep ();
+        }
+        display.dispose ();
     }
 
     /**
@@ -242,9 +242,9 @@ public class SWTPluggableRendererDemo
             System.out.println("need at least 2 seeds (one source, one sink)"); //$NON-NLS-1$
 
         // use these seeds as source and sink vertices, run VoltageRanker
-        boolean source	= true;
-        Set sources		= new HashSet();
-        Set sinks		= new HashSet();
+        boolean source  = true;
+        Set sources             = new HashSet();
+        Set sinks               = new HashSet();
         for (Iterator iter = seeds.iterator(); iter.hasNext(); ) {
             if (source) {
                 sources.add(iter.next());
@@ -284,52 +284,52 @@ public class SWTPluggableRendererDemo
         Listener actionListener = new Listener() {
             public void handleEvent(Event e) {
                 if (e.type == SWT.Selection) {
-	                Button source = (Button)(e.widget);
-	                if (source == v_color) {
-	                    if (source.getSelection()) {
-	                        pr.setVertexColorFunction(vcf_degree);
-	                    } else {
-	                        pr.setVertexColorFunction(vcf_constant);
-	                    }
-	                } else if (source == e_color) {
-	                    ewcs.setWeighted(source.getSelection());
-	                } else if (source == v_stroke) {
-	                    vsh.setHighlight(source.getSelection());
-	                } else if (source == v_labels) {
-	                    if (source.getSelection()) {
-	                        pr.setVertexStringer(vs);
-	                    } else {
-	                        pr.setVertexStringer(vs_none);
-	                    }
-	                } else if (source == e_labels) {
-	                    if (source.getSelection()) {
-	                        pr.setEdgeStringer(es);
-	                    } else {
-	                        pr.setEdgeStringer(es_none);
-	                    }
-	                } else if (source == e_arrow_pred) {
-	                    if (source.getSelection()) {
-	                        pr.setEdgeArrowPredicate(TruePredicate.getInstance());
-	                    }
-	                    //else {
+                        Button source = (Button)(e.widget);
+                        if (source == v_color) {
+                            if (source.getSelection()) {
+                                pr.setVertexColorFunction(vcf_degree);
+                            } else {
+                                pr.setVertexColorFunction(vcf_constant);
+                            }
+                        } else if (source == e_color) {
+                            ewcs.setWeighted(source.getSelection());
+                        } else if (source == v_stroke) {
+                            vsh.setHighlight(source.getSelection());
+                        } else if (source == v_labels) {
+                            if (source.getSelection()) {
+                                pr.setVertexStringer(vs);
+                            } else {
+                                pr.setVertexStringer(vs_none);
+                            }
+                        } else if (source == e_labels) {
+                            if (source.getSelection()) {
+                                pr.setEdgeStringer(es);
+                            } else {
+                                pr.setEdgeStringer(es_none);
+                            }
+                        } else if (source == e_arrow_pred) {
+                            if (source.getSelection()) {
+                                pr.setEdgeArrowPredicate(TruePredicate.getInstance());
+                            }
+                            //else {
                         //pr.setEdgeArrowPredicate(Graph.DIRECTED_EDGE);
                     //}
-	                } else if (source == font) {
-	                    ff.setBold(source.getSelection());
-	                } else if (source == v_shape) {
-	                    vssa.useFunnyShapes(source.getSelection());
-	                } else if (source == v_size) {
-	                    vssa.setScaling(source.getSelection());
-	                } else if (source == v_aspect) {
-	                    vssa.setStretching(source.getSelection());
-	                } else if (source == e_show_d) {
-	                    show_edge.showDirected(source.getSelection());
-	                } else if (source == e_show_u) {
-	                    show_edge.showUndirected(source.getSelection());
-	                } else if (source == v_small) {
-	                    show_vertex.filterSmall(source.getSelection());
-	                }
-	                gd.getVisualizationViewer().redraw();
+                        } else if (source == font) {
+                            ff.setBold(source.getSelection());
+                        } else if (source == v_shape) {
+                            vssa.useFunnyShapes(source.getSelection());
+                        } else if (source == v_size) {
+                            vssa.setScaling(source.getSelection());
+                        } else if (source == v_aspect) {
+                            vssa.setStretching(source.getSelection());
+                        } else if (source == e_show_d) {
+                            show_edge.showDirected(source.getSelection());
+                        } else if (source == e_show_u) {
+                            show_edge.showUndirected(source.getSelection());
+                        } else if (source == v_small) {
+                            show_vertex.filterSmall(source.getSelection());
+                        }
+                        gd.getVisualizationViewer().redraw();
                 }
             }
         };

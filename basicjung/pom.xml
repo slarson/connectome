@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>basicjung</groupId>
-	<artifactId>basicjung</artifactId>
+	<groupId>com.vaadin.jung</groupId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<artifactId>GWT2DWrapper</artifactId>
+	<packaging>jar</packaging>
 	<properties>
 		<project.build.name>basicjung-dev</project.build.name>
 	</properties>
@@ -29,11 +29,7 @@
 						<phase>compile</phase>
 						<configuration>
 							<!-- if you don't specify any modules, the plugin will find them -->
-							<!--
-								<modules>
-								<module>org.wholebrainproject.wbcweb.Widgetset</module>
-								</modules>
-							-->
+
 							<webappDirectory>${project.build.directory}/${project.build.name}/VAADIN/widgetsets</webappDirectory>
 							<!-- On Mac running Snow Leopard, add "-d32" -->
 							<!--
@@ -57,6 +53,34 @@
 				</executions>
 			</plugin>
 			<!--
+				Plugin in charge of copying neccessary dependencies to target
+				directory. These dependencies are needed in the target dictory in
+				order for the applet to work
+			-->
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<!-- Specify dependencies we want in the target directory -->
+						<configuration>
+							<outputDirectory>${project.build.directory}/${project.build.name}/VAADIN/widgetsets/com.vaadin.jung.GwtG2DWrapper</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.vaadin.addons</groupId>
+									<artifactId>gwt-graphics</artifactId>
+									<version>0.9.7</version>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!--
 				A simple Jetty test server at
 				http://localhost:8080/project-basicjung can be launched with the
 				Maven goal jetty:run and stopped with jetty:stop
@@ -75,7 +99,7 @@
 					<scanIntervalSeconds>0</scanIntervalSeconds>
 					<!-- make sure Jetty also finds the widgetset -->
 					<webAppConfig>
-						<contextPath>/project-basicjung</contextPath>
+						<contextPath>/basicjung-wrapper</contextPath>
 						<baseResource implementation="org.mortbay.resource.ResourceCollection">
 							<!--
 								Workaround for Maven/Jetty issue
@@ -91,8 +115,29 @@
 			</plugin>
 		</plugins>
 	</build>
+	<!-- genereted jar repository -->
+	<distributionManagement>
+		<!-- defines where the generated documentation should go -->
+		<site>
+			<id>google.download</id>
+			<name>wholebrain googlecode scm</name>
+			<url>scm:svn:https://connectome.googlecode.com/hg/site/mcb</url>
+		</site>
+		<repository>
+			<id>google.code</id>
+			<name>Google code</name>
+			<url>https://connectome.googlecode.com/hg/mcb/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Internal Snapshots</name>
+			<url>http://openccdb.org:8081/nexus/content/repositories/snapshots
+                        </url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<dependencies><!-- verified jung 2.0 -->
-	<dependency>
+		<dependency>
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-api</artifactId>
 			<version>2.0</version>

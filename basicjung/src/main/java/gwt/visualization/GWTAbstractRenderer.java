@@ -11,12 +11,14 @@ package gwt.visualization;
 
 import com.vaadin.jung.GwtG2DWrapper;
 
+import edu.uci.ics.jung.graph.event.GraphEvent.Vertex;
+import edu.uci.ics.jung.visualization.picking.PickedInfo;
+import edu.uci.ics.jung.visualization.renderers.Renderer.Edge;
+
 import swt.visualization.SWTRenderer;
 
 
-import edu.uci.ics.jung.graph.Edge;
-import edu.uci.ics.jung.graph.Vertex;
-import edu.uci.ics.jung.visualization.PickedInfo;
+
 
 /**
  * This abstract class structures much of the annoying

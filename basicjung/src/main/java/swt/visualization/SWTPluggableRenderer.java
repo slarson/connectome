@@ -22,7 +22,7 @@ import org.apache.commons.collections.functors.TruePredicate;
 
 import samples.preview_new_graphdraw.CoordinateUtil;
 import samples.preview_new_graphdraw.Coordinates;
-import swt.contrib.AwtG2DWrapper;
+import swt.contrib.ui.AwtG2DWrapper;
 import edu.uci.ics.jung.graph.ArchetypeEdge;
 import edu.uci.ics.jung.graph.ArchetypeVertex;
 import edu.uci.ics.jung.graph.Edge;
@@ -436,7 +436,7 @@ public class SWTPluggableRenderer extends SWTAbstractRenderer implements PickedI
 
         if (new_color != null)
             g2d.setColor(new_color);
-        	g2d.setBackground(new_color);
+                g2d.setBackground(new_color);
 
         Stroke new_stroke = edgeStrokeFunction.getStroke(e);
         Stroke old_stroke = g2d.getStroke();
@@ -718,13 +718,14 @@ public class SWTPluggableRenderer extends SWTAbstractRenderer implements PickedI
         return super.isPicked(v);
     }
 
-	public boolean isPicked(ArchetypeVertex arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+        public boolean isPicked(ArchetypeVertex arg0) {
+                // TODO Auto-generated method stub
+                return false;
+        }
 
-	public boolean isPicked(ArchetypeEdge arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+        public boolean isPicked(ArchetypeEdge arg0) {
+                // TODO Auto-generated method stub
+                return false;
+        }
 }
+
