@@ -1,0 +1,467 @@
+brain_region_id,brain_region_name,cellinstance_cell_id,celltype_cell_name 
+102,Striatum,302,BNSTALG Type I neuron
+104,Bed nuclei of the stria terminalis,206,360 nm-cone
+104,Bed nuclei of the stria terminalis,207,glutamate expressing retinal ganglion cell
+104,Bed nuclei of the stria terminalis,208,glutamate/PACAP expressing retinal ganglion cell
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,209,OP-projecting retinal ganglion cell
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,289,class A neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,291,B1 neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,292,B2 neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,293,5H1A-IR neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,294,5HT1A-1R multipolar neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,295,5HT1A-IR fusiform neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,296,5HT1A-IR medium-sized neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,297,BNSTAL-5HT neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,298,BNSTAL-5HT (HYP) neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,302,BNSTALG Type I neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,303,BNSTALG Type II neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,305,GALir magnocellular neurosecretory-type neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,306,BST large neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,307,cholinergic neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,308,vSub-BST neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,309,BST-PVN neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,310,vSub/PVN neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,311,GAD67 neuron
+106,Bed nuclei of the stria terminalis anterior division anterodorsal area,316,Calbindin (CB) expressing neuron
+107,Bed nuclei of the stria terminalis anterolateral area,210,retinal ganglion cell with surround
+107,Bed nuclei of the stria terminalis anterolateral area,226,superficial spiny neuron
+107,Bed nuclei of the stria terminalis anterolateral area,289,class A neuron
+107,Bed nuclei of the stria terminalis anterolateral area,291,B1 neuron
+107,Bed nuclei of the stria terminalis anterolateral area,292,B2 neuron
+107,Bed nuclei of the stria terminalis anterolateral area,293,5H1A-IR neuron
+107,Bed nuclei of the stria terminalis anterolateral area,294,5HT1A-1R multipolar neuron
+107,Bed nuclei of the stria terminalis anterolateral area,295,5HT1A-IR fusiform neuron
+107,Bed nuclei of the stria terminalis anterolateral area,296,5HT1A-IR medium-sized neuron
+107,Bed nuclei of the stria terminalis anterolateral area,297,BNSTAL-5HT neuron
+107,Bed nuclei of the stria terminalis anterolateral area,298,BNSTAL-5HT (HYP) neuron
+107,Bed nuclei of the stria terminalis anterolateral area,301,BNSTAL-5HT(NR) neuron
+107,Bed nuclei of the stria terminalis anterolateral area,302,BNSTALG Type I neuron
+107,Bed nuclei of the stria terminalis anterolateral area,305,GALir magnocellular neurosecretory-type neuron
+107,Bed nuclei of the stria terminalis anterolateral area,306,BST large neuron
+107,Bed nuclei of the stria terminalis anterolateral area,307,cholinergic neuron
+107,Bed nuclei of the stria terminalis anterolateral area,308,vSub-BST neuron
+107,Bed nuclei of the stria terminalis anterolateral area,309,BST-PVN neuron
+107,Bed nuclei of the stria terminalis anterolateral area,310,vSub/PVN neuron
+107,Bed nuclei of the stria terminalis anterolateral area,311,GAD67 neuron
+107,Bed nuclei of the stria terminalis anterolateral area,313,IL-BST neuron
+107,Bed nuclei of the stria terminalis anterolateral area,314,BST-VTA neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,211,retinal ganglion cell with no surround
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,289,class A neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,301,BNSTAL-5HT(NR) neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,302,BNSTALG Type I neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,303,BNSTALG Type II neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,304,BNSTALG Type III neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,305,GALir magnocellular neurosecretory-type neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,306,BST large neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,307,cholinergic neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,308,vSub-BST neuron
+108,Bed nuclei of the stria terminalis anterior division anteroventral area,309,BST-PVN neuron
+109,Bed nuclei of the stria terminalis oval nucleus,202,OS2-positive cone
+109,Bed nuclei of the stria terminalis oval nucleus,203,green-sensitive cone
+109,Bed nuclei of the stria terminalis oval nucleus,214,spiny bipolar neuron
+109,Bed nuclei of the stria terminalis oval nucleus,215,small pyramidal neuron
+109,Bed nuclei of the stria terminalis oval nucleus,216,triangular neuron
+109,Bed nuclei of the stria terminalis oval nucleus,218,spiny neuron
+109,Bed nuclei of the stria terminalis oval nucleus,219,spine sparse neuron
+109,Bed nuclei of the stria terminalis oval nucleus,220,BST-medial neurons
+109,Bed nuclei of the stria terminalis oval nucleus,221,cell group a
+109,Bed nuclei of the stria terminalis oval nucleus,224,cell group d
+109,Bed nuclei of the stria terminalis oval nucleus,225,cell group e
+109,Bed nuclei of the stria terminalis oval nucleus,226,superficial spiny neuron
+109,Bed nuclei of the stria terminalis oval nucleus,305,GALir magnocellular neurosecretory-type neuron
+109,Bed nuclei of the stria terminalis oval nucleus,306,BST large neuron
+109,Bed nuclei of the stria terminalis oval nucleus,307,cholinergic neuron
+109,Bed nuclei of the stria terminalis oval nucleus,322,round-to-multipolar neuron
+109,Bed nuclei of the stria terminalis oval nucleus,323,oval-to-spindle neuron
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,200,stratified ganglion cell
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,201,COS1-positive cone
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,202,OS2-positive cone
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,203,green-sensitive cone
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,204,blue-sensitive cone
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,205,510 nm-cone
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,226,superficial spiny neuron
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,302,BNSTALG Type I neuron
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,305,GALir magnocellular neurosecretory-type neuron
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,306,BST large neuron
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,307,cholinergic neuron
+110,Bed nuclei of the stria terminalis juxtacapsular nucleus,315,Calretinin (CR) expressing neuron
+111,Bed nuclei of the stria terminalis rhomboid nucleus,289,class A neuron
+111,Bed nuclei of the stria terminalis rhomboid nucleus,305,GALir magnocellular neurosecretory-type neuron
+111,Bed nuclei of the stria terminalis rhomboid nucleus,317,Parvalbumin (PV) expressing neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,301,BNSTAL-5HT(NR) neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,302,BNSTALG Type I neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,303,BNSTALG Type II neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,304,BNSTALG Type III neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,305,GALir magnocellular neurosecretory-type neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,306,BST large neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,308,vSub-BST neuron
+112,Bed nuclei of the stria terminalis anterior division dorsomedial nucleus,310,vSub/PVN neuron
+113,Bed nuclei of the stria terminalis anterior division dorsolateral nucleus,289,class A neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,289,class A neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,301,BNSTAL-5HT(NR) neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,303,BNSTALG Type II neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,304,BNSTALG Type III neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,305,GALir magnocellular neurosecretory-type neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,306,BST large neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,307,cholinergic neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,308,vSub-BST neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,310,vSub/PVN neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,318,BSTse bipolar neuron
+114,Bed nuclei of the stria terminalis anterior division fusiform nucleus,322,round-to-multipolar neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,289,class A neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,302,BNSTALG Type I neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,303,BNSTALG Type II neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,304,BNSTALG Type III neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,305,GALir magnocellular neurosecretory-type neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,306,BST large neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,309,BST-PVN neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,310,vSub/PVN neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,319,Pericommissural type I neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,322,round-to-multipolar neuron
+115,Bed nuclei of the stria terminalis anterior division ventral nucleus,323,oval-to-spindle neuron
+116,Bed nuclei of the stria terminalis anterior division magnocellular nucleus,289,class A neuron
+116,Bed nuclei of the stria terminalis anterior division magnocellular nucleus,300,BNSTAL-5HT(DEP) neuron
+116,Bed nuclei of the stria terminalis anterior division magnocellular nucleus,305,GALir magnocellular neurosecretory-type neuron
+116,Bed nuclei of the stria terminalis anterior division magnocellular nucleus,322,round-to-multipolar neuron
+116,Bed nuclei of the stria terminalis anterior division magnocellular nucleus,323,oval-to-spindle neuron
+116,Bed nuclei of the stria terminalis anterior division magnocellular nucleus,324,large multipolar neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,209,OP-projecting retinal ganglion cell
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,212,type 6a bipolar cell
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,289,class A neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,299,BNSTAL-5HT (HYP-DEP) neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,301,BNSTAL-5HT(NR) neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,302,BNSTALG Type I neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,303,BNSTALG Type II neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,304,BNSTALG Type III neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,305,GALir magnocellular neurosecretory-type neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,306,BST large neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,309,BST-PVN neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,310,vSub/PVN neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,311,GAD67 neuron
+118,Bed nuclei of the stria terminalis posterior division principal nucleus,325,tranversely oriented neuron
+11843,Bed nuclei of the stria terminalis anteromedial area,329,large GAL-ir neuron
+11843,Bed nuclei of the stria terminalis anteromedial area,333,SP-ir neuron
+11844,Bed nuclei of the stria terminalis oval nucleus,325,tranversely oriented neuron
+11844,Bed nuclei of the stria terminalis oval nucleus,327,CRH-ir neuron
+11844,Bed nuclei of the stria terminalis oval nucleus,329,large GAL-ir neuron
+11844,Bed nuclei of the stria terminalis oval nucleus,331,Enk-ir neuron
+11844,Bed nuclei of the stria terminalis oval nucleus,332,SS-ir neuron
+11844,Bed nuclei of the stria terminalis oval nucleus,334,BST-CG neuron
+11845,Bed nuclei of the stria terminalis juxtacapsular nucleus,325,tranversely oriented neuron
+11845,Bed nuclei of the stria terminalis juxtacapsular nucleus,326,fusiform tranversely oriented neuron
+11845,Bed nuclei of the stria terminalis juxtacapsular nucleus,327,CRH-ir neuron
+11845,Bed nuclei of the stria terminalis juxtacapsular nucleus,329,large GAL-ir neuron
+11849,Bed nuclei of the stria terminalis fusiform nucleus,328,NT-ir neuron
+11849,Bed nuclei of the stria terminalis fusiform nucleus,329,large GAL-ir neuron
+11849,Bed nuclei of the stria terminalis fusiform nucleus,333,SP-ir neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,212,type 6a bipolar cell
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,289,class A neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,299,BNSTAL-5HT (HYP-DEP) neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,301,BNSTAL-5HT(NR) neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,302,BNSTALG Type I neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,305,GALir magnocellular neurosecretory-type neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,306,BST large neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,309,BST-PVN neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,310,vSub/PVN neuron
+119,Bed nuclei of the stria terminalis posterior division interfascicular nucleus,311,GAD67 neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,289,class A neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,301,BNSTAL-5HT(NR) neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,302,BNSTALG Type I neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,303,BNSTALG Type II neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,304,BNSTALG Type III neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,305,GALir magnocellular neurosecretory-type neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,306,BST large neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,309,BST-PVN neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,310,vSub/PVN neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,311,GAD67 neuron
+120,Bed nuclei of the stria terminalis posterior division transverse nucleus,320,Pericommissural type II neuron
+121,Bed nuclei of the stria terminalis posterior division premedullary nucleus,321,transitional neuron
+122,Bed nuclei of the stria terminalis posterior division dorsal nucleus,302,BNSTALG Type I neuron
+122,Bed nuclei of the stria terminalis posterior division dorsal nucleus,305,GALir magnocellular neurosecretory-type neuron
+123,Bed nuclei of the stria terminalis posterior division strial extension,305,GALir magnocellular neurosecretory-type neuron
+123,Bed nuclei of the stria terminalis posterior division strial extension,312,GAD67 BST-PVN neuron
+124,Bed nuclei of the stria terminalis posterior division cell-sparse zone,305,GALir magnocellular neurosecretory-type neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,289,class A neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,301,BNSTAL-5HT(NR) neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,302,BNSTALG Type I neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,305,GALir magnocellular neurosecretory-type neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,306,BST large neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,307,cholinergic neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,308,vSub-BST neuron
+1694,Bed nuclei of the stria terminalis, anterior division, subcommisural zone,309,BST-PVN neuron
+208,Retina,119,type 2 cone bipolar cell
+208,Retina,120,type 3 cone bipolar cell
+208,Retina,121,type 4 cone bipolar cell
+208,Retina,122,type 5 cone bipolar cell
+208,Retina,123,type 6 cone bipolar cell
+208,Retina,124,type 7 cone bipolar cell
+208,Retina,125,type 8 cone bipolar cell
+208,Retina,126,type 9 cone bipolar cell
+208,Retina,127,horizontal cell
+208,Retina,128,A17 amacrine cell
+208,Retina,129,preautonomic neuron spinal cord
+208,Retina,131,preautonomic neuron spinal cord/vagal complex
+208,Retina,132,cerebellar granule cell
+208,Retina,133,superficial short axon stellate cell
+208,Retina,134,deeper long axon stellate cell
+208,Retina,135,candelabrum cell
+208,Retina,136,L-type retinal ganglion cell
+208,Retina,137,M-type retinal ganglion cell
+208,Retina,138,S-type retinal ganglion cell
+208,Retina,139,fast-conducting retinal ganglion cell
+208,Retina,140,intermediate-conducting retinal ganglion cell
+208,Retina,141,slow-conducting retinal ganglion cell
+208,Retina,142,on-center retinal ganglion cell
+208,Retina,143,off-center retinal ganglion cell
+208,Retina,144,MTN-projecting retinal ganglion cell
+208,Retina,145,cerebellar molecular layer interneuron
+208,Retina,146,large ganglion cell
+208,Retina,147,type 1 glycinergic retinal amacrine cell
+208,Retina,148,type 2 glycinergic retinal amacrine cell
+208,Retina,149,type 3 glycinergic retinal amacrine cell
+208,Retina,150,type 4 glycinergic retinal amacrine cell
+208,Retina,151,type 5 glycinergic retinal amacrine cell
+208,Retina,152,type 6 glycinergic retinal amacrine cell
+208,Retina,153,type 7 glycinergic retinal amacrine cell
+208,Retina,154,wide-field amacrine cell
+208,Retina,155,melanopsin-containing retinal ganglion cell
+208,Retina,156,SCN-projecting retinal ganglion cell
+208,Retina,157,photosensitive SCN-projecting retinal ganglion cell
+208,Retina,158,TH-immunoreactive stellate amacrine cell
+208,Retina,161,TH-immunoreactive displaced amacrine cell
+208,Retina,162,TH-immunoreactive small amacrine cell
+208,Retina,163,large THI-DA retinal cell
+208,Retina,164,PNMT-immunoreactive retinal cell
+208,Retina,165,1CA amacrine retinal cell
+208,Retina,166,2CA amacrine retinal cell
+208,Retina,167,indoleamine-accumulating amacrine cell type 1
+208,Retina,168,indoleamine-accumulating amacrine cell type 2
+208,Retina,169,indoleamine-accumulating amacrine cell type 3
+208,Retina,17,magnocellular cell
+208,Retina,170,indoleamine-accumulating amacrine cell type 4
+208,Retina,171,indoleamine-accumulating amacrine cell type 5
+208,Retina,172,cholinergic amacrine cell
+208,Retina,173,LHA-projecting retinal ganglion cell
+208,Retina,175,multipolar Lugaro cell
+208,Retina,176,type I retinal bipolar cell
+208,Retina,177,type II retinal bipolar cell
+208,Retina,178,diffuse amacrine cell
+208,Retina,179,wide-field unistratified diffuse amacrine cell
+208,Retina,18,autonomic cell
+208,Retina,180,unistratified retinal ganglion cell
+208,Retina,181,dopamine interplexiform cell
+208,Retina,182,vLGN-ipsilateral projecting retinal ganglion cell
+208,Retina,183,LP-ipsilateral projecting retinal ganglion cell
+208,Retina,184,vLGN/LP-ipsilateral projecting retinal ganglion cell
+208,Retina,185,NPY-immunoreactive amacrine cell
+208,Retina,186,displaced NPY-immunoreactive amacrine cell
+208,Retina,187,ON cone bipolar cell
+208,Retina,188,OFF cone bipolar cell
+208,Retina,189,dLGN-ipsilateral projecting retinal ganglion cell
+208,Retina,19,sensory neuron
+208,Retina,190,dLGN-contralateral projecting retinal ganglion cell
+208,Retina,193,SC-contralateral projecting retinal ganglion cell
+208,Retina,194,SC-ipsi/contra projecting retinal ganglion cell
+208,Retina,195,dLGN-ipsi/contra/SC-contralateral projecting retinal ganglion cell
+208,Retina,196,SC-ipsi/contra/dLGN-contralateral projecting retinal ganglion cell
+208,Retina,197,SC-ipsi/dLGN-contralateral projecting retinal ganglion cell
+208,Retina,198,SC-ipsi/dLGN-ipsilateral projecting retinal ganglion cell
+208,Retina,199,SC-contra/dLGN-ipsilateral projecting retinal ganglion cell
+208,Retina,20,motor neuron
+208,Retina,21,sensory/motor neuron
+208,Retina,22,interneuron
+208,Retina,23,motor somatic neuron
+208,Retina,24,motor autonomic neuron
+208,Retina,25,motor neuroendocrine neuron
+208,Retina,26,motor neuroendocrine magnocellular neuron
+208,Retina,27,motor neuroendocrine magnocellular vasopressin neuron
+208,Retina,28,motor neuroendocrine magnocellular oxytocin neuron
+208,Retina,29,projection interneuron
+208,Retina,36,preautonomic oxytocin neuron
+208,Retina,39,motor neuroendocrine parvicellular CRH neuron
+208,Retina,42,local interneuron, inhibitory
+208,Retina,43,local interneuron, complex effect
+208,Retina,44,local interneuron, unknown effect
+208,Retina,45,basket neuron
+208,Retina,46,stellate neuron
+208,Retina,47,Golgi neuron
+208,Retina,50,Lugaro neuron
+208,Retina,51,unipolar brush neuron
+208,Retina,53,rod
+208,Retina,54,cone
+208,Retina,55,retinal ganglion cell A
+208,Retina,56,retinal ganglion cell A1
+208,Retina,57,retinal ganglion cell A2 inner
+208,Retina,59,retinal ganglion cell B
+208,Retina,60,retinal ganglion cell B1
+208,Retina,61,retinal ganglion cell B2
+208,Retina,62,retinal ganglion cell B3
+208,Retina,76,retinal ganglion cell Class IIa
+208,Retina,91,retinal ganglion cell C4 outer
+208,Retina,94,diffuse ganglion cell
+232,Preoptic periventricular nucleus,100,retinal ganglion cell "tight" type
+233,Supraoptic nucleus,100,retinal ganglion cell "tight" type
+233,Supraoptic nucleus,101,retinal amacrine cell
+233,Supraoptic nucleus,229,dense axon plexus-forming neurons
+234,Supraoptic nucleus, retrochiasmatic part,101,retinal amacrine cell
+236,Supraoptic nucleus, accessory supraoptic group, nucleus circularis,100,retinal ganglion cell "tight" type
+236,Supraoptic nucleus, accessory supraoptic group, nucleus circularis,101,retinal amacrine cell
+238,Paraventricular nucleus of the hypothalamus,227,common spiny neuron
+238,Paraventricular nucleus of the hypothalamus,228,spiny neuron with chandelier-like axon
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,102,wide field diffuse amacrine cell
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,105,type (a) narrow-field unistratified amacrine cell
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,230,spiny neurogliaform neuron
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,231,beaded neuron
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,233,projecting star neuron
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,244,PVN pre-autonomic type C neuron
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,245,burst LTS neuron
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,246,simple bipolar neuron
+240,Paraventricular nucleus of the hypothalamus, descending division, medial parvicellular part, ventral zone,247,monopolar neuron
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,102,wide field diffuse amacrine cell
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,105,type (a) narrow-field unistratified amacrine cell
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,230,spiny neurogliaform neuron
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,232,spiny projection neuron
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,233,projecting star neuron
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,234,constrained-range neuron
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,246,simple bipolar neuron
+241,Paraventricular nucleus of the hypothalamus, descending division, dorsal parvicellular part,247,monopolar neuron
+242,Paraventricular nucleus of the hypothalamus, descending division, lateral parvicellular part,105,type (a) narrow-field unistratified amacrine cell
+242,Paraventricular nucleus of the hypothalamus, descending division, lateral parvicellular part,247,monopolar neuron
+243,Paraventricular nucleus of the hypothalamus, descending division, forniceal part,100,retinal ganglion cell "tight" type
+243,Paraventricular nucleus of the hypothalamus, descending division, forniceal part,101,retinal amacrine cell
+243,Paraventricular nucleus of the hypothalamus, descending division, forniceal part,102,wide field diffuse amacrine cell
+245,Paraventricular nucleus of the hypothalamus, magnocellular division, anterior magnocellular part,100,retinal ganglion cell "tight" type
+245,Paraventricular nucleus of the hypothalamus, magnocellular division, anterior magnocellular part,102,wide field diffuse amacrine cell
+246,Paraventricular nucleus of the hypothalamus, magnocellular division, medial magnocellular part,100,retinal ganglion cell "tight" type
+247,Paraventricular nucleus of the hypothalamus, magnocellular division, posterior magnocellular part,100,retinal ganglion cell "tight" type
+247,Paraventricular nucleus of the hypothalamus, magnocellular division, posterior magnocellular part,101,retinal amacrine cell
+247,Paraventricular nucleus of the hypothalamus, magnocellular division, posterior magnocellular part,102,wide field diffuse amacrine cell
+247,Paraventricular nucleus of the hypothalamus, magnocellular division, posterior magnocellular part,105,type (a) narrow-field unistratified amacrine cell
+249,Paraventricular nucleus of the hypothalamus, magnocellular division, posterior magnocellular part, lateral zone,229,dense axon plexus-forming neurons
+251,Paraventricular nucleus of the hypothalamus, parvicellular division, anterior parvicellular part,100,retinal ganglion cell "tight" type
+251,Paraventricular nucleus of the hypothalamus, parvicellular division, anterior parvicellular part,102,wide field diffuse amacrine cell
+251,Paraventricular nucleus of the hypothalamus, parvicellular division, anterior parvicellular part,242,PVN pre-autonomic type A neuron
+251,Paraventricular nucleus of the hypothalamus, parvicellular division, anterior parvicellular part,246,simple bipolar neuron
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,100,retinal ganglion cell "tight" type
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,102,wide field diffuse amacrine cell
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,105,type (a) narrow-field unistratified amacrine cell
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,229,dense axon plexus-forming neurons
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,230,spiny neurogliaform neuron
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,242,PVN pre-autonomic type A neuron
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,243,PVN pre-autonomic type B neuron
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,246,simple bipolar neuron
+252,Paraventricular nucleus of the hypothalamus, parvicellular division, medial parvicellular part, dorsal zone,247,monopolar neuron
+253,Paraventricular nucleus of the hypothalamus, parvicellular division, periventricular part,100,retinal ganglion cell "tight" type
+253,Paraventricular nucleus of the hypothalamus, parvicellular division, periventricular part,102,wide field diffuse amacrine cell
+253,Paraventricular nucleus of the hypothalamus, parvicellular division, periventricular part,105,type (a) narrow-field unistratified amacrine cell
+253,Paraventricular nucleus of the hypothalamus, parvicellular division, periventricular part,229,dense axon plexus-forming neurons
+253,Paraventricular nucleus of the hypothalamus, parvicellular division, periventricular part,243,PVN pre-autonomic type B neuron
+253,Paraventricular nucleus of the hypothalamus, parvicellular division, periventricular part,246,simple bipolar neuron
+277,Arcuate nucleus of the hypothalamus,244,PVN pre-autonomic type C neuron
+280,Medial preoptic area,105,type (a) narrow-field unistratified amacrine cell
+280,Medial preoptic area,246,simple bipolar neuron
+288,Parastrial nucleus,306,BST large neuron
+290,Anterior hypothalamic nucleus,100,retinal ganglion cell "tight" type
+290,Anterior hypothalamic nucleus,101,retinal amacrine cell
+295,Suprachiasmatic nucleus,235,wide-range neuron
+295,Suprachiasmatic nucleus,236,heterodendritic neuron
+295,Suprachiasmatic nucleus,237,GABA-IR neuron, BST
+295,Suprachiasmatic nucleus,238,type I PVN neuron
+295,Suprachiasmatic nucleus,239,type II PVN neuron
+321,Lateral hypothalamic area,105,type (a) narrow-field unistratified amacrine cell
+321,Lateral hypothalamic area,246,simple bipolar neuron
+333,Dorsal part of the lateral geniculate complex,283,type II ganglion cell
+333,Dorsal part of the lateral geniculate complex,285,stellate cell of the zone of horizontal cells
+333,Dorsal part of the lateral geniculate complex,286,stellate cell of the zone of vertical cells
+347,Zona incerta,105,type (a) narrow-field unistratified amacrine cell
+347,Zona incerta,246,simple bipolar neuron
+417,Superior colliculus zonal layer,263,Glu-IR neuron, cerebellar nuclei
+417,Superior colliculus zonal layer,265,reciprocal Glu-IR neuron, cerebellar nuclei
+417,Superior colliculus zonal layer,266,symmetrical GABA-IR neuron, cerebellar nuclei
+417,Superior colliculus zonal layer,268,IO projecting neuron, cerebellar nuclei
+417,Superior colliculus zonal layer,272,superficial horizontal cell
+417,Superior colliculus zonal layer,273,deep horizontal cell
+417,Superior colliculus zonal layer,279,intermediate vertical fusiform cell
+418,Superior colliculus superficial gray layer,263,Glu-IR neuron, cerebellar nuclei
+418,Superior colliculus superficial gray layer,266,symmetrical GABA-IR neuron, cerebellar nuclei
+418,Superior colliculus superficial gray layer,269,type I (bursting) neuron, cerebellar nuclei
+418,Superior colliculus superficial gray layer,270,type I (non-bursting) neuron, cerebellar nuclei
+418,Superior colliculus superficial gray layer,272,superficial horizontal cell
+418,Superior colliculus superficial gray layer,276,narrow field vertical cell
+418,Superior colliculus superficial gray layer,280,deep vertical fusiform cell
+419,Superior colliculus optic layer,264,reciprocal GABA-IR neuron, cerebellar nuclei
+419,Superior colliculus optic layer,271,HSD2 neuron
+419,Superior colliculus optic layer,277,vertical fusiform cell
+419,Superior colliculus optic layer,281,wide field vertical cell
+420,Superior colliculus intermediate gray layer,282,type I ganglion cell
+495,Nucleus of the solitary tract,261,symmetrical projections neuron, cerebellar nuclei
+523,Trochlear nucleus,241,non-bursting LTS neuron
+524,Abducens nucleus,241,non-bursting LTS neuron
+789,Cerebellar cortex,107,wide-field unistratified amacrine cell
+789,Cerebellar cortex,108,type (a) wide-field unistratified amacrine cell
+789,Cerebellar cortex,110,type (c) wide-field unistratified amacrine cell
+789,Cerebellar cortex,111,bistratified amacrine cell
+789,Cerebellar cortex,112,narrow-field bistratified amacrine cell
+789,Cerebellar cortex,113,wide-field bistratified amacrine cell
+789,Cerebellar cortex,114,stratified diffuse amacrine cell
+789,Cerebellar cortex,115,AII amacrine cell
+789,Cerebellar cortex,116,retinal bipolar cell
+789,Cerebellar cortex,117,rod bipolar cell
+789,Cerebellar cortex,118,type 1 cone bipolar cell
+789,Cerebellar cortex,130,preautonomic neuron vagal complex
+789,Cerebellar cortex,159,TH-imunoreactive retinal cell
+789,Cerebellar cortex,160,TH-immunoreactive interplexiform cell
+837,Fastigial nucleus,248,curly bipolar neuron
+837,Fastigial nucleus,253,motor neuroendocrine parvicellular SOM neuron
+837,Fastigial nucleus,254,motor neuroendocrine parvicellular GRH neuron
+837,Fastigial nucleus,255,motor neuroendocrine parvicellular DA neuron
+837,Fastigial nucleus,256,descending neuron, sympathetic system
+837,Fastigial nucleus,257,descending neuron, sympathetic/parasympathetic system
+837,Fastigial nucleus,258,GABA-IR neuron, cerebellar nuclei
+838,Interposed nucleus,248,curly bipolar neuron
+838,Interposed nucleus,253,motor neuroendocrine parvicellular SOM neuron
+838,Interposed nucleus,254,motor neuroendocrine parvicellular GRH neuron
+838,Interposed nucleus,255,motor neuroendocrine parvicellular DA neuron
+838,Interposed nucleus,256,descending neuron, sympathetic system
+838,Interposed nucleus,257,descending neuron, sympathetic/parasympathetic system
+838,Interposed nucleus,258,GABA-IR neuron, cerebellar nuclei
+841,Dentate nucleus,248,curly bipolar neuron
+841,Dentate nucleus,253,motor neuroendocrine parvicellular SOM neuron
+841,Dentate nucleus,254,motor neuroendocrine parvicellular GRH neuron
+841,Dentate nucleus,255,motor neuroendocrine parvicellular DA neuron
+841,Dentate nucleus,256,descending neuron, sympathetic system
+841,Dentate nucleus,258,GABA-IR neuron, cerebellar nuclei
+844,Retina, outer nuclear layer,191,dLGN-ipsi/contra projecting retinal ganglion cell
+844,Retina, outer nuclear layer,192,SC-ipsilateral projecting retinal ganglion cell
+846,Retina, inner nuclear layer,63,retinal ganglion cell C1
+846,Retina, inner nuclear layer,64,retinal ganglion cell C2 inner
+846,Retina, inner nuclear layer,66,retinal ganglion cell C others
+846,Retina, inner nuclear layer,67,retinal ganglion cell C
+846,Retina, inner nuclear layer,69,retinal ganglion cell C2
+846,Retina, inner nuclear layer,70,retinal ganglion cell
+846,Retina, inner nuclear layer,71,retinal ganglion cell type I
+846,Retina, inner nuclear layer,73,retinal ganglion cell type III
+846,Retina, inner nuclear layer,74,retinal ganglion cell type IV
+846,Retina, inner nuclear layer,75,retinal ganglion cell Class I
+846,Retina, inner nuclear layer,79,alpha retinal ganglion cell
+846,Retina, inner nuclear layer,80,delta retinal ganglion cell
+846,Retina, inner nuclear layer,81,inner alpha retinal ganglion cell
+846,Retina, inner nuclear layer,82,outer alpha retinal ganglion cell
+846,Retina, inner nuclear layer,83,inner delta retinal ganglion cell
+846,Retina, inner nuclear layer,84,outer delta retinal ganglion cell
+846,Retina, inner nuclear layer,85,retinal ganglion cell B3 inner
+846,Retina, inner nuclear layer,86,retinal ganglion cell B3 outer
+846,Retina, inner nuclear layer,87,retinal ganglion cell B4
+846,Retina, inner nuclear layer,88,retinal ganglion cell C3
+846,Retina, inner nuclear layer,90,retinal ganglion cell C4 inner
+848,Retina, ganglion cell layer,10,medium spiny
+848,Retina, ganglion cell layer,11,type I large
+848,Retina, ganglion cell layer,12,type II large
+848,Retina, ganglion cell layer,2,granule cell
+848,Retina, ganglion cell layer,3,medium sized neuron
+848,Retina, ganglion cell layer,4,large sized neuron
+848,Retina, ganglion cell layer,6,inverted pyramidal cell
+848,Retina, ganglion cell layer,7,round
+848,Retina, ganglion cell layer,70,retinal ganglion cell
+848,Retina, ganglion cell layer,8,fusiform neuron
+848,Retina, ganglion cell layer,9,stellate neuron
