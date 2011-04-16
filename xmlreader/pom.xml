@@ -5,7 +5,7 @@
 	<artifactId>xmlreader</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<project.build.name>basicjung-dev</project.build.name>
+		<project.build.name>xmlreader-dev</project.build.name>
 	</properties>
 	<build>
 		<finalName>${project.build.name}</finalName>
@@ -98,7 +98,7 @@
 					<scanIntervalSeconds>0</scanIntervalSeconds>
 					<!-- make sure Jetty also finds the widgetset -->
 					<webAppConfig>
-						<contextPath>/basicjung-wrapper</contextPath>
+						<contextPath>/xmlreader-wrapper</contextPath>
 						<baseResource implementation="org.mortbay.resource.ResourceCollection">
 							<!--
 								Workaround for Maven/Jetty issue
