@@ -34,13 +34,12 @@ public class XMLDataReaderAndFormat {
 	 */
 	public static void main(String[] args) throws SAXException, IOException, XMLStreamException {
 
-		FileInputStream file = new FileInputStream("braincell.xml");
-		//FileOutputStream fileout = new FileOutputStream("brain_cell");
-		//BufferedOutputStream out = new BufferedOutputStream(fileout);
-		FileWriter fileout =  new FileWriter("brain_cell.txt");
+		FileInputStream file = new FileInputStream("sparql");
+		FileWriter fileout =  new FileWriter("sparql_brain_cell.txt");
 		BufferedWriter out = new BufferedWriter(fileout);
 		writeToFile(file,out);
 		file.close();
+		out.close();
 	}
 
 	/**
@@ -89,19 +88,19 @@ public class XMLDataReaderAndFormat {
 						System.out.println(selectedVariable);
 						selectedElement = parser.getElementText();
 						selectedElement = selectedElement.replaceAll("[ \t]+", " ");
-						out.write(","+selectedElement);
+						out.write("*"+selectedElement);
 					}
 					if(selectedVariable.contains("cellinstance_cell_id")){
 						System.out.println(selectedVariable);
 						selectedElement = parser.getElementText();
 						selectedElement = selectedElement.replaceAll("[ \t]+", " ");
-						out.write(","+selectedElement);
+						out.write("*"+selectedElement);
 					}
 					if(selectedVariable.contains("celltype_cell_name")){
 						System.out.println(selectedVariable);
 						selectedElement = parser.getElementText();
 						selectedElement = selectedElement.replaceAll("[ \t]+", " ");
-						out.write(","+selectedElement+"\n");
+						out.write("*"+selectedElement+"\n");
 						selectedVariable = null;
 					}
 				}
@@ -110,9 +109,9 @@ public class XMLDataReaderAndFormat {
 				parser.close();
 				break;
 			}
+
 		}
 		System.out.println("Data processing finalized.");
-		out.close();
 	}
 }
 
