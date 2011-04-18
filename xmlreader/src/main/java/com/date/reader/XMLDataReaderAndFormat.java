@@ -61,7 +61,7 @@ public class XMLDataReaderAndFormat {
 		String selectedVariable = null;
 		String selectedElement;
 
-		out.write("brain_region_id,brain_region_name,cellinstance_cell_id,celltype_cell_name \n");
+		out.write("brain_region_id*brain_region_name*cellinstance_cell_id*celltype_cell_name \n");
 		while (true) {
 
 			int event = parser.next();
