@@ -10,6 +10,9 @@ import javax.xml.stream.events.XMLEvent;
  * This application contains the main driver for a XML Stax reader.
  * This allows for the parsing of XML files in segments.
  *
+ * The XML document is located at
+ * {@link http://www.connectomics.org/neurolex/cwikidump.xml}
+ *
  * The class needs some improvements that will be latter documented and
  * implemented.
  *
@@ -25,13 +28,28 @@ public class StaxReader {
 		// URL and URL content.
 		URL                url;
 	    URLConnection      urlConn;
-
-
+	    FileWriter fileout =  new FileWriter("connectomics-wikidump.txt");
+		BufferedWriter out = new BufferedWriter(fileout);
 	    url = new URL("http://www.connectomics.org/neurolex/cwikidump.xml");
 	    urlConn = url.openConnection();
 	    urlConn.setDoInput(true);
 	    urlConn.setUseCaches(false);
 
+	    //main method that reads and writes to file.
+	    StaxReaderAndWriter(urlConn,out);
+	}
+
+	/**
+	 * Method takes an URLConnection and BufferedWriter. The URLConnection is
+	 * used to implement a XMLEventReader. The BufferedWriter is implemented
+	 * to write to file what the event reader's output.
+	 * @param urlConn
+	 * @param out
+	 * @throws XMLStreamException
+	 * @throws IOException
+	 */
+	private static void StaxReaderAndWriter(URLConnection urlConn, BufferedWriter out)
+	throws XMLStreamException, IOException {
 		// Use  reference implementation
 		System.setProperty(
 				"javax.xml.stream.XMLInputFactory",
@@ -53,6 +71,8 @@ public class StaxReader {
 		while (filteredEventReader.hasNext()) {
 			XMLEvent e = (XMLEvent) filteredEventReader.next();
 			System.out.println(e);
+			out.write(e.toString());
 		}
+		out.close();
 	}
 }
